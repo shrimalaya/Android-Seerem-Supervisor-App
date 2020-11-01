@@ -15,6 +15,7 @@ public class Supervisor {
     private int emergencyContantNumber;
 
 
+
     // When creating a new user, their username and password will be the first things saved; everything else will be added manually later on
     private Supervisor(String username, String password){
         savedUsername = username;
@@ -46,6 +47,7 @@ public class Supervisor {
         return savedUsername;
     }
 
+    // Since Personal Information should be able to be altered by user, create setters to allow this.
     public void setSavedUsername(String savedUsername) {
         this.savedUsername = savedUsername;
     }
