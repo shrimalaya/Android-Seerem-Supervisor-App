@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "101666941388",
+    "firebase_url": "https://seerem-supervisor.firebaseio.com",
+    "project_id": "seerem-supervisor",
+    "storage_bucket": "seerem-supervisor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101666941388:android:71ba28b107e11b56a89569",
+        "android_client_info": {
+          "package_name": "com.example.supervisor_seerem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "101666941388-2rlf6jku35hag3vs2vjrao7qm1j50isi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPzf8j9QIkRMxhXkHOwgfQSHZb8HXS4x0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101666941388-2rlf6jku35hag3vs2vjrao7qm1j50isi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
