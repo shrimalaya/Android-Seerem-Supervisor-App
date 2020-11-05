@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Supervisor_SEEREM</string>
+    <string name="welcome_text">Welcome, Supervisor.</string>
+    <string name="login_help">Please input your Username and Password.</string>
+    <string name="username_entry">Username:</string>
+    <string name="password_entry">Password:</string>
+    <string name="login_button">Login</string>
+    <string name="error_no_username">Please input a Username.</string>
+    <string name="error_no_password">Please input a Password.</string>
 </resources>
