@@ -1,10 +1,12 @@
-package com.example.supervisor_seerem.model;
+package com.example.supervisor_seerem.model.database;
 
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
+
+import com.example.supervisor_seerem.model.database.SchemaConstants;
 
 /**
  * Helper class for creating the SQL Database for the Supervisor Class

@@ -12,14 +12,61 @@ public class Supervisor {
     private String id;
     private String medicalConsiderations;
     private String emergencyContactName;
-    private int emergencyContantNumber;
+    private int emergencyContactNumber;
+    private String firstName;
+    private String lastName;
+    private String company_id;
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setCompany_id(String company_id) {
+        this.company_id = company_id;
+    }
+
+    public void setWorksite_id(String worksite_id) {
+        this.worksite_id = worksite_id;
+    }
+
+    private String worksite_id;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getCompany_id() {
+        return company_id;
+    }
+
+    public String getWorksite_id() {
+        return worksite_id;
+    }
+
+    public static Supervisor getInstance() {
+        return instance;
+    }
 
     // When creating a new user, their username and password will be the first things saved; everything else will be added manually later on
     private Supervisor(String username, String password){
         savedUsername = username;
         savedPassword = password;
+    }
+
+    public Supervisor(String id, String firstName, String lastName, String company_id, String worksite_id) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.company_id = company_id;
+        this.worksite_id = worksite_id;
     }
 
     private Supervisor(){}
@@ -84,11 +131,11 @@ public class Supervisor {
         this.emergencyContactName = emergencyContactName;
     }
 
-    public int getEmergencyContantNumber() {
-        return emergencyContantNumber;
+    public int getEmergencyContactNumber() {
+        return emergencyContactNumber;
     }
 
-    public void setEmergencyContantNumber(int emergencyContantNumber) {
-        this.emergencyContantNumber = emergencyContantNumber;
+    public void setEmergencyContactNumber(int emergencyContactNumber) {
+        this.emergencyContactNumber = emergencyContactNumber;
     }
 }
