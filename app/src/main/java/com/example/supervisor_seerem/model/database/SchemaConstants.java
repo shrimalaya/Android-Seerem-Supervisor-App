@@ -1,4 +1,4 @@
-package com.example.supervisor_seerem.model;
+package com.example.supervisor_seerem.model.database;
 
 /**
  * Constants specifically related to defining the schema of SQL Databases used in the app.

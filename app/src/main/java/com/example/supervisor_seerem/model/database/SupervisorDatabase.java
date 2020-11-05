@@ -1,4 +1,4 @@
-package com.example.supervisor_seerem.model;
+package com.example.supervisor_seerem.model.database;
 
 import android.content.ContentValues;
 import android.content.Context;
