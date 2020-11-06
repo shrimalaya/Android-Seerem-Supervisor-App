@@ -2,20 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recycler_worksite"
+    android:id="@+id/worksite_recycler_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/fixHSE"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="9dp"
         android:text="HSE Link(s):"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/txt_siteId_worksite"
-        app:layout_constraintTop_toBottomOf="@+id/fixMasterpoint_worksite" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_masterpoint_worksite" />
 
     <TextView
         android:id="@+id/fixMasterpoint_worksite"
@@ -26,7 +28,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/fixHSE"
-        app:layout_constraintTop_toBottomOf="@+id/txt_operationHours_worksite" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_location_worksite" />
 
     <TextView
         android:id="@+id/txt_siteId_worksite"
@@ -34,9 +36,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="Site id"
-        android:textSize="16sp"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/txt_projectId_worksite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,7 +53,6 @@
         android:layout_marginLeft="4dp"
         android:text="Company Id"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/txt_siteId_worksite"
         app:layout_constraintEnd_toStartOf="@+id/txt_location_worksite"
         app:layout_constraintStart_toEndOf="@+id/txt_siteId_worksite"
         app:layout_constraintTop_toTopOf="@+id/txt_siteId_worksite" />
@@ -62,7 +65,6 @@
         android:layout_marginLeft="4dp"
         android:text="Location"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/txt_siteId_worksite"
         app:layout_constraintEnd_toStartOf="@+id/txt_operationHours_worksite"
         app:layout_constraintStart_toEndOf="@+id/txt_projectId_worksite"
         app:layout_constraintTop_toTopOf="@+id/txt_siteId_worksite" />
@@ -73,21 +75,27 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
         android:text="Masterpoint"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/fixHSE"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fixMasterpoint_worksite"
-        app:layout_constraintTop_toBottomOf="@+id/txt_siteId_worksite" />
+        app:layout_constraintTop_toTopOf="@+id/fixMasterpoint_worksite" />
 
     <TextView
         android:id="@+id/txt_HSElink_worksite"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="12dp"
         android:text="HSE links"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/fixHSE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fixHSE"
         app:layout_constraintTop_toTopOf="@+id/fixHSE" />
 
@@ -97,13 +105,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
         android:text="Op Hrs"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txt_location_worksite"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/txt_siteId_worksite" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
