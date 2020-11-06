@@ -1,5 +1,7 @@
 package com.example.supervisor_seerem.model;
 
+import com.google.type.LatLng;
+
 /**
  * Class name: Site
  *
@@ -8,29 +10,33 @@ package com.example.supervisor_seerem.model;
  */
 public class Site {
     private String projectID;
-    private String location;
+    private String ID;
+    private LatLng location;
     private String emergencyResponse;
-    private String masterpoint;
-    private String hse;
+    private LatLng masterpoint;
+    private String hseLink;
     private String operationHour;
 
     // Parameterized Constructor
-    public Site(String projectID, String location, String emergencyResponse, String masterpoint,
-                String hse, String operationHour) {
+    public Site(String ID, String projectID, LatLng location, LatLng masterpoint, String hseLink, String operationHour) {
         this.projectID = projectID;
+        this.ID = ID;
         this.location = location;
-        this.emergencyResponse = emergencyResponse;
         this.masterpoint = masterpoint;
-        this.hse = hse;
+        this.hseLink = hseLink;
         this.operationHour = operationHour;
     }
 
     // Getters
+    public String getID() { return ID; }
+
+    public String getHseLink() { return hseLink; }
+
     public String getProjectID() {
         return projectID;
     }
 
-    public String getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
@@ -38,12 +44,12 @@ public class Site {
         return emergencyResponse;
     }
 
-    public String getMasterpoint() {
+    public LatLng getMasterpoint() {
         return masterpoint;
     }
 
     public String getHse() {
-        return hse;
+        return hseLink;
     }
 
     public String getOperationHour() {
@@ -55,9 +61,8 @@ public class Site {
         return "Site{" +
                 "projectID='" + projectID + '\'' +
                 ", location='" + location + '\'' +
-                ", emergencyInfo='" + emergencyResponse + '\'' +
                 ", masterpoint='" + masterpoint + '\'' +
-                ", hse='" + hse + '\'' +
+                ", hse='" + hseLink + '\'' +
                 ", operationHour='" + operationHour + '\'' +
                 '}';
     }

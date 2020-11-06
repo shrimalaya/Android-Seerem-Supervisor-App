@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -11,6 +10,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -27,10 +27,29 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:26.0.0')
+
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+
+    // Declare the dependency for the Firebase SDK for Google Analytics
     implementation 'com.google.firebase:firebase-analytics'
 
+    // Declare the dependencies for any other desired Firebase products
+    // For example, declare the dependencies for Firebase Authentication and Cloud Firestore
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
+
+    implementation 'com.android.support:multidex'
+
+    // FirebaseUI for Cloud Firestore
+    implementation 'com.firebaseui:firebase-ui-firestore:6.2.1'
+
 }
+
+apply plugin: 'com.google.gms.google-services'
