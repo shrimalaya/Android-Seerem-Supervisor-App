@@ -4,28 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.location.Location;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
-import com.example.supervisor_seerem.model.ModelLocation;
-import com.example.supervisor_seerem.model.Site;
 import com.example.supervisor_seerem.model.Supervisor;
 import com.example.supervisor_seerem.model.WorksiteAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.type.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +32,14 @@ public class SiteInfoActivity extends AppCompatActivity {
 
     RecyclerView mRecycler;
     WorksiteAdapter mAdapter;
+
+    private Boolean showAllSites = false;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference mWorksitesRef = db.collection(CONSTANTS.WORKSITES_COLLECTION);
     private Supervisor currUser;
-    public List<DocumentSnapshot> mDocs = new ArrayList<>();
+    public List<DocumentSnapshot> mAllDocs = new ArrayList<>();
+    public List<DocumentSnapshot> mUserDocs = new ArrayList<>();
+    public List<DocumentSnapshot> mShowDocs = new ArrayList<>();
 
 
     @Override
@@ -73,9 +72,16 @@ public class SiteInfoActivity extends AppCompatActivity {
                 getAllData(new AllDataCallback() {
                     @Override
                     public void onCallback(List<DocumentSnapshot> docs) {
-                        mDocs = new ArrayList<>();
-                        mDocs.addAll(docs);
-                        System.out.println("TEST1> Size of final data = " + mDocs.size());
+                        mAllDocs = new ArrayList<>();
+                        mAllDocs.addAll(docs);
+                        System.out.println("TEST1> Size of final data = " + mAllDocs.size());
+
+                        mUserDocs = new ArrayList<>();
+                        for (DocumentSnapshot doc: docs) {
+                            if(doc.getString(CONSTANTS.ID_KEY).equals(currUser.getWorksite_id())) {
+                                mUserDocs.add(doc);
+                            }
+                        }
                         displayData();
                     }
                 });
@@ -129,20 +135,65 @@ public class SiteInfoActivity extends AppCompatActivity {
                 getAllData(new AllDataCallback() {
                     @Override
                     public void onCallback(List<DocumentSnapshot> docs) {
-                        mDocs.clear();
-                        mDocs.addAll(docs);
+                        mAllDocs.clear();
+                        mAllDocs.addAll(docs);
+
+                        mUserDocs.clear();
+                        for (DocumentSnapshot doc: docs) {
+                            if(doc.getString(CONSTANTS.ID_KEY).equals(currUser.getWorksite_id())) {
+                                mUserDocs.add(doc);
+                            }
+                        }
+
+                        updateDisplaySites();
                         mAdapter.notifyDataSetChanged();
                     }
                 });
                 return true;
+
+            case (R.id.menu_display_all_user):
+                TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
+
+                if(showAllSites) {
+                    showAllSites = false;
+                    displayAllOrSelectedSites.setText("Your Worksites");
+                    item.setTitle("Display All Worksites");
+                } else {
+                    showAllSites = true;
+                    displayAllOrSelectedSites.setText("All Company Worksites");
+                    item.setTitle("Display My Worksites");
+                }
+
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
+                return true;
+
+            case (R.id.map_menu_siteInfo):
+                Intent i = new Intent(this, SiteMapActivity.class);
+                startActivity(i);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void updateDisplaySites() {
+        if(showAllSites) {
+            mShowDocs.clear();
+            mShowDocs.addAll(mAllDocs);
+        } else {
+            mShowDocs.clear();
+            mShowDocs.addAll(mUserDocs);
+        }
+    }
+
     public void displayData() {
-        System.out.println("TEST1> Before adapter: size of docs = " + mDocs.size());
-        mAdapter = new WorksiteAdapter(mDocs);
+        System.out.println("TEST1> Before adapter: size of docs = " + mAllDocs.size());
+
+        updateDisplaySites();
+        mAdapter = new WorksiteAdapter(mShowDocs);
+
         if (mAdapter == null) {
             System.out.println("TEST1> Adapter null");
         } else {
