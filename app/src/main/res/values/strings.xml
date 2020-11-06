@@ -8,4 +8,19 @@
     <string name="error_no_username">Please input a Username.</string>
     <string name="error_no_password">Please input a Password.</string>
     <string name="error_wrong_password">The Password you entered is not associated with the Username you entered. Please enter the correct Password.</string>
+
+    <string name="user_info_header">User Info</string>
+    <string name="user_info_help">Edit personal information and UI settings here. </string>
+    <string name="name_entry">First and last name</string>
+    <string name="first_name_entry">First name</string>
+    <string name="last_name_entry">Last name</string>
+    <string name="id_entry">ID (driver licence or company ID)</string>
+    <string name="medical_considerations_entry">Medical considerations</string>
+    <string name="emergency_contact_entry">Emergency Contact</string>
+    <string name="emergency_contact_name_entry">Name</string>
+    <string name="emergency_contact_number_entryy">Phone Number</string>
+    <string name="emergency_contact_type_family">Family</string>
+    <string name="emergency_contact_type_friend">Friend</string>
+    <string name="go_to_ui_preferences_button">UI Preferences</string>
+    <string name="go_to_mapsite">Worksite Map</string>
 </resources>

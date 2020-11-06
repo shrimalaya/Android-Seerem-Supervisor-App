@@ -15,9 +15,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".UI.testDatabaseActivity"></activity>
         <activity android:name=".UI.WorkerInfoActivity" />
-        <activity android:name=".UI.UserInfoActivity"></activity>
+        <activity android:name=".UI.UserInfoActivity"/>
         <activity android:name=".UI.MainActivity" />
-        <activity android:name=".UI.CommunicationActivity" />
+        <activity android:name=".UI.CommunicationActivity"/>
         <activity android:name=".UI.SiteMapActivity" />
         <activity android:name=".UI.SiteInfoActivity" />
         <activity android:name=".UI.LoginInfoActivity">
