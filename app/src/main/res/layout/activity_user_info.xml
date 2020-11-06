@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.UserInfoActivity"
+    android:orientation="vertical"
+    >
+
+    <TableLayout
+        android:id="@+id/userInfoInputTableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/seerem_logo_colour"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/userInfoHeader"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"
+                android:text="@string/user_info_header"
+                android:textSize="30sp"
+                android:textColor="@color/white"
+                android:fontFamily="monospace"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:text="@string/name_entry"
+                android:textStyle="bold"
+                android:textSize="24dp"
+                android:layout_weight="3"
+                android:textColor="@color/seerem_logo_colour"
+                android:fontFamily="monospace"
+                android:gravity="center"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_weight="2"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"
+                android:hint="@string/first_name_entry"
+                android:inputType="textPersonName"
+                android:backgroundTint="@color/seerem_logo_colour"
+                android:textColor="@color/seerem_logo_colour"
+                android:fontFamily="monospace"
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_weight="2"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"
+                android:hint="@string/last_name_entry"
+                android:inputType="textPersonName"
+                android:backgroundTint="@color/seerem_logo_colour"
+                android:textColor="@color/seerem_logo_colour"
+                android:fontFamily="monospace"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:text="@string/id_entry"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_weight="2"
+                android:textColor="@color/seerem_logo_colour"
+                android:fontFamily="monospace"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"/>
+
+            <EditText
+                android:id="@+id/editTextTextPersonName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:backgroundTint="@color/seerem_logo_colour"
+                android:textColor="@color/seerem_logo_colour"
+                android:fontFamily="monospace"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:text="@string/medical_considerations_entry"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/seerem_logo_colour"
+                android:fontFamily="monospace"
+                android:layout_weight="2"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:backgroundTint="@color/seerem_logo_colour"
+                android:textColor="@color/seerem_logo_colour"
+                android:fontFamily="monospace"
+                />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:text="@string/emergency_contact_entry"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:textColor="@color/seerem_logo_colour"
+                android:fontFamily="monospace"
+                android:layout_weight="5"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"/>
+
+            <RadioGroup
+                android:id="@+id/radio_contact_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/seerem_logo_colour"
+                android:paddingRight="20dip"
+                android:textColor="@color/seerem_logo_colour">
+
+                <RadioButton android:id="@+id/radio_family"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/emergency_contact_type_family"
+                    android:textColor="@color/seerem_logo_colour"
+                    android:textSize="20dp"
+                    android:fontFamily="monospace"
+                    android:layout_gravity="center"/>
+
+
+                <RadioButton android:id="@+id/radio_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/emergency_contact_type_friend"
+                    android:textColor="@color/seerem_logo_colour"
+                    android:textSize="20dp"
+                    android:fontFamily="monospace"
+                    android:layout_gravity="center"/>
+            </RadioGroup>
+        </TableRow>
+    </TableLayout>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:background="@color/white">
+
+        <EditText
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:layout_weight="2"
+            android:paddingStart="20dip"
+            android:paddingLeft="20dip"
+            android:backgroundTint="@color/seerem_logo_colour"
+            android:hint="@string/emergency_contact_number_entryy"
+            android:textColor="@color/seerem_logo_colour"
+            android:fontFamily="monospace"/>
+
+        <EditText
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:layout_weight="2"
+            android:paddingStart="20dip"
+            android:paddingLeft="20dip"
+            android:hint="@string/emergency_contact_name_entry"
+            android:backgroundTint="@color/seerem_logo_colour"
+            android:textColor="@color/seerem_logo_colour"
+            android:fontFamily="monospace"/>
+
+    </TableRow>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/seerem_logo_colour">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/go_to_ui_preferences_button"
+            android:textColor="@color/seerem_logo_colour"
+            android:backgroundTint="@color/white"
+            android:fontFamily="monospace"/>
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/go_to_mapsite"
+            android:textColor="@color/seerem_logo_colour"
+            android:backgroundTint="@color/white"
+            android:fontFamily="monospace"/>
+
+    </LinearLayout>
+</LinearLayout>
