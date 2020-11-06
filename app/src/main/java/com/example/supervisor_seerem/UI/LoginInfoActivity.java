@@ -21,7 +21,7 @@ import com.example.supervisor_seerem.R;
  */
 public class LoginInfoActivity extends AppCompatActivity {
 
-    private EditText loginInput;
+    private EditText usernameInput;
     private EditText passwordInput;
     private Button buttonLogin;
 
@@ -30,7 +30,7 @@ public class LoginInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_info);
 
-        loginInput = findViewById(R.id.editUsername);
+        usernameInput = findViewById(R.id.editUsername);
         passwordInput = findViewById(R.id.editPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
 
@@ -43,10 +43,10 @@ public class LoginInfoActivity extends AppCompatActivity {
     }
 
     private void checkInputs() {
-        String loginToCheck = loginInput.getText().toString();
+        String usernameToCheck = usernameInput.getText().toString();
         String passworkToCheck = passwordInput.getText().toString();
-        if (loginToCheck.isEmpty() || passworkToCheck.isEmpty()) {
-            if (loginToCheck.isEmpty()) {
+        if (usernameToCheck.isEmpty() || passworkToCheck.isEmpty()) {
+            if (usernameToCheck.isEmpty()) {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.error_no_username), Toast.LENGTH_LONG).show();
             }
@@ -54,18 +54,32 @@ public class LoginInfoActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.error_no_password), Toast.LENGTH_LONG).show();
             }
-        }else{
+        } else {
+
+
             Intent toUserInfo = new Intent(this, UserInfoActivity.class);
 
             SharedPreferences loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = loginSharedPreferences.edit();
-            editor.putString("username", loginToCheck);
-            editor.putString("password", passworkToCheck);
+            String savedUsername = loginSharedPreferences.getString("username", null);
+            String savedpassword = loginSharedPreferences.getString("password", null);
 
-            // API suggested apply() instead of commit() to do this storage in the background
-            // instead of immediately.
-            editor.apply();
-            startActivity(toUserInfo);
+            if ((savedUsername == null && savedpassword == null) || // If no Username and Password have been added to the device
+                    (!savedUsername.equals(usernameToCheck))){// A new Username denotes a different (and new) account
+                SharedPreferences.Editor editor = loginSharedPreferences.edit();
+                // API suggested apply() instead of commit() to do this storage in the background
+                // instead of immediately.
+                editor.putString("username", usernameToCheck);
+                if(!savedpassword.equals(passworkToCheck)) {
+                    editor.putString("password", passworkToCheck);
+                }
+                editor.apply();
+                startActivity(toUserInfo);
+            } else {// The Username has been stored but the Password is wrong.
+                if (savedUsername.equals(usernameToCheck) && !savedpassword.equals(passworkToCheck)){
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.error_wrong_password), Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 }

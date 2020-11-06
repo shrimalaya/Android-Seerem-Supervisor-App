@@ -7,4 +7,5 @@
     <string name="login_button">Login</string>
     <string name="error_no_username">Please input a Username.</string>
     <string name="error_no_password">Please input a Password.</string>
+    <string name="error_wrong_password">The Password you entered is not associated with the Username you entered. Please enter the correct Password.</string>
 </resources>
