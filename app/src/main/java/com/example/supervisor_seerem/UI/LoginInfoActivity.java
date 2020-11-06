@@ -69,9 +69,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                 // API suggested apply() instead of commit() to do this storage in the background
                 // instead of immediately.
                 editor.putString("username", usernameToCheck);
-                if(!savedpassword.equals(passworkToCheck)) {
                     editor.putString("password", passworkToCheck);
-                }
                 editor.apply();
                 startActivity(toUserInfo);
             } else {// The Username has been stored but the Password is wrong.
