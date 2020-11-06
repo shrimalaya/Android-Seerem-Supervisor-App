@@ -22,5 +22,5 @@
     <string name="emergency_contact_type_family">Family</string>
     <string name="emergency_contact_type_friend">Friend</string>
     <string name="go_to_ui_preferences_button">UI Preferences</string>
-    <string name="go_to_mapsite">Worksite Map</string>
+    <string name="go_to_worksite">Worksite(s)</string>
 </resources>
