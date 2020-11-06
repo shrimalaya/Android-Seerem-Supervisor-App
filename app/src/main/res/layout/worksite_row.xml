@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recycler_worksite"
+    android:id="@+id/worksite_recycler_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,6 +10,8 @@
         android:id="@+id/fixHSE"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="6dp"
         android:text="HSE Link(s):"
         android:textSize="16sp"
@@ -81,13 +83,16 @@
 
     <TextView
         android:id="@+id/txt_HSElink_worksite"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
         android:text="HSE links"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/fixHSE"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fixHSE"
         app:layout_constraintTop_toTopOf="@+id/fixHSE" />
 

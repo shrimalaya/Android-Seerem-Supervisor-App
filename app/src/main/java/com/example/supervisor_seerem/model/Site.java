@@ -11,14 +11,14 @@ import com.google.type.LatLng;
 public class Site {
     private String projectID;
     private String ID;
-    private LatLng location;
+    private ModelLocation location;
     private String emergencyResponse;
-    private LatLng masterpoint;
+    private ModelLocation masterpoint;
     private String hseLink;
     private String operationHour;
 
     // Parameterized Constructor
-    public Site(String ID, String projectID, LatLng location, LatLng masterpoint, String hseLink, String operationHour) {
+    public Site(String ID, String projectID, ModelLocation location, ModelLocation masterpoint, String hseLink, String operationHour) {
         this.projectID = projectID;
         this.ID = ID;
         this.location = location;
@@ -36,7 +36,7 @@ public class Site {
         return projectID;
     }
 
-    public LatLng getLocation() {
+    public ModelLocation getLocation() {
         return location;
     }
 
@@ -44,7 +44,7 @@ public class Site {
         return emergencyResponse;
     }
 
-    public LatLng getMasterpoint() {
+    public ModelLocation getMasterpoint() {
         return masterpoint;
     }
 

@@ -4,24 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.ModelLocation;
 import com.example.supervisor_seerem.model.Site;
 import com.example.supervisor_seerem.model.Supervisor;
 import com.example.supervisor_seerem.model.WorksiteAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +42,13 @@ public class SiteInfoActivity extends AppCompatActivity {
     private Supervisor currUser;
     private String USER_ID = CONSTANTS.USER_ID;
 
+    private double latAddress = Double.parseDouble("49.1895");
+    private double lngAddress = -122.8479;
+    private String HSElink = "https://new.translink.ca/rider-guide/safety-and-security";
+//    private LatLng location = new LatLng(latAddress, lngAddress);
+
     // TODO: Reduce this to two variables instead of three
-    private List<Site> mAllSites = new ArrayList<>();
+    private ArrayList<Site> mAllSites = new ArrayList<>();
     private List<Site> mCompanySites = new ArrayList<>();
     private List<Site> mAssignedSites = new ArrayList<>();
 
@@ -51,20 +60,28 @@ public class SiteInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_info);
 
-        mRecycler = (RecyclerView) findViewById(R.id.recycler_worksite);
 
 
+        mRecycler = (RecyclerView) findViewById(R.id.siteInfoRecyclerView);
 
-        getUserData();
+        setSupervisor();
+
+        mAdapter = new WorksiteAdapter(mAllSites);
+        System.out.println("TEST1> Adapter list size = " + mAdapter.getItemCount());
+        mRecycler.setAdapter(mAdapter);
+
+//        getUserData();
         //displayData();
     }
 
-
+    private void setSupervisor() {
+        mAllSites.add(new Site("WS0001", "PJ0001", new ModelLocation(49.1895, -122.8479), new ModelLocation(49.1895, -122.8479), HSElink, "10:30 - 12:30"));
+    }
 
 
     public void displayData() {
         System.out.println("TEST1> Before adapter: size of docs = " + mDocs.size());
-        mAdapter = new WorksiteAdapter(mDocs);
+//        mAdapter = new WorksiteAdapter(mDocs);
         if(mAdapter == null) {
             System.out.println("TEST1> Adapter null");
         } else {
