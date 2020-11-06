@@ -40,88 +40,73 @@ public class SiteInfoActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference mWorksitesRef = db.collection(CONSTANTS.WORKSITES_COLLECTION);
     private Supervisor currUser;
-    private String USER_ID = CONSTANTS.USER_ID;
-
-    private double latAddress = Double.parseDouble("49.1895");
-    private double lngAddress = -122.8479;
-    private String HSElink = "https://new.translink.ca/rider-guide/safety-and-security";
-//    private LatLng location = new LatLng(latAddress, lngAddress);
-
-    // TODO: Reduce this to two variables instead of three
-    private ArrayList<Site> mAllSites = new ArrayList<>();
-    private List<Site> mCompanySites = new ArrayList<>();
-    private List<Site> mAssignedSites = new ArrayList<>();
-
-    public ArrayList<DocumentSnapshot> mDocs = new ArrayList<>();
+    public List<DocumentSnapshot> mDocs = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_info);
-
-
-
         mRecycler = (RecyclerView) findViewById(R.id.siteInfoRecyclerView);
 
-        setSupervisor();
-
-        mAdapter = new WorksiteAdapter(mAllSites);
-        System.out.println("TEST1> Adapter list size = " + mAdapter.getItemCount());
-        mRecycler.setAdapter(mAdapter);
-
-//        getUserData();
-        //displayData();
+        retrieveData();
     }
 
-    private void setSupervisor() {
-        mAllSites.add(new Site("WS0001", "PJ0001", new ModelLocation(49.1895, -122.8479), new ModelLocation(49.1895, -122.8479), HSElink, "10:30 - 12:30"));
+    /**
+     -> This is an async task and therefore requires a callback in order to wait for the data to be
+        received
+     -> Get user info
+     -> Use company_id of user to get all sites of that company (in DocumentSnapshot data type)
+     -> Display using WorksiteAdapter by passing List of DocumentSnapshots
+     */
+    private void retrieveData() {
+        getUserData(new UserSupervisorCallback() {
+            @Override
+            public void onCallback(DocumentSnapshot doc) {
+                System.out.println("TEST1> User id = " + doc.getString(CONSTANTS.ID_KEY));
+                currUser = new Supervisor(doc.getString(CONSTANTS.ID_KEY),
+                        doc.getString(CONSTANTS.FIRST_NAME_KEY),
+                        doc.getString(CONSTANTS.LAST_NAME_KEY),
+                        doc.getString(CONSTANTS.COMPANY_ID_KEY),
+                        doc.getString(CONSTANTS.WORKSITE_ID_KEY));
+
+                getAllData(new AllDataCallback() {
+                    @Override
+                    public void onCallback(List<DocumentSnapshot> docs) {
+                        mDocs = new ArrayList<>();
+                        mDocs.addAll(docs);
+                        System.out.println("TEST1> Size of final data = " + mDocs.size());
+                        displayData();
+                    }
+                });
+            }
+        });
     }
 
-
-    public void displayData() {
-        System.out.println("TEST1> Before adapter: size of docs = " + mDocs.size());
-//        mAdapter = new WorksiteAdapter(mDocs);
-        if(mAdapter == null) {
-            System.out.println("TEST1> Adapter null");
-        } else {
-            mRecycler.setAdapter(mAdapter);
-        }
-    }
-
-    public void getUserData() {
+    public void getUserData(final UserSupervisorCallback callback) {
         final DocumentReference mSupervisor = db.document(CONSTANTS.SUPERVISORS_COLLECTION + "/" + CONSTANTS.USER_ID);
         mSupervisor.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isComplete()) {
+                if (task.isComplete()) {
                     DocumentSnapshot doc = task.getResult();
                     System.out.println("TEST1> User id = " + doc.getString(CONSTANTS.ID_KEY));
-                    currUser = new Supervisor(doc.getString(CONSTANTS.ID_KEY),
-                            doc.getString(CONSTANTS.FIRST_NAME_KEY),
-                            doc.getString(CONSTANTS.LAST_NAME_KEY),
-                            doc.getString(CONSTANTS.COMPANY_ID_KEY),
-                            doc.getString(CONSTANTS.WORKSITE_ID_KEY));
-
-                    getAllData();
+                    callback.onCallback(doc);
                 }
             }
         });
     }
 
-    public void getAllData() {
+    public void getAllData(final AllDataCallback callback) {
         mWorksitesRef
                 .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, currUser.getCompany_id())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isComplete()) {
-                            ArrayList<DocumentSnapshot> mDocs_temp = new ArrayList<>();
-                            mDocs_temp.addAll(task.getResult().getDocuments());
-                            System.out.println("TEST1> Size of temp data = " + mDocs_temp.size());
-                            mDocs = mDocs_temp;
-                            // displayData();
+                        if (task.isComplete()) {
+                            System.out.println("TEST1> Size of temp data = " + task.getResult().getDocuments().size());
+                            callback.onCallback(task.getResult().getDocuments());
                         }
                     }
                 });
@@ -129,7 +114,6 @@ public class SiteInfoActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_site_info, menu);
         return true;
@@ -142,49 +126,36 @@ public class SiteInfoActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case (R.id.refresh_site_info):
-                getAllData();
+                getAllData(new AllDataCallback() {
+                    @Override
+                    public void onCallback(List<DocumentSnapshot> docs) {
+                        mDocs.clear();
+                        mDocs.addAll(docs);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    public void displayData() {
+        System.out.println("TEST1> Before adapter: size of docs = " + mDocs.size());
+        mAdapter = new WorksiteAdapter(mDocs);
+        if (mAdapter == null) {
+            System.out.println("TEST1> Adapter null");
+        } else {
+            mRecycler.setAdapter(mAdapter);
+        }
+    }
 
-    //    // TODO: Figure out a way to get data (wait for the async tasks to complete) and send it to adapter
-//    getUserData(new UserSupervisorCallback() {
-//        @Override
-//        public void onCallback(DocumentSnapshot doc) {
-//            System.out.println("TEST1> User id = " + doc.getString(CONSTANTS.ID_KEY));
-//            currUser = new Supervisor(doc.getString(CONSTANTS.ID_KEY),
-//                    doc.getString(CONSTANTS.FIRST_NAME_KEY),
-//                    doc.getString(CONSTANTS.LAST_NAME_KEY),
-//                    doc.getString(CONSTANTS.COMPANY_ID_KEY),
-//                    doc.getString(CONSTANTS.WORKSITE_ID_KEY));
-//
-//            getAllData(new AllDataCallback() {
-//                @Override
-//                public void onCallback(ArrayList<DocumentSnapshot> docs) {
-//                    mDocs = new ArrayList<>();
-//                    mDocs.addAll(docs);
-//                    System.out.println("TEST1> Size of final data = " + mDocs.size());
-//                    displayData();
-//                }
-//            });
-//        }
-//    });
+    private interface AllDataCallback {
+        void onCallback(List<DocumentSnapshot> docs);
+    }
 
+    private interface UserSupervisorCallback {
+        void onCallback(DocumentSnapshot doc);
+    }
 
-
-
-    //    private interface AllDataCallback {
-//        void onCallback(ArrayList<DocumentSnapshot> docs);
-//    }
-//
-//    private interface UserSupervisorCallback {
-//        void onCallback(DocumentSnapshot doc);
-//    }
-//
-//    private interface DisplayCallback {
-//        void onCallBack();
-//    }
 }

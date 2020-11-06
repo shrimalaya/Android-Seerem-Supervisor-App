@@ -16,14 +16,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.supervisor_seerem.R.layout.worksite_row;
 
 
 public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.WorksiteViewHolder> {
 
-    public ArrayList<Site> mList;
+    public List<DocumentSnapshot> mList;
 
-    public WorksiteAdapter(ArrayList<Site> mList) { this.mList = mList; }
+    public WorksiteAdapter(List<DocumentSnapshot> mList) { this.mList = mList; }
 
     @NonNull
     @Override
@@ -35,16 +37,23 @@ public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.Worksi
 
     @Override
     public void onBindViewHolder(@NonNull WorksiteAdapter.WorksiteViewHolder holder, int position) {
-        Site curr = mList.get(position);
+        DocumentSnapshot curr = mList.get(position);
+        System.out.println("TEST1> Site info id -> " + curr.getString(CONSTANTS.ID_KEY));
 
-        System.out.println("TEST1> Site info id -> " + curr.getID());
 
-        holder.siteIDTextView.setText(curr.getID());
-        holder.projectIDTextView.setText(curr.getProjectID());
-        holder.HSElinkTextView.setText(curr.getHseLink());
-        holder.locationTextView.setText(curr.getLocation().toString());
-        holder.masterpointTextView.setText(curr.getMasterpoint().toString());
-        holder.operationHoursTextView.setText(curr.getOperationHour());
+
+        ModelLocation location = new ModelLocation(curr.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
+                                        curr.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+
+        ModelLocation masterpoint = new ModelLocation(curr.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
+                curr.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
+
+        holder.siteIDTextView.setText(curr.getString(CONSTANTS.ID_KEY));
+        holder.projectIDTextView.setText(curr.getString(CONSTANTS.PROJECT_ID_KEY));
+        holder.locationTextView.setText(location.toString());
+        holder.masterpointTextView.setText(masterpoint.toString());
+        holder.HSElinkTextView.setText(curr.getString(CONSTANTS.HSE_LINK_KEY));
+        holder.operationHoursTextView.setText(curr.getString(CONSTANTS.OPERATION_HRS_KEY));
 
     }
 
