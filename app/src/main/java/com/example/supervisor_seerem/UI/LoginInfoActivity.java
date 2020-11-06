@@ -76,6 +76,8 @@ public class LoginInfoActivity extends AppCompatActivity {
                 if (savedUsername.equals(usernameToCheck) && !savedpassword.equals(passworkToCheck)){
                     Toast.makeText(getApplicationContext(),
                             getString(R.string.error_wrong_password), Toast.LENGTH_LONG).show();
+                } else if (savedUsername.equals(usernameToCheck) && savedpassword.equals(passworkToCheck)) {
+                    startActivity(toUserInfo);
                 }
             }
         }

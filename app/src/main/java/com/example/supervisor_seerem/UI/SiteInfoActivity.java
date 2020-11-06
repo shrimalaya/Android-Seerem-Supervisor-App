@@ -48,6 +48,9 @@ public class SiteInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_site_info);
         mRecycler = (RecyclerView) findViewById(R.id.siteInfoRecyclerView);
 
+        // TODO: repopulate online database and set the key as employee_id (SP0001, SP0002, etc)
+        CONSTANTS.USER_ID = "sladha";
+
         retrieveData();
     }
 
@@ -90,7 +93,7 @@ public class SiteInfoActivity extends AppCompatActivity {
     }
 
     public void getUserData(final UserSupervisorCallback callback) {
-        final DocumentReference mSupervisor = db.document(CONSTANTS.SUPERVISORS_COLLECTION + "/" + CONSTANTS.USER_ID);
+        DocumentReference mSupervisor = db.collection(CONSTANTS.SUPERVISORS_COLLECTION).document(CONSTANTS.USER_ID);
         mSupervisor.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
