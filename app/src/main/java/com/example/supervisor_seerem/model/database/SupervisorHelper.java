@@ -19,12 +19,13 @@ public class SupervisorHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE =
             "CREATE TABLE "+
                     SchemaConstants.SUPERVISOR_TABLE_NAME+ " (" +
-                    SchemaConstants.SAVED_USERNAME + " TEXT, " +
-                    SchemaConstants.SAVED_PASSWORD + " TEXT, " +
-                    SchemaConstants.ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchemaConstants.SUPERVISOR_FIRST_NAME + " TEXT, " +
+                    SchemaConstants.SUPERVISOR_LAST_NAME + " TEXT, " +
+                    SchemaConstants.ID + " TEXT, " +
                     SchemaConstants.MEDICAL_CONSIDERATIONS + " TEXT, " +
-                    SchemaConstants.EMERGENCY_CONTACT_NAME + " TEXT, " +
-                    SchemaConstants.EMERGENCY_CONTACT_NUMBER + " INTEGER PRIMARY KEY AUTOINCREMENT); ";
+                    SchemaConstants.EMERGENCY_CONTACT_TYPE + " TEXT, " +
+                    SchemaConstants.EMERGENCY_CONTACT_NUMBER + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchemaConstants.EMERGENCY_CONTACT_NAME + "TEXT); ";
 
     private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + SchemaConstants.SUPERVISOR_TABLE_NAME;
 

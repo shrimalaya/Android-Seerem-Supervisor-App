@@ -10,10 +10,11 @@ public class SchemaConstants {
     public static final String SUPERVISOR_DATABASE_NAME = "supervisordatabase";
     public static final String SUPERVISOR_TABLE_NAME = "SUPERVISORTABLE";
 
-    public static final String SAVED_USERNAME = "savedusername";
-    public static final String SAVED_PASSWORD = "savedpassword";
+    public static final String SUPERVISOR_FIRST_NAME = "supervisorfirstname";
+    public static final String SUPERVISOR_LAST_NAME = "supervisorlastname";
     public static final String ID = "id";
     public static final String MEDICAL_CONSIDERATIONS = "medicalconsiderations";
+    public static final String EMERGENCY_CONTACT_TYPE = "emergencycontacttype";
     public static final String EMERGENCY_CONTACT_NAME = "emergencycontactname";
     public static final String EMERGENCY_CONTACT_NUMBER = "emergencycontactnumber";
     public static final int SUPERVISOR_DATABASE_VERSION = 1;

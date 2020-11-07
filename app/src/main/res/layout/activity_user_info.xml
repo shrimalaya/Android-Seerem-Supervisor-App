@@ -187,6 +187,7 @@
                     android:textColor="@color/seerem_logo_colour"
                     android:textSize="20dp"
                     android:fontFamily="monospace"
+                    android:checked="true"
                     android:layout_gravity="center"/>
 
 
@@ -220,6 +221,7 @@
             android:hint="@string/emergency_contact_number_entryy"
             android:paddingStart="20dip"
             android:paddingLeft="20dip"
+            android:inputType="number"
             android:textColor="@color/seerem_logo_colour"
             android:textSize="22sp" />
 
@@ -247,7 +249,7 @@
         android:background="@color/seerem_logo_colour">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonUIPreferences"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -257,7 +259,17 @@
             android:fontFamily="monospace"/>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonSaveUserInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/save_user_info_button"
+            android:textColor="@color/seerem_logo_colour"
+            android:backgroundTint="@color/white"
+            android:fontFamily="monospace"/>
+
+        <Button
+            android:id="@+id/buttonSiteMap"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

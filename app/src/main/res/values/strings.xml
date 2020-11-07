@@ -23,4 +23,6 @@
     <string name="emergency_contact_type_friend">Friend</string>
     <string name="go_to_ui_preferences_button">UI Preferences</string>
     <string name="go_to_worksite">Worksite(s)</string>
+    <string name="save_user_info_button">Save User Info</string>
+    <string name="error_userinfo_incomplete">All parts of your User Info must be filled before they can be saved.</string>
 </resources>
