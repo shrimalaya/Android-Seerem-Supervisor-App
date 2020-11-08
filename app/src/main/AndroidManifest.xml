@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
 
     <application
@@ -13,12 +16,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/maps_api_key" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity android:name=".UI.testDatabaseActivity"></activity>
         <activity android:name=".UI.WorkerInfoActivity" />
         <activity android:name=".UI.UserInfoActivity"/>
         <activity android:name=".UI.MainActivity" />
         <activity android:name=".UI.CommunicationActivity"/>
-        <activity android:name=".UI.SiteMapActivity" />
+        <activity android:name=".UI.SiteMapActivity"
+            android:theme="@style/AppTheme_NoActionBar"/>
         <activity android:name=".UI.SiteInfoActivity" />
         <activity android:name=".UI.LoginInfoActivity">
             <intent-filter>
