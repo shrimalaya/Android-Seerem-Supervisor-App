@@ -39,8 +39,11 @@ public class SupervisorDatabase {
 
     public int wipeData(){
         SQLiteDatabase db = helper.getWritableDatabase();
-//        String[] whereArgs = {"herb"};
-        int count = db.delete(SchemaConstants.SUPERVISOR_TABLE_NAME,  null, null);
+        //String[] whereArgs = {""};
+        // According to the Android Studio Documentation, putting "1" in the whereClause will remove
+        // all rows but also returns a count of the rows that were deleted. This should return 1
+        // because only one row of data should be available on the device (locally) at a time
+        int count = db.delete(SchemaConstants.SUPERVISOR_TABLE_NAME,  "1", null);
         return count;
     }
 }

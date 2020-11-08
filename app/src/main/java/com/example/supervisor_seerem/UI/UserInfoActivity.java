@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.emergency.EmergencyNumber;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -72,9 +73,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private boolean areAnyInputsEmpty(String[] inputs){
         for(int i = 0; i < inputs.length; i++){
+            Log.i("Checking!: ", inputs[i]);
             if(inputs[i].isEmpty()){
                 return false;
             }
+            Log.i("OKAY!: ", inputs[i] + " is okay!");
         }
         return true;
     }
@@ -86,6 +89,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         String medicalConsiderations = medicalConsiderationsInput.getText().toString();
         String emergencyContactNumber = emergencyContactNumberInput.getText().toString();
         String emergencyContactName = emergencyContactNameInput.getText().toString();
+
+        chosenEmergencyContactType = ((RadioButton)findViewById(emergencyContactTypes.getCheckedRadioButtonId())).getText().toString();
         String[] inputs = {firstName, lastName, id, medicalConsiderations, chosenEmergencyContactType,
                 emergencyContactNumber, emergencyContactName};
 
@@ -93,20 +98,22 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         if(!areAnyInputsEmpty(inputs)){
             Toast.makeText(this,getText(R.string.error_userinfo_incomplete), Toast.LENGTH_LONG).show();
         }else{
-//            supervisorDatabase.wipeData();
 
-            //Temporarily commented out
-//            long result = supervisorDatabase.insertSupervisorData(firstName, lastName,
-//                    id, medicalConsiderations, chosenEmergencyContactType,
-//                    Integer.parseInt(emergencyContactNumberInput.getText().toString()),
-//                    emergencyContactName);
-//            // For testing ---
-//            // the database returns -1 if an error occured.
-//            if (result < 0) {
-//                Toast.makeText(this, "data not inserted", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(this, "data inserted!", Toast.LENGTH_SHORT).show();
-//            }
+            //Remove original
+            int rowsDeleted = supervisorDatabase.wipeData();
+            Log.i("Rows deleted", ""+ rowsDeleted);
+
+            long result = supervisorDatabase.insertSupervisorData(firstName, lastName,
+                    id, medicalConsiderations, chosenEmergencyContactType,
+                    Integer.parseInt(emergencyContactNumberInput.getText().toString()),
+                    emergencyContactName);
+            // For testing ---
+            // the database returns -1 if an error occured.
+            if (result < 0) {
+                Toast.makeText(this, "data not inserted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "data inserted!", Toast.LENGTH_SHORT).show();
+            }
         }
         // ---
     }
