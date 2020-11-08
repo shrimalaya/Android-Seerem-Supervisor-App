@@ -67,7 +67,7 @@
                 android:text="W. Site"
                 android:textColor="#000000"
                 android:textSize="18sp"
-                android:textStyle="italic"
+                android:textStyle="normal"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_LastName"
                 app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
 
@@ -104,6 +104,21 @@
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_WorksiteId"
                 app:layout_constraintTop_toTopOf="@+id/workerRow_WorksiteId" />
+
+            <TextView
+                android:id="@+id/WorkerRow_fix_additionalInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="6dp"
+                android:text="Additional Information >"
+                android:textColor="#454545"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/workerRow_ID"
+                app:layout_constraintTop_toBottomOf="@+id/workerRow_FirstName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
