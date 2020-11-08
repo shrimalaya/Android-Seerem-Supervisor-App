@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.Supervisor;
-import com.example.supervisor_seerem.model.WorksiteAdapter;
+import com.example.supervisor_seerem.UI.util.WorksiteAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;

@@ -23,4 +23,7 @@
     <string name="emergency_contact_type_friend">Friend</string>
     <string name="go_to_ui_preferences_button">UI Preferences</string>
     <string name="go_to_worksite">Worksite(s)</string>
+
+    <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
+    <string name="search_input_hint">Enter a worker\'s name or a site\'s ID</string>
 </resources>

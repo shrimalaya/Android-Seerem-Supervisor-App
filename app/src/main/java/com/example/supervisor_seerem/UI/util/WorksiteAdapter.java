@@ -1,6 +1,6 @@
-package com.example.supervisor_seerem.model;
+package com.example.supervisor_seerem.UI.util;
 
-import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +12,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.supervisor_seerem.R;
-import com.google.firebase.firestore.DocumentReference;
+import com.example.supervisor_seerem.UI.SiteMapActivity;
+import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.ModelLocation;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.supervisor_seerem.R.layout.worksite_row;
@@ -62,7 +63,7 @@ public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.Worksi
         return mList.size();
     }
 
-    public class WorksiteViewHolder extends RecyclerView.ViewHolder {
+    public static class WorksiteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ConstraintLayout mLayout;
         public TextView siteIDTextView;
@@ -82,6 +83,17 @@ public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.Worksi
             masterpointTextView = (TextView) itemView.findViewById(R.id.txt_masterpoint_worksite);
             HSElinkTextView = (TextView) itemView.findViewById(R.id.txt_HSElink_worksite);
             operationHoursTextView = itemView.findViewById(R.id.txt_operationHours_worksite);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            String location = locationTextView.getText().toString();
+            Toast.makeText(view.getContext(), location, Toast.LENGTH_SHORT).show();
+            Intent mapIntent = new Intent(view.getContext(), SiteMapActivity.class);
+            mapIntent.putExtra("LOCATION_FROM_SITEINFO", location);
+            view.getContext().startActivity(mapIntent);
         }
     }
 }
