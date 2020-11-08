@@ -13,19 +13,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.testDatabaseActivity"></activity>
-        <activity android:name=".UI.WorkerInfoActivity" />
+        <activity android:name=".UI.testDatabaseActivity" />
+        <activity android:name=".UI.WorkerInfoActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".UI.UserInfoActivity"/>
         <activity android:name=".UI.MainActivity" />
         <activity android:name=".UI.CommunicationActivity"/>
         <activity android:name=".UI.SiteMapActivity" />
         <activity android:name=".UI.SiteInfoActivity" />
         <activity android:name=".UI.LoginInfoActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

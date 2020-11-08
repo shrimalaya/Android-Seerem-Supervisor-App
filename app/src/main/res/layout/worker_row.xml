@@ -1,6 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/worker_row_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarSize="1dp"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scrollbarSize="1dp">
+
+            <TextView
+                android:id="@+id/workerRow_ID"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="6dp"
+                android:scrollbarSize="7dp"
+                android:text="ID"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/workerRow_FirstName"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="First Name"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/workerRow_ID"
+                app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
+
+            <TextView
+                android:id="@+id/workerRow_LastName"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="Last Name"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/workerRow_FirstName"
+                app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
+
+            <TextView
+                android:id="@+id/workerRow_WorksiteId"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="W. Site"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toEndOf="@+id/workerRow_LastName"
+                app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
+
+            <TextView
+                android:id="@+id/workerRow_Location"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="-122.8479, -122.8479"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/workerRow_supervisor"
+                app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
+
+            <TextView
+                android:id="@+id/workerRow_Skills"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="Skills"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toEndOf="@+id/workerRow_Location"
+                app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
+
+            <TextView
+                android:id="@+id/workerRow_supervisor"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="SUP ID"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/workerRow_WorksiteId"
+                app:layout_constraintTop_toTopOf="@+id/workerRow_WorksiteId" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
