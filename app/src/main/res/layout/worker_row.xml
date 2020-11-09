@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/worker_row_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:scrollbarSize="1dp"
     android:scrollbars="none">
 
@@ -88,6 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
+                android:paddingRight="8dp"
                 android:text="Skills"
                 android:textSize="18sp"
                 android:textStyle="italic"
@@ -96,10 +97,11 @@
 
             <TextView
                 android:id="@+id/workerRow_supervisor"
-                android:layout_width="70dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
+                android:gravity="center"
                 android:text="SUP ID"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_WorksiteId"

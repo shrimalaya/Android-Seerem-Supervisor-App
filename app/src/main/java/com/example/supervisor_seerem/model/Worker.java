@@ -14,17 +14,19 @@ public class Worker {
     private String employeeID;
     private String supervisorID;
     private String worksiteID;
+    private String companyID;
     private ModelLocation location;
     private List<String> skills;
 
     // Parameterized Constructor
     public Worker(String employeeID, String firstName, String lastName, String supervisorID,
-                  String worksiteID, ModelLocation location, List<String> skills) {
+                  String worksiteID, String companyID, ModelLocation location, List<String> skills) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.employeeID = employeeID;
         this.supervisorID = supervisorID;
         this.worksiteID = worksiteID;
+        this.companyID = companyID;
         this.skills = skills;
         this.location = location;
     }

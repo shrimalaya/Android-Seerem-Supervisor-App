@@ -7,15 +7,29 @@
     tools:context=".UI.WorkerInfoActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/fix_workerInfo_displayingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="5dp"
-        android:text="TextView"
+        android:text="Displaying:"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fix_workerInfo_currentlyDisplaying"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:text="Assigned Workers"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintStart_toEndOf="@+id/fix_workerInfo_displayingText"
+        app:layout_constraintTop_toTopOf="@+id/fix_workerInfo_displayingText" />
 
     <HorizontalScrollView
         android:layout_width="0dp"
@@ -24,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/fix_workerInfo_displayingText">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -123,11 +137,11 @@
 
             <TextView
                 android:id="@+id/textView9"
-                android:layout_width="70dp"
+                android:layout_width="85dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="Superv..."
+                android:text="Supervisor"
                 android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold"

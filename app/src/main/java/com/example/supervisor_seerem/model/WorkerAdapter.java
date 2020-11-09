@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.supervisor_seerem.R;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
 
@@ -19,9 +20,9 @@ import static com.example.supervisor_seerem.R.layout.worker_row;
 
 public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerViewHolder> {
 
-    public List<Worker> mList;
+    public List<DocumentSnapshot> mList;
 
-    public WorkerAdapter(List<Worker> mList) { this.mList = mList; }
+    public WorkerAdapter(List<DocumentSnapshot> mList) { this.mList = mList; }
 
     @NonNull
     @Override
@@ -34,21 +35,18 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
     @Override
     public void onBindViewHolder(@NonNull WorkerAdapter.WorkerViewHolder holder, int position) {
 
-        Worker curr = mList.get(position);
+        DocumentSnapshot curr = mList.get(position);
 
-        List<String> skills = curr.getSkills();
-        String sk = "";
-        for(String elt: skills) {
-            sk = sk + elt + ", ";
-        }
+        ModelLocation location = new ModelLocation(curr.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
+                curr.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
 
-        holder.workerIDTextView.setText(curr.getEmployeeID());
-        holder.firstNameTextView.setText(curr.getFirstName());
-        holder.lastNameTextView.setText(curr.getLastName());
-        holder.locationTextView.setText(curr.getLocation().toString());
-        holder.skillsTextView.setText(sk);
-        holder.siteIdTextView.setText(curr.getWorksiteID());
-        holder.supervisorIdTextView.setText(curr.getSupervisorID());
+        holder.workerIDTextView.setText(curr.getString(CONSTANTS.ID_KEY));
+        holder.firstNameTextView.setText(curr.getString(CONSTANTS.FIRST_NAME_KEY));
+        holder.lastNameTextView.setText(curr.getString(CONSTANTS.LAST_NAME_KEY));
+        holder.locationTextView.setText(location.toString());
+        holder.skillsTextView.setText(curr.getString(CONSTANTS.SKILLS_KEY));
+        holder.siteIdTextView.setText(curr.getString(CONSTANTS.WORKSITE_ID_KEY));
+        holder.supervisorIdTextView.setText(curr.getString(CONSTANTS.SUPERVISOR_ID_KEY));
 
     }
 
@@ -60,7 +58,6 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
     public class WorkerViewHolder extends RecyclerView.ViewHolder {
 
         ConstraintLayout mLayout;
-        // TODO: Add textView for supervisorId
         public TextView workerIDTextView;
         public TextView firstNameTextView;
         public TextView lastNameTextView;
@@ -83,3 +80,19 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
         }
     }
 }
+
+
+//    List<String> skills = curr.getSkills();
+//    String sk = "";
+//        for(String elt: skills) {
+//                sk = sk + elt + ", ";
+//                }
+//
+//                holder.workerIDTextView.setText(curr.getEmployeeID());
+//                holder.firstNameTextView.setText(curr.getFirstName());
+//                holder.lastNameTextView.setText(curr.getLastName());
+//                holder.locationTextView.setText(curr.getLocation().toString());
+//                holder.skillsTextView.setText(sk);
+//                holder.siteIdTextView.setText(curr.getWorksiteID());
+//                holder.supervisorIdTextView.setText(curr.getSupervisorID());
+
