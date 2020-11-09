@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -15,6 +16,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -37,6 +39,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +59,11 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 10000;
     private static final float DEFAULT_ZOOM = 15f; // 15 = street level view
+
+    public static Intent launchMapIntent(Context context) {
+        Intent mapIntent = new Intent(context, SiteMapActivity.class);
+        return mapIntent;
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -77,10 +85,53 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
+    private void setupNavigationBar() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.mapNavigation);
+
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch(menuItem.getItemId()) {
+                    case R.id.workerNavigation:
+                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteMapActivity.this);
+                        startActivity(workerIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.siteNavigation:
+                        Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(SiteMapActivity.this);
+                        startActivity(siteIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.mapNavigation:
+                        // home activity --> do nothing
+                        return true;
+
+                    case R.id.sensorNavigation:
+                        Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(SiteMapActivity.this);
+                        startActivity(sensorIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.userNavigation:
+                        Intent userIntent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
+                        startActivity(userIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_map);
+        setupNavigationBar();
+
         searchInputEditText = (EditText) findViewById(R.id.searchInputEditText);
         myLocationImageView = (ImageView) findViewById(R.id.myLocationImageView);
 
@@ -88,16 +139,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         getLocationPermission();
 
 //        zoomToLocation();
-    }
-
-    private void zoomToLocation() {
-//        TODO: get location of the clicked site and zoom in it
-//        Intent intent = getIntent();
-//        String location = intent.getStringExtra("LOCATION_FROM_SITEINFO");
-//        String[] attributes = location.split(",");
-//        double lat = Double.parseDouble(attributes[0]);
-//        double lng = Double.parseDouble(attributes[1]);
-//        moveCamera(new LatLng(lat, lng), DEFAULT_ZOOM, "Site Location");
     }
 
     private void checkGooglePlayServicesAvailable() {
@@ -116,14 +157,31 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
+    private void getLocationPermission() {
+        String[] permissions = {FINE_LOCATION, COARSE_LOCATION};
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), COARSE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                isLocationPermissionsGranted = true;
+                initializeMap();
+            } else {
+                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        } else {
+            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
     private void setupMap() {
         searchInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionID, KeyEvent keyEvent) {
                 if (actionID == EditorInfo.IME_ACTION_SEARCH ||
-                    actionID == EditorInfo.IME_ACTION_DONE ||
-                    actionID == KeyEvent.ACTION_DOWN ||
-                    actionID == KeyEvent.KEYCODE_ENTER) {
+                        actionID == EditorInfo.IME_ACTION_DONE ||
+                        actionID == KeyEvent.ACTION_DOWN ||
+                        actionID == KeyEvent.KEYCODE_ENTER) {
                     goToLocation();
                 }
                 return false;
@@ -137,6 +195,33 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             }
         });
         hideSoftKeyboard();
+    }
+
+    private void initializeMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(SiteMapActivity.this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        isLocationPermissionsGranted = false;
+
+        switch(requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0) {
+                    for (int result : grantResults) {
+                        if (result == PackageManager.PERMISSION_GRANTED) {
+                            isLocationPermissionsGranted = true;
+                            break;
+                        } else {
+                            isLocationPermissionsGranted = false;
+                        }
+                    }
+                    if (isLocationPermissionsGranted) {
+                        initializeMap();
+                    }
+                }
+        }
     }
 
     private void goToLocation() {
@@ -198,48 +283,14 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         hideSoftKeyboard();
     }
 
-    private void initMap() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(SiteMapActivity.this);
-    }
-
-    private void getLocationPermission() {
-        String[] permissions = {FINE_LOCATION, COARSE_LOCATION};
-
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) ==
-                                                PackageManager.PERMISSION_GRANTED) {
-            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), COARSE_LOCATION) ==
-                                                    PackageManager.PERMISSION_GRANTED) {
-                isLocationPermissionsGranted = true;
-                initMap();
-            } else {
-                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            }
-        } else {
-            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        isLocationPermissionsGranted = false;
-
-        switch(requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0) {
-                    for (int result : grantResults) {
-                        if (result == PackageManager.PERMISSION_GRANTED) {
-                            isLocationPermissionsGranted = true;
-                            break;
-                        } else {
-                            isLocationPermissionsGranted = false;
-                        }
-                    }
-                    if (isLocationPermissionsGranted) {
-                        initMap();
-                    }
-                }
-        }
+    private void zoomToLocation() {
+//        TODO: get location of the clicked site and zoom in it
+//        Intent intent = getIntent();
+//        String location = intent.getStringExtra("LOCATION_FROM_SITEINFO");
+//        String[] attributes = location.split(",");
+//        double lat = Double.parseDouble(attributes[0]);
+//        double lng = Double.parseDouble(attributes[1]);
+//        moveCamera(new LatLng(lat, lng), DEFAULT_ZOOM, "Site Location");
     }
 
     private void hideSoftKeyboard() {
