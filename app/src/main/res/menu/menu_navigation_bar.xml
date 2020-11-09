@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/workerNavigation"
+        android:title="@string/worker_navigation_bar_text"
+        android:icon="@drawable/ic_workers"/>
+
+    <item
+        android:id="@+id/siteNavigation"
+        android:title="@string/site_navigation_bar_text"
+        android:icon="@drawable/ic_sites"/>
+
+    <item
+        android:id="@+id/mapNavigation"
+        android:title="@string/map_navigation_bar_text"
+        android:icon="@drawable/ic_map"/>
+
+    <item
+        android:id="@+id/sensorNavigation"
+        android:title="@string/sensor_navigation_bar_text"
+        android:icon="@drawable/ic_sensors"/>
+
+    <item
+        android:id="@+id/userNavigation"
+        android:title="@string/user_navigation_bar_text"
+        android:icon="@drawable/ic_user"/>
+</menu>

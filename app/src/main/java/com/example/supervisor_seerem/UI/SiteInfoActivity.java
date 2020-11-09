@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,9 +14,10 @@ import android.widget.TextView;
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.Supervisor;
-import com.example.supervisor_seerem.model.WorksiteAdapter;
+import com.example.supervisor_seerem.UI.util.WorksiteAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,11 +43,58 @@ public class SiteInfoActivity extends AppCompatActivity {
     public List<DocumentSnapshot> mUserDocs = new ArrayList<>();
     public List<DocumentSnapshot> mShowDocs = new ArrayList<>();
 
+    public static Intent launchSiteInfoIntent(Context context) {
+        Intent siteInfoIntent = new Intent(context, SiteInfoActivity.class);
+        return siteInfoIntent;
+    }
+
+    private void setupNavigationBar() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.siteNavigation);
+
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch(menuItem.getItemId()) {
+                    case R.id.workerNavigation:
+                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteInfoActivity.this);
+                        startActivity(workerIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.siteNavigation:
+                        // home activity --> do nothing
+                        return true;
+
+                    case R.id.mapNavigation:
+                        Intent mapIntent = SiteMapActivity.launchMapIntent(SiteInfoActivity.this);
+                        startActivity(mapIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.sensorNavigation:
+                        Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(SiteInfoActivity.this);
+                        startActivity(sensorIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.userNavigation:
+                        Intent userIntent = UserInfoActivity.launchUserInfoIntent(SiteInfoActivity.this);
+                        startActivity(userIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_info);
+
+        setupNavigationBar();
         mRecycler = (RecyclerView) findViewById(R.id.siteInfoRecyclerView);
 
         // TODO: repopulate online database and set the key as employee_id (SP0001, SP0002, etc)

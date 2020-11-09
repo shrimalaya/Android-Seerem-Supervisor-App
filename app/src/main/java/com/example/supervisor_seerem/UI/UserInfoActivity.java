@@ -1,6 +1,7 @@
 package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.emergency.EmergencyNumber;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +32,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +56,54 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     String chosenEmergencyContactType;
     FirebaseAuth firebaseAuthentication;
 
+    Button goToWorksites;
+
+    public static Intent launchUserInfoIntent(Context context) {
+        Intent userInfoIntent = new Intent(context, UserInfoActivity.class);
+        return userInfoIntent;
+    }
+
+    private void setupNavigationBar() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.userNavigation);
+
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch(menuItem.getItemId()) {
+                    case R.id.workerNavigation:
+                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
+                        startActivity(workerIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.siteNavigation:
+                        Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(UserInfoActivity.this);
+                        startActivity(siteIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.mapNavigation:
+                        Intent mapIntent = SiteMapActivity.launchMapIntent(UserInfoActivity.this);
+                        startActivity(mapIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.sensorNavigation:
+                        Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(UserInfoActivity.this);
+                        startActivity(sensorIntent);
+                        overridePendingTransition(0,0);
+                        return true;
+
+                    case R.id.userNavigation:
+                        // home activity --> do nothing
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
     SupervisorDatabase supervisorDatabase;
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
     private CollectionReference mWorksitesRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION);
@@ -62,6 +113,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+        setupNavigationBar();
 
         // The username saved from sharedPreference will become the name
         // Of the document.
@@ -89,6 +141,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
         // TODO: Get user data from Cloud if it exists to autofill options during onCreate()
 
+//        setupButtons();
         emergencyContactTypes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
