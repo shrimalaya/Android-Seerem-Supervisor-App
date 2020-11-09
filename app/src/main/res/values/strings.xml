@@ -26,4 +26,11 @@
 
     <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
     <string name="search_input_hint">Enter a worker\'s name or a site\'s ID</string>
+
+    <string name="worker_navigation_bar_text">Worker</string>
+    <string name="site_navigation_bar_text">Sites</string>
+    <string name="map_navigation_bar_text">Map</string>
+    <string name="sensor_navigation_bar_text">Sensors</string>
+    <string name="user_navigation_bar_text">Me</string>
+
 </resources>
