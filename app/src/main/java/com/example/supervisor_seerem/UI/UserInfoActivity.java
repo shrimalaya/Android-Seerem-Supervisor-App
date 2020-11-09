@@ -1,8 +1,6 @@
 package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -26,13 +24,13 @@ import com.example.supervisor_seerem.model.database.SupervisorDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +43,8 @@ import java.util.Map;
  * @Author Michael Mora
  */
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
+
+    // Storing of data in Cloud Firebase guided by SmallAcademy @https://www.youtube.com/watch?v=RiHGwJ_u27k
 
     EditText firstNameInput;
     EditText lastNameInput;

@@ -25,8 +25,8 @@
     <string name="go_to_worksite">Worksite(s)</string>
     <string name="save_user_info_button">Save User Info</string>
     <string name="error_userinfo_incomplete">All parts of your User Info must be filled before they can be saved.</string>
-    <string name="user_info_save_success">, your User Info Settings have been successfully saved.</string>
-    <string name="user_info_save_fail">, your User Info Settings have not been successfully saved.</string>
+    <string name="user_info_save_success">Your User Info Settings have been successfully saved.</string>
+    <string name="user_info_save_fail">Your User Info Settings have not been successfully saved.</string>
 
     <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
     <string name="search_input_hint">Enter a worker\'s name or a site\'s ID</string>

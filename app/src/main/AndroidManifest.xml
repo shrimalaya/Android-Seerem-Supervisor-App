@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.UIPreferencesActivity"></activity>
+        <activity android:name=".UI.UIPreferencesActivity" />
         <activity android:name=".UI.testDatabaseActivity" />
         <activity android:name=".UI.SensorsUsageActivity"></activity>
 
@@ -27,12 +27,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".UI.testDatabaseActivity" />
         <activity android:name=".UI.WorkerInfoActivity" />
         <activity android:name=".UI.UserInfoActivity" />
         <activity android:name=".UI.MainActivity" />
-        <activity android:name=".UI.CommunicationActivity" />
-        <activity android:name=".UI.SiteMapActivity" />
         <activity android:name=".UI.CommunicationActivity" />
         <activity
             android:name=".UI.SiteMapActivity"
