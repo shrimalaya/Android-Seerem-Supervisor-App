@@ -1,8 +1,12 @@
 package com.example.supervisor_seerem.UI;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.emergency.EmergencyNumber;
 import android.util.Log;
@@ -14,10 +18,23 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.Supervisor;
 import com.example.supervisor_seerem.model.database.SupervisorDatabase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class allows the user to enter an save their personal info, and go UIPreferencesActivity and
@@ -34,13 +51,22 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     EditText emergencyContactNumberInput;
     RadioGroup emergencyContactTypes;
     String chosenEmergencyContactType;
+    FirebaseAuth firebaseAuthentication;
 
     SupervisorDatabase supervisorDatabase;
+    private FirebaseFirestore database = FirebaseFirestore.getInstance();
+    private CollectionReference mWorksitesRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION);
+    private String currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+
+        // The username saved from sharedPreference will become the name
+        // Of the document.
+        SharedPreferences sharedPrefs = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
+        currentUser = sharedPrefs.getString("username", null);
 
         firstNameInput = findViewById(R.id.editFirstName);
         lastNameInput = findViewById(R.id.editLastName);
@@ -50,6 +76,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         emergencyContactTypes = findViewById(R.id.radioContactType);
         emergencyContactNumberInput = findViewById(R.id.editEmergencyNumber);
 
+        firebaseAuthentication = FirebaseAuth.getInstance();
         supervisorDatabase = new SupervisorDatabase(this);
 
         Button goToUIPreferences = (Button) findViewById(R.id.buttonUIPreferences);
@@ -60,6 +87,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         saveUserInfo.setOnClickListener(this);
         goToWorkSite.setOnClickListener(this);
 
+        // TODO: Get user data from Cloud if it exists to autofill options during onCreate()
+
         emergencyContactTypes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -68,7 +97,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 Toast.makeText(getApplicationContext(), chosenEmergencyContactType, Toast.LENGTH_LONG).show();
             }
         });
-        List<RadioButton> contactRadioButtons = new ArrayList<>();
     }
 
     private boolean areAnyInputsEmpty(String[] inputs){
@@ -103,22 +131,36 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             int rowsDeleted = supervisorDatabase.wipeData();
             Log.i("Rows deleted", ""+ rowsDeleted);
 
-            long result = supervisorDatabase.insertSupervisorData(firstName, lastName,
-                    id, medicalConsiderations, chosenEmergencyContactType,
-                    Integer.parseInt(emergencyContactNumberInput.getText().toString()),
-                    emergencyContactName);
-            // For testing ---
-            // the database returns -1 if an error occured.
-            if (result < 0) {
-                Toast.makeText(this, "data not inserted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "data inserted!", Toast.LENGTH_SHORT).show();
-            }
+            // Refer to the collection for storing Supervisors.
+            // Within that collection, create a document named after  the user_id
+            // If such a document already exists, its contents will be overwritten with the new contents
+            // Otherwise, the next line will create appropriately named username.
+            DocumentReference supervisorDocRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION).document(currentUser);
+            Map<String,Object> user = new HashMap<>();
+            user.put(CONSTANTS.FIRST_NAME_KEY, firstName);
+            user.put(CONSTANTS.LAST_NAME_KEY, lastName);
+            user.put(CONSTANTS.ID_KEY, id);
+            user.put(CONSTANTS.MEDICAL_CONDITIONS_KEY, medicalConsiderations);
+            user.put(CONSTANTS.RELATIONSHIP_KEY, chosenEmergencyContactType);
+            user.put(CONSTANTS.EMERGENCY_CONTACT_KEY, emergencyContactNumber);
+            user.put(CONSTANTS.EMERGENCY_NAME_KEY, emergencyContactName);
+            supervisorDocRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(getApplicationContext(), getText(R.string.user_info_save_success), Toast.LENGTH_LONG).show();
+                }
+            });
+            supervisorDocRef.set(user).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), getText(R.string.user_info_save_fail), Toast.LENGTH_LONG).show();
+                    Log.i("onFailure()", e.toString());
+                }
+            });
         }
-        // ---
     }
 
-    // Changed settings will not be saved unless the user explicitly saves the info.
+    // Changed settings will not be saved unless the user clicks the save button
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.buttonUIPreferences){
