@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
-import com.example.supervisor_seerem.model.Supervisor;
-import com.example.supervisor_seerem.model.database.SupervisorDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -103,8 +101,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         getUserData(new UserSupervisorCallback() {
             @Override
             public void onCallback(DocumentSnapshot doc) {
-                Toast.makeText(getApplicationContext(), doc.getString(CONSTANTS.FIRST_NAME_KEY),
-                        Toast.LENGTH_LONG).show();
                 String savedFirstName = doc.getString(CONSTANTS.FIRST_NAME_KEY);
                 String savedLastName = doc.getString(CONSTANTS.LAST_NAME_KEY);
                 String savedID = doc.getString(CONSTANTS.ID_KEY);
@@ -172,7 +168,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    SupervisorDatabase supervisorDatabase;
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
     private CollectionReference mWorksitesRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION);
     private String currentUser;
@@ -200,7 +195,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         emergencyTypeFriend = findViewById(R.id.radio_friend);
 
         firebaseAuthentication = FirebaseAuth.getInstance();
-        supervisorDatabase = new SupervisorDatabase(this);
 
         Button goToUIPreferences = (Button) findViewById(R.id.buttonUIPreferences);
         Button saveUserInfo = (Button) findViewById(R.id.buttonSaveUserInfo);
@@ -252,8 +246,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this,getText(R.string.error_userinfo_incomplete), Toast.LENGTH_LONG).show();
         }else{
             //Remove original
-            int rowsDeleted = supervisorDatabase.wipeData();
-            Log.i("Rows deleted", ""+ rowsDeleted);
 
             // Refer to the collection for storing Supervisors.
             // Within that collection, create a document named after the user_id
