@@ -189,7 +189,6 @@
                     android:textColor="@color/seerem_logo_colour"
                     android:textSize="20dp"
                     android:fontFamily="monospace"
-                    android:checked="true"
                     android:layout_gravity="center"/>
 
 

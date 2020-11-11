@@ -24,6 +24,7 @@ import com.example.supervisor_seerem.model.database.SupervisorDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -53,6 +54,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     EditText emergencyContactNameInput;
     EditText emergencyContactNumberInput;
     RadioGroup emergencyContactTypes;
+    RadioButton emergencyTypeFamily;
+    RadioButton emergencyTypeFriend;
     String chosenEmergencyContactType;
     FirebaseAuth firebaseAuthentication;
 
@@ -61,6 +64,71 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     public static Intent launchUserInfoIntent(Context context) {
         Intent userInfoIntent = new Intent(context, UserInfoActivity.class);
         return userInfoIntent;
+    }
+
+
+    //Retrieve data
+//
+//    private void retrieveData(){
+//        getUserData(new UserSupervisorCalback(){
+//
+//        }
+//    }
+
+    // As in SiteInfoActivity, this is an async task so checking for/retrieving from the appropriate
+    // Supervisor document must be waited for before moving forward.
+    public void getUserData(final UserInfoActivity.UserSupervisorCallback callback) {
+        DocumentReference supervisorDocRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION).document(currentUser);
+
+        supervisorDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()) {
+                        callback.onCallback(doc);
+                    }else{
+                        Toast.makeText(getApplicationContext(), getText(R.string.new_user_prompt),
+                                Toast.LENGTH_LONG).show();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "OOPS!",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void retrieveData(){
+        getUserData(new UserSupervisorCallback() {
+            @Override
+            public void onCallback(DocumentSnapshot doc) {
+                Toast.makeText(getApplicationContext(), doc.getString(CONSTANTS.FIRST_NAME_KEY),
+                        Toast.LENGTH_LONG).show();
+                String savedFirstName = doc.getString(CONSTANTS.FIRST_NAME_KEY);
+                String savedLastName = doc.getString(CONSTANTS.LAST_NAME_KEY);
+                String savedID = doc.getString(CONSTANTS.ID_KEY);
+                String savedMedicalConsiderations = doc.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY);
+                String savedEmergencyContactType = doc.getString(CONSTANTS.RELATIONSHIP_KEY);
+                String savedEmergencyContactNumber = doc.getString(CONSTANTS.EMERGENCY_CONTACT_KEY);
+                String savedEmergencyContactName = doc.getString(CONSTANTS.EMERGENCY_NAME_KEY);
+
+                firstNameInput.setText(savedFirstName);
+                lastNameInput.setText(savedLastName);
+                idInput.setText(savedID);
+                medicalConsiderationsInput.setText(savedMedicalConsiderations);
+                emergencyContactNameInput.setText(savedEmergencyContactName);
+                //emergencyContactTypes = findViewById(R.id.radioContactType);
+                emergencyContactNumberInput.setText(savedEmergencyContactNumber);
+                    if (savedEmergencyContactType.equals("Family")) {
+                        emergencyTypeFamily.setChecked(true);
+                        emergencyTypeFriend.setChecked(false);
+                    } else if (savedEmergencyContactType.equals("Friend")) {
+                        emergencyTypeFriend.setChecked(true);
+                        emergencyTypeFamily.setChecked(false);
+                    }
+                }
+        });
     }
 
     private void setupNavigationBar() {
@@ -119,6 +187,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         // Of the document.
         SharedPreferences sharedPrefs = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
         currentUser = sharedPrefs.getString("username", null);
+        retrieveData();
 
         firstNameInput = findViewById(R.id.editFirstName);
         lastNameInput = findViewById(R.id.editLastName);
@@ -127,6 +196,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         emergencyContactNameInput = findViewById(R.id.editEmergencyContactName);
         emergencyContactTypes = findViewById(R.id.radioContactType);
         emergencyContactNumberInput = findViewById(R.id.editEmergencyNumber);
+        emergencyTypeFamily = findViewById(R.id.radio_family);
+        emergencyTypeFriend = findViewById(R.id.radio_friend);
 
         firebaseAuthentication = FirebaseAuth.getInstance();
         supervisorDatabase = new SupervisorDatabase(this);
@@ -147,9 +218,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
                 chosenEmergencyContactType = selectedRadioButton.getText().toString();
-                Toast.makeText(getApplicationContext(), chosenEmergencyContactType, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), chosenEmergencyContactType, Toast.LENGTH_LONG).show();
             }
         });
+
     }
 
     private boolean areAnyInputsEmpty(String[] inputs){
@@ -179,13 +251,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         if(!areAnyInputsEmpty(inputs)){
             Toast.makeText(this,getText(R.string.error_userinfo_incomplete), Toast.LENGTH_LONG).show();
         }else{
-
             //Remove original
             int rowsDeleted = supervisorDatabase.wipeData();
             Log.i("Rows deleted", ""+ rowsDeleted);
 
             // Refer to the collection for storing Supervisors.
-            // Within that collection, create a document named after  the user_id
+            // Within that collection, create a document named after the user_id
             // If such a document already exists, its contents will be overwritten with the new contents
             // Otherwise, the next line will create appropriately named username.
             DocumentReference supervisorDocRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION).document(currentUser);
@@ -223,5 +294,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }else if(view.getId() == R.id.buttonSiteMap){
             startActivity(new Intent(getBaseContext(), SiteInfoActivity.class));
         }
+    }
+
+    private interface UserSupervisorCallback{
+        void onCallback(DocumentSnapshot doc);
     }
 }
