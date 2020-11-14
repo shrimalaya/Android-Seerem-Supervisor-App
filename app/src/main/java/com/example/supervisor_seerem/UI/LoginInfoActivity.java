@@ -44,20 +44,21 @@ public class LoginInfoActivity extends AppCompatActivity {
 
     private void checkInputs() {
         String usernameToCheck = usernameInput.getText().toString();
-        String passworkToCheck = passwordInput.getText().toString();
-        if (usernameToCheck.isEmpty() || passworkToCheck.isEmpty()) {
+        String passwordToCheck = passwordInput.getText().toString();
+        if (usernameToCheck.isEmpty() || passwordToCheck.isEmpty()) {
             if (usernameToCheck.isEmpty()) {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.error_no_username), Toast.LENGTH_LONG).show();
             }
-            if (passworkToCheck.isEmpty()) {
+            if (passwordToCheck.isEmpty()) {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.error_no_password), Toast.LENGTH_LONG).show();
             }
         } else {
 
 
-            Intent toUserInfo = new Intent(this, UserInfoActivity.class);
+//            Intent toUserInfo = new Intent(this, UserInfoActivity.class);
+            Intent siteInfoIntent = SiteInfoActivity.launchSiteInfoIntent(LoginInfoActivity.this);
 
             SharedPreferences loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
             String savedUsername = loginSharedPreferences.getString("username", null);
@@ -69,15 +70,15 @@ public class LoginInfoActivity extends AppCompatActivity {
                 // API suggested apply() instead of commit() to do this storage in the background
                 // instead of immediately.
                 editor.putString("username", usernameToCheck);
-                    editor.putString("password", passworkToCheck);
+                    editor.putString("password", passwordToCheck);
                 editor.apply();
-                startActivity(toUserInfo);
+                startActivity(siteInfoIntent);
             } else {// The Username has been stored but the Password is wrong.
-                if (savedUsername.equals(usernameToCheck) && !savedpassword.equals(passworkToCheck)){
+                if (savedUsername.equals(usernameToCheck) && !savedpassword.equals(passwordToCheck)){
                     Toast.makeText(getApplicationContext(),
                             getString(R.string.error_wrong_password), Toast.LENGTH_LONG).show();
-                } else if (savedUsername.equals(usernameToCheck) && savedpassword.equals(passworkToCheck)) {
-                    startActivity(toUserInfo);
+                } else if (savedUsername.equals(usernameToCheck) && savedpassword.equals(passwordToCheck)) {
+                    startActivity(siteInfoIntent);
                 }
             }
         }

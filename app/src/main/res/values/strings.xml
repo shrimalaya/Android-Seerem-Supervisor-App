@@ -23,4 +23,19 @@
     <string name="emergency_contact_type_friend">Friend</string>
     <string name="go_to_ui_preferences_button">UI Preferences</string>
     <string name="go_to_worksite">Worksite(s)</string>
+    <string name="save_user_info_button">Save User Info</string>
+    <string name="error_userinfo_incomplete">All parts of your User Info must be filled before they can be saved.</string>
+    <string name="user_info_save_success">Your User Info Settings have been successfully saved.</string>
+    <string name="user_info_save_fail">Your User Info Settings have not been successfully saved.</string>
+    <string name="new_user_prompt">Welcome! Please input and submit the information described here for use at SEEDA.</string>
+    <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
+    <string name="search_input_hint">Enter a worker\'s name or a site\'s ID</string>
+
+
+    <string name="worker_navigation_bar_text">Worker</string>
+    <string name="site_navigation_bar_text">Sites</string>
+    <string name="map_navigation_bar_text">Map</string>
+    <string name="sensor_navigation_bar_text">Sensors</string>
+    <string name="user_navigation_bar_text">Me</string>
+
 </resources>
