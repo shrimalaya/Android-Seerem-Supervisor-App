@@ -3,6 +3,8 @@ package com.example.supervisor_seerem.model;
 public class CONSTANTS {
     public static final String USER_SUPERVISOR = "supervisor";
     public static String USER_ID = "";
+    public static String USER_COMPANY = "";
+
 
     public static final String WORKERS_COLLECTION = "workers";
     public static final String WORKSITES_COLLECTION = "worksites";
@@ -18,11 +20,11 @@ public class CONSTANTS {
     public static final String WORKSITE_ID_KEY = "WORKSITE_ID";
     public static final String PROJECT_ID_KEY = "PROJECT_ID";
 
+    public static final String SUPERVISOR_ID_KEY = "SUPERVISOR_ID";
     public static final String HSE_LINK_KEY = "HSE_LINK";
     public static final String LOCATION_KEY = "LOCATION";
     public static final String MASTERPOINT_KEY = "MASTERPOINT";
     public static final String SKILLS_KEY = "SKILLS";
-    public static final String SUPERVISOR_OR_COMPANY_KEY = "SUPERVISOR_OR_COMPANY";
     public static final String OPERATION_HRS_KEY = "OPERATION_HRS";
 
     public static final String BLOOD_GROUP_KEY = "BLOOD_GRP";

@@ -14,17 +14,21 @@ public class Worker {
     private String employeeID;
     private String supervisorID;
     private String worksiteID;
-    private List<String> skills = new ArrayList<>();
+    private String companyID;
+    private ModelLocation location;
+    private List<String> skills;
 
     // Parameterized Constructor
-    public Worker(String firstName, String lastName, String employeeID, String supervisorID,
-                  String worksiteID, List<String> skills) {
+    public Worker(String employeeID, String firstName, String lastName, String supervisorID,
+                  String worksiteID, String companyID, ModelLocation location, List<String> skills) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.employeeID = employeeID;
         this.supervisorID = supervisorID;
         this.worksiteID = worksiteID;
+        this.companyID = companyID;
         this.skills = skills;
+        this.location = location;
     }
 
     // Getters
@@ -71,5 +75,9 @@ public class Worker {
                 ", worksiteID='" + worksiteID + '\'' +
                 ", skills=" + skills +
                 '}';
+    }
+
+    public ModelLocation getLocation() {
+        return location;
     }
 }

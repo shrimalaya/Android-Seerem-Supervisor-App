@@ -95,7 +95,9 @@ public class SiteInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_site_info);
 
         setupNavigationBar();
-        mRecycler = (RecyclerView) findViewById(R.id.siteInfoRecyclerView);
+
+
+        mRecycler = findViewById(R.id.siteInfoRecyclerView);
 
         // TODO: repopulate online database and set the key as employee_id (SP0001, SP0002, etc)
         CONSTANTS.USER_ID = "sladha";
@@ -208,7 +210,7 @@ public class SiteInfoActivity extends AppCompatActivity {
 
                 if(showAllSites) {
                     showAllSites = false;
-                    displayAllOrSelectedSites.setText("Your Worksites");
+                    displayAllOrSelectedSites.setText("Assigned Worksites");
                     item.setTitle("Display All Worksites");
                 } else {
                     showAllSites = true;
