@@ -107,6 +107,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                                 , user.getString(CONSTANTS.LAST_NAME_KEY), user.getString(CONSTANTS.COMPANY_ID_KEY)));
 
                         startActivity(toUserInfo);
+                        break;
                     }
                 }
 
