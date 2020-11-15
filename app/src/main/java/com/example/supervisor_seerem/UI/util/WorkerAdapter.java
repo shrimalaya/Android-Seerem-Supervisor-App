@@ -1,4 +1,4 @@
-package com.example.supervisor_seerem.model;
+package com.example.supervisor_seerem.UI.util;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.ModelLocation;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
