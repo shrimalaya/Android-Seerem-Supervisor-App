@@ -18,7 +18,13 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.model.Availability;
 import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.Contact;
+import com.example.supervisor_seerem.model.Emergency;
+import com.example.supervisor_seerem.model.Site;
+import com.example.supervisor_seerem.model.Supervisor;
+import com.example.supervisor_seerem.model.Worker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +48,13 @@ import java.util.Map;
  * @Author Michael Mora
  */
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private List<Worker> workers;
+    private List<Site> sites;
+    private List<Supervisor> supervisors;
+    private List<Emergency> emergencyInfo;
+    private List<Contact> contacts;
+    private List<Availability> availabilities;
 
     // Storing of data in Cloud Firebase guided by SmallAcademy @https://www.youtube.com/watch?v=RiHGwJ_u27k
 
@@ -290,5 +303,14 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private interface UserSupervisorCallback{
         void onCallback(DocumentSnapshot doc);
+    }
+
+    private interface AllDataCallback{
+        void onCallback(DocumentSnapshot supervisor, DocumentSnapshot workers, DocumentSnapshot sites,
+                        DocumentSnapshot availability, DocumentSnapshot contacts, DocumentSnapshot emergencyInfo);
+    }
+
+    private void getAlldata(AllDataCallback callback) {
+
     }
 }

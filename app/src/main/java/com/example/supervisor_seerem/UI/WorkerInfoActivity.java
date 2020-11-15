@@ -6,17 +6,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.view.MenuItem;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.Worker;
-import com.example.supervisor_seerem.model.WorkerAdapter;
+import com.example.supervisor_seerem.UI.util.WorkerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,9 +24,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.example.supervisor_seerem.model.Worker;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.auth.User;
 
 public class WorkerInfoActivity extends AppCompatActivity {
 

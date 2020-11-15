@@ -1,19 +1,12 @@
-package com.example.supervisor_seerem.model;
-
-import android.os.Build;
+package com.example.supervisor_seerem.model.managers;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
+
+import com.example.supervisor_seerem.model.Worker;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Singleton class
