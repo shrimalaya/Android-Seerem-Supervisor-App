@@ -25,6 +25,7 @@ import com.example.supervisor_seerem.model.Emergency;
 import com.example.supervisor_seerem.model.Site;
 import com.example.supervisor_seerem.model.Supervisor;
 import com.example.supervisor_seerem.model.Worker;
+import com.example.supervisor_seerem.model.managers.DocumentManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,7 +49,8 @@ import java.util.Map;
  * @Author Michael Mora
  */
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
-
+    FirebaseFirestore mRef = FirebaseFirestore.getInstance();
+    private DocumentManager manager = DocumentManager.getInstance();
     private List<Worker> workers;
     private List<Site> sites;
     private List<Supervisor> supervisors;
@@ -305,12 +307,138 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         void onCallback(DocumentSnapshot doc);
     }
 
-    private interface AllDataCallback{
-        void onCallback(DocumentSnapshot supervisor, DocumentSnapshot workers, DocumentSnapshot sites,
-                        DocumentSnapshot availability, DocumentSnapshot contacts, DocumentSnapshot emergencyInfo);
-    }
-
-    private void getAlldata(AllDataCallback callback) {
-
-    }
 }
+
+
+
+/*
+    private interface DocListCallback{
+        void onCallback(List<DocumentSnapshot> docs);
+    }
+
+    private void retrieveAllData() {
+        getSupervisorData(new DocListCallback() {
+            @Override
+            public void onCallback(List<DocumentSnapshot> docs) {
+                manager.setSupervisors(docs);
+
+                getEmergencyData(new DocListCallback() {
+                    @Override
+                    public void onCallback(List<DocumentSnapshot> docs) {
+                        manager.setEmergencyInfo(docs);
+
+                        getContactData(new DocListCallback() {
+                            @Override
+                            public void onCallback(List<DocumentSnapshot> docs) {
+                                manager.setContacts(docs);
+
+                                getWorkersData(new DocListCallback() {
+                                    @Override
+                                    public void onCallback(List<DocumentSnapshot> docs) {
+                                        manager.setWorkers(docs);
+                                    }
+                                });
+
+                                getAvailabilityData(new DocListCallback() {
+                                    @Override
+                                    public void onCallback(List<DocumentSnapshot> docs) {
+                                        manager.setAvailabilities(docs);
+                                    }
+                                });
+
+                                getSitesData(new DocListCallback() {
+                                    @Override
+                                    public void onCallback(List<DocumentSnapshot> docs) {
+                                        manager.setSites(docs);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    private void getSupervisorData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
+                .whereEqualTo(CONSTANTS.ID_KEY, CONSTANTS.USER_ID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
+
+    private void getWorkersData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.WORKERS_COLLECTION)
+                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, CONSTANTS.USER_COMPANY)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
+
+    private void getSitesData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
+                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, CONSTANTS.USER_COMPANY)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
+
+    private void getAvailabilityData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.AVAILABILITY_COLLECTION)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
+
+    private void getContactData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.CONTACT_INFO_COLLECTION)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
+
+    private void getEmergencyData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.EMERGENCY_INFO_COLLECTION)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
+
+     */

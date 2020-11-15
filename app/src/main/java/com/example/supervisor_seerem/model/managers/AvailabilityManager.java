@@ -2,14 +2,14 @@ package com.example.supervisor_seerem.model.managers;
 
 import androidx.annotation.NonNull;
 
-import com.example.supervisor_seerem.model.Site;
+import com.example.supervisor_seerem.model.Availability;
 
 import java.util.Iterator;
 
-public class SiteManager implements Iterable<Site> {
+public class AvailabilityManager implements Iterable<Availability> {
     @NonNull
     @Override
-    public Iterator<Site> iterator() {
+    public Iterator<Availability> iterator() {
         return null;
     }
 }
