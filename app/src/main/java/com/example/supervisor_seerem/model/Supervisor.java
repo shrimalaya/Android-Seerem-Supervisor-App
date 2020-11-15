@@ -61,12 +61,11 @@ public class Supervisor {
         savedPassword = password;
     }
 
-    public Supervisor(String id, String firstName, String lastName, String company_id, String worksite_id) {
+    public Supervisor(String id, String firstName, String lastName, String company_id) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.company_id = company_id;
-        this.worksite_id = worksite_id;
     }
 
     private Supervisor(){}

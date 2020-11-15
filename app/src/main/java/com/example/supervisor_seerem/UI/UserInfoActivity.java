@@ -35,6 +35,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -304,71 +305,45 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         void onCallback(DocumentSnapshot doc);
     }
 
-}
-
-
-
-/*
     private interface DocListCallback{
         void onCallback(List<DocumentSnapshot> docs);
     }
 
     private void retrieveAllData() {
-        getSupervisorData(new DocListCallback() {
+        getEmergencyData(new DocListCallback() {
             @Override
             public void onCallback(List<DocumentSnapshot> docs) {
-                manager.setSupervisors(docs);
+                manager.setEmergencyInfo(docs);
 
-                getEmergencyData(new DocListCallback() {
+                getContactData(new DocListCallback() {
                     @Override
                     public void onCallback(List<DocumentSnapshot> docs) {
-                        manager.setEmergencyInfo(docs);
+                        manager.setContacts(docs);
 
-                        getContactData(new DocListCallback() {
+                        getWorkersData(new DocListCallback() {
                             @Override
                             public void onCallback(List<DocumentSnapshot> docs) {
-                                manager.setContacts(docs);
+                                manager.setWorkers(docs);
+                            }
+                        });
 
-                                getWorkersData(new DocListCallback() {
-                                    @Override
-                                    public void onCallback(List<DocumentSnapshot> docs) {
-                                        manager.setWorkers(docs);
-                                    }
-                                });
+                        getAvailabilityData(new DocListCallback() {
+                            @Override
+                            public void onCallback(List<DocumentSnapshot> docs) {
+                                manager.setAvailabilities(docs);
+                            }
+                        });
 
-                                getAvailabilityData(new DocListCallback() {
-                                    @Override
-                                    public void onCallback(List<DocumentSnapshot> docs) {
-                                        manager.setAvailabilities(docs);
-                                    }
-                                });
-
-                                getSitesData(new DocListCallback() {
-                                    @Override
-                                    public void onCallback(List<DocumentSnapshot> docs) {
-                                        manager.setSites(docs);
-                                    }
-                                });
+                        getSitesData(new DocListCallback() {
+                            @Override
+                            public void onCallback(List<DocumentSnapshot> docs) {
+                                manager.setSites(docs);
                             }
                         });
                     }
                 });
             }
         });
-    }
-
-    private void getSupervisorData(final DocListCallback callback) {
-        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
-                .whereEqualTo(CONSTANTS.ID_KEY, CONSTANTS.USER_ID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isComplete()) {
-                            callback.onCallback(task.getResult().getDocuments());
-                        }
-                    }
-                });
     }
 
     private void getWorkersData(final DocListCallback callback) {
@@ -438,4 +413,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 });
     }
 
-     */
+
+}
+
+
+

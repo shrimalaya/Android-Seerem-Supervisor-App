@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.DocumentManager;
 import com.example.supervisor_seerem.model.Worker;
 import com.example.supervisor_seerem.UI.util.WorkerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,6 +32,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
 
     private String USER_ID;
     private String USER_COMPANY;
+    private DocumentManager manager = DocumentManager.getInstance();
 
     private WorkerAdapter mAdapter;
     private RecyclerView mRecycler;
@@ -120,41 +122,16 @@ public class WorkerInfoActivity extends AppCompatActivity {
     }
 
     private void retrieveData() {
-        getAllData(new AllDataCallback() {
-            @Override
-            public void onCallback(List<DocumentSnapshot> docs) {
-                mAllDocs = new ArrayList<>();
-                mAllDocs.addAll(docs);
-
-                mUserDocs = new ArrayList<>();
-                for (DocumentSnapshot doc: docs) {
-                    if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
-                        mUserDocs.add(doc);
-                    }
-                }
-                displayData();
+        mAllDocs.clear();
+        mAllDocs.addAll(manager.getWorkers());
+        mUserDocs = new ArrayList<>();
+        for (DocumentSnapshot doc: mAllDocs) {
+            if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
+                mUserDocs.add(doc);
             }
-        });
+        }
+        displayData();
     }
-
-    private interface AllDataCallback {
-        void onCallback(List<DocumentSnapshot> docs);
-    }
-
-    private void getAllData(final AllDataCallback callback) {
-        mCollection
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, USER_COMPANY)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isComplete()) {
-                            callback.onCallback(task.getResult().getDocuments());
-                        }
-                    }
-                });
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,23 +147,18 @@ public class WorkerInfoActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case (R.id.menu_worker_refresh):
-                getAllData(new WorkerInfoActivity.AllDataCallback() {
-                    @Override
-                    public void onCallback(List<DocumentSnapshot> docs) {
-                        mAllDocs.clear();
-                        mAllDocs.addAll(docs);
-
-                        mUserDocs = new ArrayList<>();
-                        for (DocumentSnapshot doc: docs) {
-                            if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
-                                mUserDocs.add(doc);
-                            }
-                        }
-
-                        updateDisplaySites();
-                        mAdapter.notifyDataSetChanged();
+                manager.retrieveAllData();
+                mAllDocs.clear();
+                mAllDocs.addAll(manager.getWorkers());
+                mUserDocs = new ArrayList<>();
+                for (DocumentSnapshot doc: mAllDocs) {
+                    if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
+                        mUserDocs.add(doc);
                     }
-                });
+                }
+
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
                 return true;
 
             case (R.id.menu_worker_display_filter):
@@ -217,18 +189,39 @@ public class WorkerInfoActivity extends AppCompatActivity {
     }
 }
 
-//        Test Code
-//        Intent intent = new Intent(this, SiteInfoActivity.class);
-//        startActivity(intent);
-
-//        List<String> skills = new ArrayList<>();
-//        skills.add("Electrical");
-//        skills.add("Civil");
-//        skills.add("Hardware");
-//        Collections.sort(skills);
-
-//        mList.add(new Worker("WK0001", "Srimalaya", "Ladha", "SP0001",
-//                "WS0001", "CP0001", new ModelLocation(49.1887, 122.8459), skills));
-//        mAdapter = new WorkerAdapter(mList);
-//        mRecycler.setAdapter(mAdapter);
-
+////        OLD Code
+//private void retrieveData() {
+//    getAllData(new AllDataCallback() {
+//        @Override
+//        public void onCallback(List<DocumentSnapshot> docs) {
+//            mAllDocs = new ArrayList<>();
+//            mAllDocs.addAll(docs);
+//
+//            mUserDocs = new ArrayList<>();
+//            for (DocumentSnapshot doc: docs) {
+//                if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
+//                    mUserDocs.add(doc);
+//                }
+//            }
+//            displayData();
+//        }
+//    });
+//}
+//
+//private interface AllDataCallback {
+//    void onCallback(List<DocumentSnapshot> docs);
+//}
+//
+//    private void getAllData(final WorkerInfoActivity.AllDataCallback callback) {
+//        mCollection
+//                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, USER_COMPANY)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isComplete()) {
+//                            callback.onCallback(task.getResult().getDocuments());
+//                        }
+//                    }
+//                });
+//    }

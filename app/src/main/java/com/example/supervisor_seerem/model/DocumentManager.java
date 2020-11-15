@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class DocumentManager implements Iterable<DocumentSnapshot> {
+public class DocumentManager {
     FirebaseFirestore mRef = FirebaseFirestore.getInstance();
     private List<DocumentSnapshot> workers = new ArrayList<>();
     private List<DocumentSnapshot> sites = new ArrayList<>();
@@ -20,6 +20,16 @@ public class DocumentManager implements Iterable<DocumentSnapshot> {
     private List<DocumentSnapshot> emergencyInfo = new ArrayList<>();
     private List<DocumentSnapshot> contacts = new ArrayList<>();
     private List<DocumentSnapshot> availabilities = new ArrayList<>();
+
+    private Supervisor currentUser;
+
+    public Supervisor getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(Supervisor currentUser) {
+        this.currentUser = currentUser;
+    }
 
     private DocumentManager() {
         // do nothing (to prevent object instantiation)
@@ -91,12 +101,9 @@ public class DocumentManager implements Iterable<DocumentSnapshot> {
         this.availabilities.addAll(availabilities);
     }
 
-    @NonNull
-    @Override
-    public Iterator<DocumentSnapshot> iterator() {
-        return null;
-    }
+    //TODO: The ASYNC Task may not complete in time for activities to repopulate
 
+    // data callback for async task
     private interface DocListCallback {
         void onCallback(List<DocumentSnapshot> docs);
     }
