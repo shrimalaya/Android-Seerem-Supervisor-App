@@ -1,15 +1,7 @@
-package com.example.supervisor_seerem.model.managers;
+package com.example.supervisor_seerem.model;
 
 import androidx.annotation.NonNull;
 
-import com.example.supervisor_seerem.UI.UserInfoActivity;
-import com.example.supervisor_seerem.model.Availability;
-import com.example.supervisor_seerem.model.CONSTANTS;
-import com.example.supervisor_seerem.model.Contact;
-import com.example.supervisor_seerem.model.Emergency;
-import com.example.supervisor_seerem.model.Site;
-import com.example.supervisor_seerem.model.Supervisor;
-import com.example.supervisor_seerem.model.Worker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
