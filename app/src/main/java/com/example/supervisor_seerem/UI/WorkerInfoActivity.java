@@ -30,17 +30,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class WorkerInfoActivity extends AppCompatActivity {
 
-    private String USER_ID;
-    private String USER_COMPANY;
     private DocumentManager manager = DocumentManager.getInstance();
 
     private WorkerAdapter mAdapter;
     private RecyclerView mRecycler;
-    CollectionReference mCollection = FirebaseFirestore.getInstance().collection(CONSTANTS.WORKERS_COLLECTION);
 
     private List<Worker> mList = new ArrayList<>();
-    private List<DocumentSnapshot> mAllDocs;
-    private List<DocumentSnapshot> mUserDocs;
+    private List<DocumentSnapshot> mAllDocs = new ArrayList<>();
+    private List<DocumentSnapshot> mUserDocs = new ArrayList<>();
     private List<DocumentSnapshot> mShowDocs = new ArrayList<>();
 
     private Boolean showAllWorkers = false;
@@ -96,16 +93,23 @@ public class WorkerInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker_info);
 
+        setupNavigationBar();
         mRecycler = findViewById(R.id.workerInfoRecycler);
 
-        USER_ID = "SP0001";
-        USER_COMPANY = "CP0002";
-
-        retrieveData();
-        setupNavigationBar();
+        displayData();
     }
 
     private void updateDisplaySites() {
+        mAllDocs.clear();
+        mAllDocs.addAll(manager.getWorkers());
+
+        mUserDocs = new ArrayList<>();
+        for (DocumentSnapshot doc: manager.getWorkers()) {
+            if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(manager.getCurrentUser().getId())) {
+                mUserDocs.add(doc);
+            }
+        }
+
         if(showAllWorkers) {
             mShowDocs.clear();
             mShowDocs.addAll(mAllDocs);
@@ -117,20 +121,14 @@ public class WorkerInfoActivity extends AppCompatActivity {
 
     public void displayData() {
         updateDisplaySites();
-        mAdapter = new WorkerAdapter(mShowDocs);
-        mRecycler.setAdapter(mAdapter);
-    }
 
-    private void retrieveData() {
-        mAllDocs.clear();
-        mAllDocs.addAll(manager.getWorkers());
-        mUserDocs = new ArrayList<>();
-        for (DocumentSnapshot doc: mAllDocs) {
-            if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
-                mUserDocs.add(doc);
-            }
+        mAdapter = new WorkerAdapter(mShowDocs);
+
+        if (mAdapter == null) {
+            System.out.println("TEST1> Adapter null");
+        } else {
+            mRecycler.setAdapter(mAdapter);
         }
-        displayData();
     }
 
     @Override
@@ -148,14 +146,6 @@ public class WorkerInfoActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case (R.id.menu_worker_refresh):
                 manager.retrieveAllData();
-                mAllDocs.clear();
-                mAllDocs.addAll(manager.getWorkers());
-                mUserDocs = new ArrayList<>();
-                for (DocumentSnapshot doc: mAllDocs) {
-                    if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
-                        mUserDocs.add(doc);
-                    }
-                }
 
                 updateDisplaySites();
                 mAdapter.notifyDataSetChanged();
@@ -188,40 +178,3 @@ public class WorkerInfoActivity extends AppCompatActivity {
         }
     }
 }
-
-////        OLD Code
-//private void retrieveData() {
-//    getAllData(new AllDataCallback() {
-//        @Override
-//        public void onCallback(List<DocumentSnapshot> docs) {
-//            mAllDocs = new ArrayList<>();
-//            mAllDocs.addAll(docs);
-//
-//            mUserDocs = new ArrayList<>();
-//            for (DocumentSnapshot doc: docs) {
-//                if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
-//                    mUserDocs.add(doc);
-//                }
-//            }
-//            displayData();
-//        }
-//    });
-//}
-//
-//private interface AllDataCallback {
-//    void onCallback(List<DocumentSnapshot> docs);
-//}
-//
-//    private void getAllData(final WorkerInfoActivity.AllDataCallback callback) {
-//        mCollection
-//                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, USER_COMPANY)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isComplete()) {
-//                            callback.onCallback(task.getResult().getDocuments());
-//                        }
-//                    }
-//                });
-//    }

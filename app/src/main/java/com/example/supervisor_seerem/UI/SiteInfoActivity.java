@@ -100,9 +100,6 @@ public class SiteInfoActivity extends AppCompatActivity {
 
         mRecycler = findViewById(R.id.siteInfoRecyclerView);
 
-        // TODO: repopulate online database and set the key as employee_id (SP0001, SP0002, etc)
-        CONSTANTS.USER_ID = "sladha";
-
         retrieveData();
     }
 
@@ -118,9 +115,12 @@ public class SiteInfoActivity extends AppCompatActivity {
         mAllDocs.addAll(manager.getSites());
 
         mUserDocs = new ArrayList<>();
-        for (DocumentSnapshot doc: manager.getSites()) {
-            if(doc.getString(CONSTANTS.ID_KEY).equals(manager.getCurrentUser().getId())) {
-                mUserDocs.add(doc);
+        for (DocumentSnapshot site: manager.getSites()) {
+            for(DocumentSnapshot supervisor: manager.getSupervisors()) {
+                if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
+                    mUserDocs.add(site);
+                    System.out.println("TEST3> size of worksites user: " + mUserDocs.size());
+                }
             }
         }
         displayData();
@@ -140,6 +140,7 @@ public class SiteInfoActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case (R.id.refresh_site_info):
+                manager.retrieveAllData();
                 mAllDocs.clear();
                 mAllDocs.addAll(manager.getSites());
 
@@ -205,11 +206,7 @@ public class SiteInfoActivity extends AppCompatActivity {
         }
     }
 
-    private interface AllDataCallback {
-        void onCallback(List<DocumentSnapshot> docs);
-    }
-
-    private interface UserSupervisorCallback {
-        void onCallback(DocumentSnapshot doc);
+    private interface refreshCallback {
+        void onCallback();
     }
 }

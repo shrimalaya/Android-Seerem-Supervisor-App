@@ -39,7 +39,7 @@ public class LoginInfoActivity extends AppCompatActivity {
     private EditText usernameInput;
     private EditText passwordInput;
     private Button buttonLogin;
-    private FirebaseFirestore mRef = FirebaseFirestore.getInstance();
+    FirebaseFirestore mRef = FirebaseFirestore.getInstance();
     private DocumentManager manager = DocumentManager.getInstance();
     List<DocumentSnapshot> allSupervisors = new ArrayList<>();
 
@@ -58,6 +58,7 @@ public class LoginInfoActivity extends AppCompatActivity {
             public void onCallback(List<DocumentSnapshot> docs) {
                 allSupervisors.clear();
                 allSupervisors.addAll(docs);
+                System.out.println("TEST3> Size of allSupervisors = " + allSupervisors.size());
 
                 buttonLogin.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -105,6 +106,10 @@ public class LoginInfoActivity extends AppCompatActivity {
 
                         manager.setCurrentUser(new Supervisor(user.getString(CONSTANTS.ID_KEY), user.getString(CONSTANTS.FIRST_NAME_KEY)
                                 , user.getString(CONSTANTS.LAST_NAME_KEY), user.getString(CONSTANTS.COMPANY_ID_KEY)));
+                        CONSTANTS.USER_COMPANY = user.getString(CONSTANTS.COMPANY_ID_KEY);
+                        CONSTANTS.USER_ID = user.getString(CONSTANTS.ID_KEY);
+
+                        System.out.println("TEST3> New user id: " + manager.getCurrentUser().getFirstName());
 
                         startActivity(toUserInfo);
                         break;
@@ -120,7 +125,22 @@ public class LoginInfoActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             getString(R.string.error_wrong_password), Toast.LENGTH_LONG).show();
                 } else if (savedUsername.equals(usernameToCheck) && savedpassword.equals(passwordToCheck)) {
-                    startActivity(toUserInfo);
+                    DocumentSnapshot user = null;
+                    for(DocumentSnapshot doc: allSupervisors) {
+                        if (doc.get(CONSTANTS.ID_KEY).equals(usernameToCheck)) {
+                            user = doc;
+
+                            manager.setCurrentUser(new Supervisor(user.getString(CONSTANTS.ID_KEY), user.getString(CONSTANTS.FIRST_NAME_KEY)
+                                    , user.getString(CONSTANTS.LAST_NAME_KEY), user.getString(CONSTANTS.COMPANY_ID_KEY)));
+                            CONSTANTS.USER_COMPANY = user.getString(CONSTANTS.COMPANY_ID_KEY);
+                            CONSTANTS.USER_ID = user.getString(CONSTANTS.ID_KEY);
+
+                            System.out.println("TEST3> curr user id: " + manager.getCurrentUser().getId());
+
+                            startActivity(toUserInfo);
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -132,12 +152,15 @@ public class LoginInfoActivity extends AppCompatActivity {
     }
 
     private void getSupervisorData(final DocListCallback callback) {
-        mRef.collection(CONSTANTS.SUPERVISORS_COLLECTION)
+        mRef.collection("supervisors")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+
+                            System.out.println("TEST3> Size of allSupervisors = " + task.getResult().getDocuments().size());
+
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }

@@ -49,12 +49,6 @@ import java.util.Map;
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
     FirebaseFirestore mRef = FirebaseFirestore.getInstance();
     private DocumentManager manager = DocumentManager.getInstance();
-    private List<Worker> workers;
-    private List<Site> sites;
-    private List<Supervisor> supervisors;
-    private List<Emergency> emergencyInfo;
-    private List<Contact> contacts;
-    private List<Availability> availabilities;
 
     // Storing of data in Cloud Firebase guided by SmallAcademy @https://www.youtube.com/watch?v=RiHGwJ_u27k
 
@@ -70,74 +64,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     String chosenEmergencyContactType;
     FirebaseAuth firebaseAuthentication;
 
-    Button goToWorksites;
-
     public static Intent launchUserInfoIntent(Context context) {
         Intent userInfoIntent = new Intent(context, UserInfoActivity.class);
         return userInfoIntent;
-    }
-
-
-    //Retrieve data
-//
-//    private void retrieveData(){
-//        getUserData(new UserSupervisorCalback(){
-//
-//        }
-//    }
-
-    // As in SiteInfoActivity, this is an async task so checking for/retrieving from the appropriate
-    // Supervisor document must be waited for before moving forward.
-    public void getUserData(final UserInfoActivity.UserSupervisorCallback callback) {
-        DocumentReference supervisorDocRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION).document(currentUser);
-
-        supervisorDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    if(doc.exists()) {
-                        callback.onCallback(doc);
-                    }else{
-                        Toast.makeText(getApplicationContext(), getText(R.string.new_user_prompt),
-                                Toast.LENGTH_LONG).show();
-                    }
-                }else{
-                    Toast.makeText(getApplicationContext(), "OOPS!",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
-    private void retrieveData(){
-        getUserData(new UserSupervisorCallback() {
-            @Override
-            public void onCallback(DocumentSnapshot doc) {
-                String savedFirstName = doc.getString(CONSTANTS.FIRST_NAME_KEY);
-                String savedLastName = doc.getString(CONSTANTS.LAST_NAME_KEY);
-                String savedID = doc.getString(CONSTANTS.ID_KEY);
-                String savedMedicalConsiderations = doc.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY);
-                String savedEmergencyContactType = doc.getString(CONSTANTS.RELATIONSHIP_KEY);
-                String savedEmergencyContactNumber = doc.getString(CONSTANTS.EMERGENCY_CONTACT_KEY);
-                String savedEmergencyContactName = doc.getString(CONSTANTS.EMERGENCY_NAME_KEY);
-
-                firstNameInput.setText(savedFirstName);
-                lastNameInput.setText(savedLastName);
-                idInput.setText(savedID);
-                medicalConsiderationsInput.setText(savedMedicalConsiderations);
-                emergencyContactNameInput.setText(savedEmergencyContactName);
-                //emergencyContactTypes = findViewById(R.id.radioContactType);
-                emergencyContactNumberInput.setText(savedEmergencyContactNumber);
-                    if (savedEmergencyContactType.equals("Family")) {
-                        emergencyTypeFamily.setChecked(true);
-                        emergencyTypeFriend.setChecked(false);
-                    } else if (savedEmergencyContactType.equals("Friend")) {
-                        emergencyTypeFriend.setChecked(true);
-                        emergencyTypeFamily.setChecked(false);
-                    }
-                }
-        });
     }
 
     private void setupNavigationBar() {
@@ -182,8 +111,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
-    private CollectionReference mWorksitesRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION);
-    private String currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,8 +121,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         // The username saved from sharedPreference will become the name
         // Of the document.
         SharedPreferences sharedPrefs = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
-        currentUser = sharedPrefs.getString("username", null);
-        retrieveData();
 
         firstNameInput = findViewById(R.id.editFirstName);
         lastNameInput = findViewById(R.id.editLastName);
@@ -208,6 +133,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         emergencyTypeFriend = findViewById(R.id.radio_friend);
 
         firebaseAuthentication = FirebaseAuth.getInstance();
+
+        retrieveAllData();
 
         Button goToUIPreferences = (Button) findViewById(R.id.buttonUIPreferences);
         Button saveUserInfo = (Button) findViewById(R.id.buttonSaveUserInfo);
@@ -264,7 +191,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             // Within that collection, create a document named after the user_id
             // If such a document already exists, its contents will be overwritten with the new contents
             // Otherwise, the next line will create appropriately named username.
-            DocumentReference supervisorDocRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION).document(currentUser);
+            //TODO: Replace "sladha" in next line with an actual user key
+            DocumentReference supervisorDocRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION).document("sladha");
             Map<String,Object> user = new HashMap<>();
             user.put(CONSTANTS.FIRST_NAME_KEY, firstName);
             user.put(CONSTANTS.LAST_NAME_KEY, lastName);
@@ -301,43 +229,83 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private interface UserSupervisorCallback{
-        void onCallback(DocumentSnapshot doc);
-    }
 
     private interface DocListCallback{
         void onCallback(List<DocumentSnapshot> docs);
     }
 
     private void retrieveAllData() {
-        getEmergencyData(new DocListCallback() {
+        getSupervisorData(new DocListCallback() {
             @Override
             public void onCallback(List<DocumentSnapshot> docs) {
-                manager.setEmergencyInfo(docs);
+                manager.setSupervisors(docs);
 
-                getContactData(new DocListCallback() {
+                getEmergencyData(new DocListCallback() {
                     @Override
                     public void onCallback(List<DocumentSnapshot> docs) {
-                        manager.setContacts(docs);
+                        manager.setEmergencyInfo(docs);
 
-                        getWorkersData(new DocListCallback() {
-                            @Override
-                            public void onCallback(List<DocumentSnapshot> docs) {
-                                manager.setWorkers(docs);
+                        DocumentSnapshot userEmergencyInfo = null;
+                        for(DocumentSnapshot document: docs) {
+                            if(document.getString(CONSTANTS.ID_KEY).equals(manager.getCurrentUser().getId())) {
+                                userEmergencyInfo = document;
                             }
-                        });
+                        }
+                        if (userEmergencyInfo == null) {
+                            Toast.makeText(getApplicationContext(), getText(R.string.new_user_prompt),
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            String savedFirstName = manager.getCurrentUser().getFirstName();
+                            String savedLastName = manager.getCurrentUser().getLastName();
+                            String savedID = manager.getCurrentUser().getId();
+                            String savedMedicalConsiderations = userEmergencyInfo.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY);
+                            String savedEmergencyContactType = userEmergencyInfo.getString(CONSTANTS.RELATIONSHIP_KEY);
+                            String savedEmergencyContactNumber = userEmergencyInfo.getString(CONSTANTS.EMERGENCY_CONTACT_KEY);
+                            String savedEmergencyContactName = userEmergencyInfo.getString(CONSTANTS.EMERGENCY_NAME_KEY);
 
-                        getAvailabilityData(new DocListCallback() {
-                            @Override
-                            public void onCallback(List<DocumentSnapshot> docs) {
-                                manager.setAvailabilities(docs);
+                            firstNameInput.setText(savedFirstName);
+                            lastNameInput.setText(savedLastName);
+                            idInput.setText(savedID);
+                            medicalConsiderationsInput.setText(savedMedicalConsiderations);
+                            emergencyContactNameInput.setText(savedEmergencyContactName);
+                            //emergencyContactTypes = findViewById(R.id.radioContactType);
+                            emergencyContactNumberInput.setText(savedEmergencyContactNumber);
+                            if (savedEmergencyContactType.equals("Family")) {
+                                emergencyTypeFamily.setChecked(true);
+                                emergencyTypeFriend.setChecked(false);
+                            } else if (savedEmergencyContactType.equals("Friend")) {
+                                emergencyTypeFriend.setChecked(true);
+                                emergencyTypeFamily.setChecked(false);
                             }
-                        });
+                        }
 
-                        getSitesData(new DocListCallback() {
+
+
+                        getContactData(new DocListCallback() {
                             @Override
                             public void onCallback(List<DocumentSnapshot> docs) {
-                                manager.setSites(docs);
+                                manager.setContacts(docs);
+
+                                getWorkersData(new DocListCallback() {
+                                    @Override
+                                    public void onCallback(List<DocumentSnapshot> docs) {
+                                        manager.setWorkers(docs);
+                                    }
+                                });
+
+                                getAvailabilityData(new DocListCallback() {
+                                    @Override
+                                    public void onCallback(List<DocumentSnapshot> docs) {
+                                        manager.setAvailabilities(docs);
+                                    }
+                                });
+
+                                getSitesData(new DocListCallback() {
+                                    @Override
+                                    public void onCallback(List<DocumentSnapshot> docs) {
+                                        manager.setSites(docs);
+                                    }
+                                });
                             }
                         });
                     }
@@ -348,12 +316,13 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void getWorkersData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.WORKERS_COLLECTION)
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, CONSTANTS.USER_COMPANY)
+                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, manager.getCurrentUser().getCompany_id())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of workers = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -368,6 +337,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -381,6 +351,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of availability = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -394,6 +365,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of contacts = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -407,12 +379,27 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of emergency = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
                 });
     }
 
+    private void getSupervisorData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.SUPERVISORS_COLLECTION)
+                .whereEqualTo(CONSTANTS.ID_KEY, manager.getCurrentUser().getId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            System.out.println("TEST3> Size of supervisors = " + task.getResult().getDocuments().size());
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
 
 }
 
