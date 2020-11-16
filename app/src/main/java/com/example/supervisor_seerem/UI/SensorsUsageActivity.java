@@ -1,5 +1,6 @@
 package com.example.supervisor_seerem.UI;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,18 +49,21 @@ public class SensorsUsageActivity extends AppCompatActivity {
                     case R.id.workerNavigation:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SensorsUsageActivity.this);
                         startActivity(workerIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.siteNavigation:
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(SensorsUsageActivity.this);
                         startActivity(siteIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.mapNavigation:
                         Intent mapIntent = SiteMapActivity.launchMapIntent(SensorsUsageActivity.this);
                         startActivity(mapIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
@@ -70,12 +74,21 @@ public class SensorsUsageActivity extends AppCompatActivity {
                     case R.id.userNavigation:
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
                         startActivity(userIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.userNavigation);
     }
 
     @Override

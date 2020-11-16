@@ -1,5 +1,6 @@
 package com.example.supervisor_seerem.UI;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,6 +61,7 @@ public class SiteInfoActivity extends AppCompatActivity {
                     case R.id.workerNavigation:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteInfoActivity.this);
                         startActivity(workerIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
@@ -70,18 +72,21 @@ public class SiteInfoActivity extends AppCompatActivity {
                     case R.id.mapNavigation:
                         Intent mapIntent = SiteMapActivity.launchMapIntent(SiteInfoActivity.this);
                         startActivity(mapIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.sensorNavigation:
                         Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(SiteInfoActivity.this);
                         startActivity(sensorIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.userNavigation:
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(SiteInfoActivity.this);
                         startActivity(userIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
                 }
@@ -91,12 +96,19 @@ public class SiteInfoActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.userNavigation);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_info);
 
         setupNavigationBar();
-
 
         mRecycler = findViewById(R.id.siteInfoRecyclerView);
 

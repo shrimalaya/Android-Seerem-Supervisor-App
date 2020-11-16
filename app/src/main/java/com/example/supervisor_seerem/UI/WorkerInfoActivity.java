@@ -1,5 +1,6 @@
 package com.example.supervisor_seerem.UI;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,30 +63,42 @@ public class WorkerInfoActivity extends AppCompatActivity {
                     case R.id.siteNavigation:
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(WorkerInfoActivity.this);
                         startActivity(siteIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.mapNavigation:
                         Intent mapIntent = SiteMapActivity.launchMapIntent(WorkerInfoActivity.this);
                         startActivity(mapIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.sensorNavigation:
                         Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(WorkerInfoActivity.this);
                         startActivity(sensorIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.userNavigation:
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
                         startActivity(userIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.userNavigation);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.supervisor_seerem.UI;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -80,24 +81,28 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     case R.id.workerNavigation:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
                         startActivity(workerIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.siteNavigation:
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(UserInfoActivity.this);
                         startActivity(siteIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.mapNavigation:
                         Intent mapIntent = SiteMapActivity.launchMapIntent(UserInfoActivity.this);
                         startActivity(mapIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.sensorNavigation:
                         Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(UserInfoActivity.this);
                         startActivity(sensorIntent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
@@ -109,6 +114,13 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
 
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
 
