@@ -1,9 +1,9 @@
 package com.example.supervisor_seerem.model;
 
 public class CONSTANTS {
-    public static final String USER_SUPERVISOR = "supervisor";
-    public static String USER_ID = "";
-    public static String USER_COMPANY = "";
+    public static final String USER_POST = "supervisor";
+    public static String USER_ID = "00";
+    public static String USER_COMPANY = "00";
 
 
     public static final String WORKERS_COLLECTION = "workers";

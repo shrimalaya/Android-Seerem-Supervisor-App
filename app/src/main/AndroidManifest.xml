@@ -17,7 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".UI.UIPreferencesActivity" />
-        <activity android:name=".UI.testDatabaseActivity" />
         <activity android:name=".UI.SensorsUsageActivity"></activity>
 
         <meta-data
