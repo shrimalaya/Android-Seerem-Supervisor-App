@@ -112,7 +112,7 @@
                 android:paddingLeft="20dip"/>
 
             <EditText
-                android:id="@+id/editID"
+                android:id="@+id/linkedEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -143,7 +143,7 @@
                 android:paddingLeft="20dip"/>
 
             <EditText
-                android:id="@+id/editMedical"
+                android:id="@+id/linkedGoogleMeet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/seerem_logo_colour"
@@ -174,7 +174,7 @@
                 android:paddingLeft="20dip"/>
 
             <RadioGroup
-                android:id="@+id/radioContactType"
+                android:id="@+id/linkedTeams"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -213,7 +213,7 @@
         android:gravity="center">
 
         <EditText
-            android:id="@+id/editEmergencyNumber"
+            android:id="@+id/buttonSkype"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -227,7 +227,7 @@
             android:textSize="22sp" />
 
         <EditText
-            android:id="@+id/editEmergencyContactName"
+            android:id="@+id/linkedSkype"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="2"
