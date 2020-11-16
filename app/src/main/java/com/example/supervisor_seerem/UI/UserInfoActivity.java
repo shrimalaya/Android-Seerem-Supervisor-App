@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.telephony.emergency.EmergencyNumber;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,11 +28,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -186,11 +182,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
         firstNameInput = findViewById(R.id.editFirstName);
         lastNameInput = findViewById(R.id.editLastName);
-        idInput = findViewById(R.id.editID);
-        medicalConsiderationsInput = findViewById(R.id.editMedical);
-        emergencyContactNameInput = findViewById(R.id.editEmergencyContactName);
-        emergencyContactTypes = findViewById(R.id.radioContactType);
-        emergencyContactNumberInput = findViewById(R.id.editEmergencyNumber);
+        idInput = findViewById(R.id.linkedEmail);
+        medicalConsiderationsInput = findViewById(R.id.linkedGoogleMeet);
+        emergencyContactNameInput = findViewById(R.id.linkedSkype);
+        emergencyContactTypes = findViewById(R.id.linkedTeams);
+        emergencyContactNumberInput = findViewById(R.id.buttonSkype);
         emergencyTypeFamily = findViewById(R.id.radio_family);
         emergencyTypeFriend = findViewById(R.id.radio_friend);
 
@@ -280,7 +276,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.buttonUIPreferences){
-            startActivity(new Intent(getBaseContext(), UIPreferencesActivity.class));
+            //startActivity(new Intent(getBaseContext(), UIPreferencesActivity.class));
+            startActivity(new Intent(getBaseContext(), CommunicationActivity.class));
         }else if(view.getId() == R.id.buttonSaveUserInfo){
             storeInputs();
         }else if(view.getId() == R.id.buttonSiteMap){
