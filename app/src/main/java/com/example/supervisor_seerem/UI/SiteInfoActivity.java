@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.DocumentManager;
 import com.example.supervisor_seerem.model.Supervisor;
 import com.example.supervisor_seerem.UI.util.WorksiteAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,7 +39,7 @@ public class SiteInfoActivity extends AppCompatActivity {
     private Boolean showAllSites = false;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference mWorksitesRef = db.collection(CONSTANTS.WORKSITES_COLLECTION);
-    private Supervisor currUser;
+    private DocumentManager manager = DocumentManager.getInstance();
     public List<DocumentSnapshot> mAllDocs = new ArrayList<>();
     public List<DocumentSnapshot> mUserDocs = new ArrayList<>();
     public List<DocumentSnapshot> mShowDocs = new ArrayList<>();
@@ -99,9 +100,6 @@ public class SiteInfoActivity extends AppCompatActivity {
 
         mRecycler = findViewById(R.id.siteInfoRecyclerView);
 
-        // TODO: repopulate online database and set the key as employee_id (SP0001, SP0002, etc)
-        CONSTANTS.USER_ID = "sladha";
-
         retrieveData();
     }
 
@@ -113,63 +111,19 @@ public class SiteInfoActivity extends AppCompatActivity {
      -> Display using WorksiteAdapter by passing List of DocumentSnapshots
      */
     private void retrieveData() {
-        getUserData(new UserSupervisorCallback() {
-            @Override
-            public void onCallback(DocumentSnapshot doc) {
-                System.out.println("TEST1> User id = " + doc.getString(CONSTANTS.ID_KEY));
-                currUser = new Supervisor(doc.getString(CONSTANTS.ID_KEY),
-                        doc.getString(CONSTANTS.FIRST_NAME_KEY),
-                        doc.getString(CONSTANTS.LAST_NAME_KEY),
-                        doc.getString(CONSTANTS.COMPANY_ID_KEY),
-                        doc.getString(CONSTANTS.WORKSITE_ID_KEY));
+        mAllDocs.clear();
+        mAllDocs.addAll(manager.getSites());
 
-                getAllData(new AllDataCallback() {
-                    @Override
-                    public void onCallback(List<DocumentSnapshot> docs) {
-                        mAllDocs = new ArrayList<>();
-                        mAllDocs.addAll(docs);
-                        System.out.println("TEST1> Size of final data = " + mAllDocs.size());
-
-                        mUserDocs = new ArrayList<>();
-                        for (DocumentSnapshot doc: docs) {
-                            if(doc.getString(CONSTANTS.ID_KEY).equals(currUser.getWorksite_id())) {
-                                mUserDocs.add(doc);
-                            }
-                        }
-                        displayData();
-                    }
-                });
-            }
-        });
-    }
-
-    public void getUserData(final UserSupervisorCallback callback) {
-        DocumentReference mSupervisor = db.collection(CONSTANTS.SUPERVISORS_COLLECTION).document(CONSTANTS.USER_ID);
-        mSupervisor.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isComplete()) {
-                    DocumentSnapshot doc = task.getResult();
-                    System.out.println("TEST1> User id = " + doc.getString(CONSTANTS.ID_KEY));
-                    callback.onCallback(doc);
+        mUserDocs = new ArrayList<>();
+        for (DocumentSnapshot site: manager.getSites()) {
+            for(DocumentSnapshot supervisor: manager.getSupervisors()) {
+                if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
+                    mUserDocs.add(site);
+                    System.out.println("TEST3> size of worksites user: " + mUserDocs.size());
                 }
             }
-        });
-    }
-
-    public void getAllData(final AllDataCallback callback) {
-        mWorksitesRef
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, currUser.getCompany_id())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isComplete()) {
-                            System.out.println("TEST1> Size of temp data = " + task.getResult().getDocuments().size());
-                            callback.onCallback(task.getResult().getDocuments());
-                        }
-                    }
-                });
+        }
+        displayData();
     }
 
     @Override
@@ -186,23 +140,20 @@ public class SiteInfoActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case (R.id.refresh_site_info):
-                getAllData(new AllDataCallback() {
-                    @Override
-                    public void onCallback(List<DocumentSnapshot> docs) {
-                        mAllDocs.clear();
-                        mAllDocs.addAll(docs);
+                manager.retrieveAllData();
+                mAllDocs.clear();
+                mAllDocs.addAll(manager.getSites());
 
-                        mUserDocs.clear();
-                        for (DocumentSnapshot doc: docs) {
-                            if(doc.getString(CONSTANTS.ID_KEY).equals(currUser.getWorksite_id())) {
-                                mUserDocs.add(doc);
-                            }
-                        }
-
-                        updateDisplaySites();
-                        mAdapter.notifyDataSetChanged();
+                mUserDocs = new ArrayList<>();
+                for (DocumentSnapshot doc: manager.getSites()) {
+                    if(doc.getString(CONSTANTS.ID_KEY).equals(manager.getCurrentUser().getId())) {
+                        mUserDocs.add(doc);
                     }
-                });
+                }
+
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
+
                 return true;
 
             case (R.id.menu_display_all_user):
@@ -255,12 +206,7 @@ public class SiteInfoActivity extends AppCompatActivity {
         }
     }
 
-    private interface AllDataCallback {
-        void onCallback(List<DocumentSnapshot> docs);
+    private interface refreshCallback {
+        void onCallback();
     }
-
-    private interface UserSupervisorCallback {
-        void onCallback(DocumentSnapshot doc);
-    }
-
 }

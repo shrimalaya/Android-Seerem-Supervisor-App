@@ -1,5 +1,6 @@
 package com.example.supervisor_seerem.UI.util;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +26,15 @@ import static com.example.supervisor_seerem.R.layout.worksite_row;
 public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.WorksiteViewHolder> {
 
     public List<DocumentSnapshot> mList;
+    Context context;
 
     public WorksiteAdapter(List<DocumentSnapshot> mList) { this.mList = mList; }
 
     @NonNull
     @Override
     public WorksiteAdapter.WorksiteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(worksite_row, parent, false);
+        context = parent.getContext();
+        View v = LayoutInflater.from(context).inflate(worksite_row, parent, false);
         WorksiteViewHolder mHolder = new WorksiteViewHolder(v);
         return mHolder;
     }

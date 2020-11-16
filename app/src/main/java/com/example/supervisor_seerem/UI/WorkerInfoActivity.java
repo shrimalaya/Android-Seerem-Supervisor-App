@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.DocumentManager;
 import com.example.supervisor_seerem.model.Worker;
 import com.example.supervisor_seerem.UI.util.WorkerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,16 +30,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class WorkerInfoActivity extends AppCompatActivity {
 
-    private String USER_ID;
-    private String USER_COMPANY;
+    private DocumentManager manager = DocumentManager.getInstance();
 
     private WorkerAdapter mAdapter;
     private RecyclerView mRecycler;
-    CollectionReference mCollection = FirebaseFirestore.getInstance().collection(CONSTANTS.WORKERS_COLLECTION);
 
     private List<Worker> mList = new ArrayList<>();
-    private List<DocumentSnapshot> mAllDocs;
-    private List<DocumentSnapshot> mUserDocs;
+    private List<DocumentSnapshot> mAllDocs = new ArrayList<>();
+    private List<DocumentSnapshot> mUserDocs = new ArrayList<>();
     private List<DocumentSnapshot> mShowDocs = new ArrayList<>();
 
     private Boolean showAllWorkers = false;
@@ -94,16 +93,23 @@ public class WorkerInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker_info);
 
+        setupNavigationBar();
         mRecycler = findViewById(R.id.workerInfoRecycler);
 
-        USER_ID = "SP0001";
-        USER_COMPANY = "CP0002";
-
-        retrieveData();
-        setupNavigationBar();
+        displayData();
     }
 
     private void updateDisplaySites() {
+        mAllDocs.clear();
+        mAllDocs.addAll(manager.getWorkers());
+
+        mUserDocs = new ArrayList<>();
+        for (DocumentSnapshot doc: manager.getWorkers()) {
+            if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(manager.getCurrentUser().getId())) {
+                mUserDocs.add(doc);
+            }
+        }
+
         if(showAllWorkers) {
             mShowDocs.clear();
             mShowDocs.addAll(mAllDocs);
@@ -115,46 +121,15 @@ public class WorkerInfoActivity extends AppCompatActivity {
 
     public void displayData() {
         updateDisplaySites();
+
         mAdapter = new WorkerAdapter(mShowDocs);
-        mRecycler.setAdapter(mAdapter);
+
+        if (mAdapter == null) {
+            System.out.println("TEST1> Adapter null");
+        } else {
+            mRecycler.setAdapter(mAdapter);
+        }
     }
-
-    private void retrieveData() {
-        getAllData(new AllDataCallback() {
-            @Override
-            public void onCallback(List<DocumentSnapshot> docs) {
-                mAllDocs = new ArrayList<>();
-                mAllDocs.addAll(docs);
-
-                mUserDocs = new ArrayList<>();
-                for (DocumentSnapshot doc: docs) {
-                    if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
-                        mUserDocs.add(doc);
-                    }
-                }
-                displayData();
-            }
-        });
-    }
-
-    private interface AllDataCallback {
-        void onCallback(List<DocumentSnapshot> docs);
-    }
-
-    private void getAllData(final AllDataCallback callback) {
-        mCollection
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, USER_COMPANY)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isComplete()) {
-                            callback.onCallback(task.getResult().getDocuments());
-                        }
-                    }
-                });
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,23 +145,10 @@ public class WorkerInfoActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case (R.id.menu_worker_refresh):
-                getAllData(new WorkerInfoActivity.AllDataCallback() {
-                    @Override
-                    public void onCallback(List<DocumentSnapshot> docs) {
-                        mAllDocs.clear();
-                        mAllDocs.addAll(docs);
+                manager.retrieveAllData();
 
-                        mUserDocs = new ArrayList<>();
-                        for (DocumentSnapshot doc: docs) {
-                            if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(USER_ID)) {
-                                mUserDocs.add(doc);
-                            }
-                        }
-
-                        updateDisplaySites();
-                        mAdapter.notifyDataSetChanged();
-                    }
-                });
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
                 return true;
 
             case (R.id.menu_worker_display_filter):
@@ -216,19 +178,3 @@ public class WorkerInfoActivity extends AppCompatActivity {
         }
     }
 }
-
-//        Test Code
-//        Intent intent = new Intent(this, SiteInfoActivity.class);
-//        startActivity(intent);
-
-//        List<String> skills = new ArrayList<>();
-//        skills.add("Electrical");
-//        skills.add("Civil");
-//        skills.add("Hardware");
-//        Collections.sort(skills);
-
-//        mList.add(new Worker("WK0001", "Srimalaya", "Ladha", "SP0001",
-//                "WS0001", "CP0001", new ModelLocation(49.1887, 122.8459), skills));
-//        mAdapter = new WorkerAdapter(mList);
-//        mRecycler.setAdapter(mAdapter);
-
