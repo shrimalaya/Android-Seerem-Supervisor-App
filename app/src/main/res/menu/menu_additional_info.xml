@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_additional_contact"
+        android:icon="@drawable/ic_baseline_contacts_24"
+        android:title="contact"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_additional_refresh"
+        android:icon="@drawable/ic_baseline_refresh_48"
+        android:title="refresh"
+        app:showAsAction="always" />
+</menu>
