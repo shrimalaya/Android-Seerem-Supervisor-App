@@ -9,7 +9,7 @@ public class CONSTANTS {
     public static final String WORKERS_COLLECTION = "workers";
     public static final String WORKSITES_COLLECTION = "worksites";
     public static final String SUPERVISORS_COLLECTION = "supervisors";
-    public static final String EMERGENCY_INFO_COLLECTION = "availability";
+    public static final String EMERGENCY_INFO_COLLECTION = "emergency_info";
     public static final String CONTACT_INFO_COLLECTION = "contact_info";
     public static final String AVAILABILITY_COLLECTION = "availability";
 

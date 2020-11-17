@@ -98,7 +98,7 @@ public class AdditionalInfoActivity extends AppCompatActivity {
             medicalConditions.setText(checkNull(emergencyInfo.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY)));
 
             contact = findViewById(R.id.txt_additional_contactName);
-            contact.setText(checkNull(emergencyInfo.getString(CONSTANTS.CONTACT_INFO_COLLECTION)));
+            contact.setText(checkNull(emergencyInfo.getString(CONSTANTS.EMERGENCY_NAME_KEY)));
 
             number = findViewById(R.id.txt_additional_emerNumber);
             number.setText(checkNull(emergencyInfo.getString(CONSTANTS.EMERGENCY_CONTACT_KEY)));
