@@ -67,6 +67,10 @@
     <string name="map_info_projectID">Project ID: </string>
     <string name="map_info_hours">Hours: </string>
     <string name="map_info_hse">HSE Link: </string>
+    <string name="map_info_employeeID">Employee ID: </string>
+    <string name="map_info_fullName">Full name:</string>
+    <string name="map_info_companyID">Company: </string>
+    <string name="map_info_supervisorID">Supervisor: </string>
 
     <string name="temperatureTextView">Temperature</string>
     <string name="pressureTextView">Pressure</string>

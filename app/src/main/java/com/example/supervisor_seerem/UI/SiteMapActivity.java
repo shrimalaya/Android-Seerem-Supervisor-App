@@ -1,6 +1,5 @@
 package com.example.supervisor_seerem.UI;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -32,6 +31,7 @@ import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
 import com.example.supervisor_seerem.model.ModelLocation;
 import com.example.supervisor_seerem.model.Site;
+import com.example.supervisor_seerem.model.Worker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -68,6 +68,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     private DocumentManager docManager = DocumentManager.getInstance();
     private List<DocumentSnapshot> sitesList = new ArrayList<>();
     private Site clickedSite;
+    private List<DocumentSnapshot> workersList = new ArrayList<>();
+    private Worker clickedWorker;
 
     private EditText searchInputEditText;
     private ImageView myLocationImageView;
@@ -105,16 +107,14 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             siteMap.setMyLocationEnabled(true);
             siteMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            // if not coming from those activities that require zoom in to a specific location
-            // (i.e. no need to zoom in worksites' or worker' current location)
             Log.d("FROM MAP: ", "previousActivity is: " + previousActivity);
-            if (previousActivity == null) {
-                // ...then just show my current location
-                getDeviceLocation();
-            } else if (previousActivity.equals("SiteInfo")){ // else if the user clicks on a site from the list of worksites
-                zoomToSiteLocationn();
+            if (previousActivity != null && previousActivity.equals("SiteInfo")){ // if the user clicks on a site from the list of worksites
+                zoomToSiteLocation();
+            } else if (previousActivity != null && previousActivity.equals("WorkerInfo")) { // if the user clicks on a worker from the list of workers
+               zoomToWorkerPosition();
             } else {
-                // TODO: Zoom to other specific location, such as worker's location
+                // otherwise, just show my current location
+                getDeviceLocation();
             }
         }
     }
@@ -167,9 +167,11 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-        navigation.setSelectedItemId(R.id.userNavigation);
+//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+//        navigation.setSelectedItemId(R.id.userNavigation);
+        finishAffinity();
+        Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
+        startActivity(intent);
     }
 
     @Override
@@ -182,6 +184,9 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         sitesList.clear();
         sitesList.addAll(docManager.getSites());
         Log.d("FROM MAP", "onCreate(): sitesList.size() = " + sitesList.size());
+        workersList.clear();
+        workersList.addAll(docManager.getWorkers());
+        Log.d("FROM MAP", "onCreate(): workersList.size() = " + workersList.size());
 
         searchInputEditText = (EditText) findViewById(R.id.searchInputEditText);
         myLocationImageView = (ImageView) findViewById(R.id.myLocationImageView);
@@ -321,14 +326,19 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         siteMap.setInfoWindowAdapter(new MapInfoWindowAdapter(SiteMapActivity.this));
 
         String info = "";
-        if (previousActivity == null || previousActivity.equals("")) {
-           info = "User; This is my current location!";
-        } else if (previousActivity.equals("SiteInfo")) {
+        if (previousActivity != null && previousActivity.equals("SiteInfo")) {
 //            String hseLink = "<a href=\"" + clickedSite.getHseLink() + "\"> HSE Link </a>";
             info = "Site;" + clickedSite.getID() +
                     ";" + clickedSite.getProjectID() +
                     ";" + clickedSite.getOperationHour() +
                     ";" + clickedSite.getHseLink();
+        } else if (previousActivity != null && previousActivity.equals("WorkerInfo")) {
+            info = "Worker;" + clickedWorker.getEmployeeID() +
+                    ";" + clickedWorker.getFirstName() + " " + clickedWorker.getLastName() +
+                    ";" + clickedWorker.getCompanyID() +
+                    ";" + clickedWorker.getSupervisorID();
+        } else {
+            info = "User; This is my current location!";
         }
         Log.d("FROM MAP", "info = " + info);
         MarkerOptions options = new MarkerOptions()
@@ -339,8 +349,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         hideSoftKeyboard();
     }
 
-    private void zoomToSiteLocationn() {
-//        TODO: get location of the clicked site and zoom in it
+    private void zoomToSiteLocation() {
         Intent intent = getIntent();
         String clickedSiteID = intent.getStringExtra("SITE ID FROM SiteInfoActivity");
         Log.d("FROM MAP", "clickedSiteID = " + clickedSiteID);
@@ -369,6 +378,44 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         System.out.println(clickedSite.toString());
         moveCamera(new LatLng(siteLocation.getLatitude(), siteLocation.getLongitude()),
                         DEFAULT_ZOOM, "Site Location");
+    }
+
+    private void zoomToWorkerPosition() {
+        Intent intent = getIntent();
+        String clickedWorkerID = intent.getStringExtra("WorkerID FROM WorkerInfoActivity");
+        Log.d("FROM MAP", "clickedWorkerID = " + clickedWorkerID);
+
+        DocumentSnapshot currentWorker = null;
+        Log.d("FROM MAP", "zoomToSiteLocation(): workersList.size() = " + workersList.size());
+        for (DocumentSnapshot worker : workersList) {
+            Log.d("FROM MAP", worker.toString());
+            Log.d("FROM MAP", "workerID = " + worker.getString(CONSTANTS.ID_KEY));
+            if (worker.getString(CONSTANTS.ID_KEY).equals(clickedWorkerID)) {
+                currentWorker = worker;
+                break;
+            }
+        }
+
+        if (currentWorker != null) {
+            String firstName = currentWorker.getString(CONSTANTS.FIRST_NAME_KEY);
+            String lastName = currentWorker.getString(CONSTANTS.LAST_NAME_KEY);
+            String supervisorID = currentWorker.getString(CONSTANTS.SUPERVISOR_ID_KEY);
+            String siteID = currentWorker.getString(CONSTANTS.WORKSITE_ID_KEY);
+            String companyID = currentWorker.getString(CONSTANTS.COMPANY_ID_KEY);
+            ModelLocation workerPosition = new ModelLocation(currentWorker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
+                    currentWorker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+            List<String> skills = new ArrayList<String>();
+            String[] workerSkills = currentWorker.getString(CONSTANTS.SKILLS_KEY).split(",");
+            for (String skill : workerSkills) {
+                skills.add(skill);
+            }
+
+            clickedWorker = new Worker(clickedWorkerID, firstName, lastName, supervisorID,
+                                    siteID, companyID, workerPosition, skills);
+            System.out.println(clickedWorker.toString());
+            moveCamera(new LatLng(workerPosition.getLatitude(), workerPosition.getLongitude()),
+                    DEFAULT_ZOOM, "Worker Position");
+        }
     }
 
     private void hideSoftKeyboard() {
