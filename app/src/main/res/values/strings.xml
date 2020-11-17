@@ -32,18 +32,25 @@
     <string name="search_input_hint">Enter a worker\'s name or a site\'s ID</string>
 
     <string name="communication_header">Communication</string>
-    <string name="communication_help">Select communication method</string>
-    <string name="communication_no_employee">(No Employee Selected)</string>
+    <string name="communication_help">Select communication method for:</string>
+    <string name="employee_last_name_first_name">%1$s, %2$s</string>
+    <string name="communication_no_employee">General Company Communication Channels</string>
     <string name="communication_phone">PHONE</string>
     <string name="communication_no_phone">(No Phone #)</string>
     <string name="communication_email">EMAIL</string>
     <string name="communication_no_email">(No Email)</string>
     <string name="communication_google_meet">Google MEET</string>
     <string name="communication_no_google_meet">(No MEET contact)</string>
+    <string name="communication_google_meet_exists">MEET account linked</string>
     <string name="communication_microsoft_teams">Microsoft TEAMs</string>
     <string name="communication_no_microsoft_teams">(No TEAMs contact)</string>
-    <string name="communications_skye">Skype</string>
-    <string name="communications_no_skye">(No Skype contact)</string>
+    <string name="communication_microsoft_teams_exists">TEAMs account linked</string>
+    <string name="communications_skype">Skype</string>
+    <string name="communications_no_skype">(No Skype contact)</string>
+    <string name="communications_skype_exists">Skye account linked</string>
+    <string name="communication_zoom">Zoom</string>
+    <string name="communication_no_zoom">(No Zoom link)</string>
+    <string name="communication_zoom_exists">(Zoom link exists)</string>
 
     <string name="worker_navigation_bar_text">Worker</string>
     <string name="site_navigation_bar_text">Sites</string>

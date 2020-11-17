@@ -65,7 +65,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/displaySelectedEmployee"
+                android:id="@+id/displayCommunicationRecipient"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -249,11 +249,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:backgroundTint="@color/cyan"
-                android:fontFamily="monospace"
                 android:ems="10"
-                android:text="@string/communications_skye"
+                android:fontFamily="monospace"
                 android:paddingStart="20dip"
                 android:paddingLeft="20dip"
+                android:text="@string/communications_skype"
                 android:textColor="@color/white"
                 android:textSize="22sp" />
 
@@ -266,11 +266,46 @@
                 android:fontFamily="monospace"
 
                 android:hint="@string/emergency_contact_name_entry"
-                android:textColor="@color/seerem_logo_colour"
-                android:text="@string/communications_no_skye"
-                />
+                android:text="@string/communications_no_skype"
+                android:textColor="@color/seerem_logo_colour" />
 
         </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonZoom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:backgroundTint="@color/cerulean"
+                android:fontFamily="monospace"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"
+                android:text="@string/communication_zoom"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/linkedZoom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/seerem_logo_colour"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:inputType="textPersonName"
+                android:text="@string/communication_no_zoom"
+                android:textColor="@color/seerem_logo_colour" />
+
+        </TableRow>
+
     </TableLayout>
 
 
