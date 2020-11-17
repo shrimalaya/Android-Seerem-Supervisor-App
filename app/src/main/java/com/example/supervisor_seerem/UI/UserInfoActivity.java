@@ -327,10 +327,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             String savedEmergencyContactNumber = userEmergencyInfo.getString(CONSTANTS.EMERGENCY_CONTACT_KEY);
             String savedEmergencyContactName = userEmergencyInfo.getString(CONSTANTS.EMERGENCY_NAME_KEY);
 
-            firstNameInput.setText(savedFirstName);
-            lastNameInput.setText(savedLastName);
+            firstNameInput.setText(savedFirstName.toUpperCase());
+            lastNameInput.setText(savedLastName.toUpperCase());
             idInput.setText(savedID);
-            medicalConsiderationsInput.setText(savedMedicalConsiderations);
+            medicalConsiderationsInput.setText(savedMedicalConsiderations.toUpperCase());
             emergencyContactNameInput.setText(savedEmergencyContactName);
             //emergencyContactTypes = findViewById(R.id.radioContactType);
             emergencyContactNumberInput.setText(savedEmergencyContactNumber);
