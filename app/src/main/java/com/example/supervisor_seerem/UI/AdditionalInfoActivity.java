@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
@@ -18,6 +19,11 @@ public class AdditionalInfoActivity extends AppCompatActivity {
     private String workerID;
     private DocumentSnapshot selectedWorker;
     private DocumentManager manager = DocumentManager.getInstance();
+
+    TextView workerName, monday, tuesday, wednesday, thursday, friday, saturday, sunday;
+    TextView totalHrs, OvertimeHrs;
+    TextView bldGrp, medicalConditions, contact, number, relationship;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
