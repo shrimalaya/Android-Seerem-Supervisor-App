@@ -93,7 +93,7 @@ public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.Worksi
         @Override
         public void onClick(View view) {
             String siteID = siteIDTextView.getText().toString();
-            Toast.makeText(view.getContext(), siteID, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(view.getContext(), siteID, Toast.LENGTH_SHORT).show();
             Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(view.getContext(), "SiteInfo");
             mapIntent.putExtra("SITE ID FROM SiteInfoActivity", siteID);
             view.getContext().startActivity(mapIntent);
