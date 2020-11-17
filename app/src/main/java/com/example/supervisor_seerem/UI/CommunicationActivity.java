@@ -102,7 +102,7 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         goToMeets = findViewById(R.id.buttonGoogleMeet);
         goToTeams = findViewById(R.id.buttonMicrosoftTeams);
         goToSkype = findViewById(R.id.buttonSkype);
-        
+
         if(employeeLastName == null || employeeFirstName == null){
             employeeFullName = getString(R.string.communication_no_employee);
         }else{

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Supervisor_SEEREM</string>
+    <string name="app_name">SeeRem: Supervisor</string>
     <string name="welcome_text">Welcome, Supervisor.</string>
     <string name="login_help">Please input your Username and Password.</string>
     <string name="username_entry">Username:</string>
