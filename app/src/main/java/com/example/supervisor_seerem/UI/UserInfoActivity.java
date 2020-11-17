@@ -118,7 +118,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        finishAffinity();
+        Intent intent = new Intent(UserInfoActivity.this, LoginInfoActivity.class);
+        startActivity(intent);
     }
 
 
