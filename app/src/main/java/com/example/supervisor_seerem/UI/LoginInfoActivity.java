@@ -72,6 +72,7 @@ public class LoginInfoActivity extends AppCompatActivity {
 
     private void checkInputs() {
         String usernameToCheck = usernameInput.getText().toString();
+        usernameToCheck = usernameToCheck.toUpperCase();
         String passwordToCheck = passwordInput.getText().toString();
         if (usernameToCheck.isEmpty() || passwordToCheck.isEmpty()) {
             if (usernameToCheck.isEmpty()) {
