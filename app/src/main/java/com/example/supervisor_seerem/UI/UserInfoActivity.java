@@ -236,11 +236,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             Intent intent = new Intent(UserInfoActivity.this, CommunicationActivity.class);
             intent.putExtra( "EMPLOYEE_FIRST_NAME", "Beep");
             intent.putExtra("EMPLOYEE_LAST_NAME","Boop");
+            intent.putExtra("EMPLOYEE_ZOOM", "https://zoom.us/");
             intent.putExtra("EMPLOYEE_PHONE_NUMBER", "1234567890");
             intent.putExtra("EMPLOYEE_EMAIL", "test@gmail.com");
             intent.putExtra("EMPLOYEE_MEETS", "A google meets link");
             intent.putExtra("EMPLOYEE_TEAMS", "A team");
-            intent.putExtra("EMPLOYEE_ZOOM", "A zoom link");
             startActivity(intent);
         }else if(view.getId() == R.id.buttonSaveUserInfo){
             storeInputs();

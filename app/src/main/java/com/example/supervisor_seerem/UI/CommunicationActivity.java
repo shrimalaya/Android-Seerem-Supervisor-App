@@ -2,6 +2,7 @@ package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -101,16 +102,13 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         goToMeets = findViewById(R.id.buttonGoogleMeet);
         goToTeams = findViewById(R.id.buttonMicrosoftTeams);
         goToSkype = findViewById(R.id.buttonSkype);
-        goToZoom = findViewById(R.id.buttonZoom);
-
-
+        
         if(employeeLastName == null || employeeFirstName == null){
             employeeFullName = getString(R.string.communication_no_employee);
         }else{
             employeeFullName = getString(R.string.employee_last_name_first_name, employeeLastName, employeeFirstName);
         }
-        // Testing autolink
-        // Phone number doesn't work yet...
+
         if(employeePhoneNumber == null){
             employeePhoneNumber = getString(R.string.communication_no_phone);
         }
@@ -118,10 +116,14 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         if(employeeEmail == null){
             employeeEmail = getString(R.string.communication_no_email);
         }
+        if(employeeZoom == null){
+            employeeZoom = getString(R.string.communication_no_zoom);
+        }
 
         if(employeeMEETS == null){
             employeeMEETS = getString(R.string.communication_no_google_meet);
             goToMeets.setEnabled(false);
+            goToMeets.setBackgroundColor(ContextCompat.getColor(this, R.color.grey));
         }else{
             employeeMEETS = getString(R.string.communication_google_meet_exists);
             goToMeets.setEnabled(true);
@@ -130,6 +132,7 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         if(employeeTEAMS == null){
             employeeTEAMS = getString(R.string.communication_no_microsoft_teams);
             goToTeams.setEnabled(false);
+            goToTeams.setBackgroundColor(ContextCompat.getColor(this, R.color.grey));
         }else{
             employeeTEAMS = getString(R.string.communication_microsoft_teams_exists);
             goToMeets.setEnabled(true);
@@ -138,27 +141,20 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         if(employeeSkype == null){
             employeeSkype = getString(R.string.communications_skype_exists);
             goToTeams.setEnabled(false);
+            goToSkype.setBackgroundColor(ContextCompat.getColor(this, R.color.grey));
         }else{
             employeeSkype = getString(R.string.communication_microsoft_teams_exists);
             goToMeets.setEnabled(true);
         }
 
-        if(employeeZoom == null){
-            employeeZoom = getString(R.string.communication_no_zoom);
-            goToZoom.setEnabled(false);
-        }else{
-            employeeZoom = getString(R.string.communication_zoom_exists);
-            goToZoom.setEnabled(true);
-        }
-
         communicationRecipient.setText(employeeFullName);
         displayedPhoneNumber.setText(employeePhoneNumber);
         displayedEmail.setText(employeeEmail);
+        displayedZoom.setText(employeeZoom);
         displayedPhoneNumber.setAutoLinkMask(Linkify.PHONE_NUMBERS);
         displayedMeets.setText(employeeMEETS);
         displayedTeams.setText(employeeTEAMS);
         displayedSkype.setText(employeeSkype);
-        displayedZoom.setText(employeeZoom);
     }
 
     private void setupNavigationBar() {
