@@ -1,6 +1,5 @@
 package com.example.supervisor_seerem.UI;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -112,7 +111,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 // ...then just show my current location
                 getDeviceLocation();
             } else if (previousActivity.equals("SiteInfo")){ // else if the user clicks on a site from the list of worksites
-                zoomToSiteLocationn();
+                zoomToSiteLocation();
             } else {
                 // TODO: Zoom to other specific location, such as worker's location
             }
@@ -167,9 +166,11 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-        navigation.setSelectedItemId(R.id.userNavigation);
+//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+//        navigation.setSelectedItemId(R.id.userNavigation);
+        finishAffinity();
+        Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
+        startActivity(intent);
     }
 
     @Override
@@ -339,8 +340,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         hideSoftKeyboard();
     }
 
-    private void zoomToSiteLocationn() {
-//        TODO: get location of the clicked site and zoom in it
+    private void zoomToSiteLocation() {
         Intent intent = getIntent();
         String clickedSiteID = intent.getStringExtra("SITE ID FROM SiteInfoActivity");
         Log.d("FROM MAP", "clickedSiteID = " + clickedSiteID);
