@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.model.Document;
 
+import java.net.IDN;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class AdditionalInfoActivity extends AppCompatActivity {
 
         workerName = findViewById(R.id.txt_additionalInfo_workerName);
         String name = selectedWorker.getString(CONSTANTS.FIRST_NAME_KEY) + " " + selectedWorker.getString(CONSTANTS.LAST_NAME_KEY);
-        workerName.setText(name);
+        workerName.setText(name.toUpperCase());
 
         if(availablity != null) {
             monday = findViewById(R.id.txt_monday);
@@ -92,25 +93,25 @@ public class AdditionalInfoActivity extends AppCompatActivity {
 
         if(emergencyInfo != null) {
             bldGrp = findViewById(R.id.txt_additional_bldGrp);
-            bldGrp.setText(checkNull(emergencyInfo.getString(CONSTANTS.BLOOD_GROUP_KEY)));
+            bldGrp.setText(checkNull(emergencyInfo.getString(CONSTANTS.BLOOD_GROUP_KEY)).toUpperCase());
 
             medicalConditions = findViewById(R.id.txt_additional_medical);
-            medicalConditions.setText(checkNull(emergencyInfo.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY)));
+            medicalConditions.setText(checkNull(emergencyInfo.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY)).toUpperCase());
 
             contact = findViewById(R.id.txt_additional_contactName);
-            contact.setText(checkNull(emergencyInfo.getString(CONSTANTS.EMERGENCY_NAME_KEY)));
+            contact.setText(checkNull(emergencyInfo.getString(CONSTANTS.EMERGENCY_NAME_KEY)).toUpperCase());
 
             number = findViewById(R.id.txt_additional_emerNumber);
             number.setText(checkNull(emergencyInfo.getString(CONSTANTS.EMERGENCY_CONTACT_KEY)));
 
             relationship = findViewById(R.id.txt_additional_relationship);
-            relationship.setText(checkNull(emergencyInfo.getString(CONSTANTS.RELATIONSHIP_KEY)));
+            relationship.setText(checkNull(emergencyInfo.getString(CONSTANTS.RELATIONSHIP_KEY)).toUpperCase());
         }
 
     }
 
     private String checkNull(String data) {
-        if(data == null) {
+        if(data == null || data.isEmpty()) {
             return " - ";
         } else {
             return data;
@@ -193,6 +194,18 @@ public class AdditionalInfoActivity extends AppCompatActivity {
 
             case (R.id.menu_additional_refresh):
                 manager.retrieveAllData();
+                DocumentSnapshot tempCurrWorker = null;
+                for(DocumentSnapshot doc: manager.getWorkers()) {
+                    if(workerID.equals(doc.getString(CONSTANTS.ID_KEY))) {
+                        tempCurrWorker = doc;
+                        break;
+                    }
+                }
+
+                if(tempCurrWorker == null) {
+                    this.finish();
+                }
+
                 populateData();
                 return true;
 

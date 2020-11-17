@@ -75,7 +75,9 @@
                 android:inputType="textPersonName"
                 android:paddingStart="20dip"
                 android:paddingLeft="20dip"
-                android:textColor="@color/seerem_logo_colour" />
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editLastName"
@@ -89,7 +91,9 @@
                 android:inputType="textPersonName"
                 android:paddingStart="20dip"
                 android:paddingLeft="20dip"
-                android:textColor="@color/seerem_logo_colour" />
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
         </TableRow>
 
         <TableRow
@@ -115,12 +119,13 @@
                 android:id="@+id/editID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
                 android:backgroundTint="@color/seerem_logo_colour"
-                android:textColor="@color/seerem_logo_colour"
+                android:ems="10"
                 android:fontFamily="monospace"
-                />
+                android:inputType="textPersonName"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
         </TableRow>
 
         <TableRow
@@ -150,7 +155,9 @@
                 android:ems="10"
                 android:fontFamily="monospace"
                 android:inputType="textPersonName"
-                android:textColor="@color/seerem_logo_colour" />
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
         </TableRow>
 
@@ -220,11 +227,12 @@
             android:backgroundTint="@color/seerem_logo_colour"
             android:fontFamily="monospace"
             android:hint="@string/emergency_contact_number_entryy"
+            android:inputType="number"
             android:paddingStart="20dip"
             android:paddingLeft="20dip"
-            android:inputType="number"
-            android:textColor="@color/seerem_logo_colour"
-            android:textSize="22sp" />
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editEmergencyContactName"
@@ -236,8 +244,10 @@
             android:hint="@string/emergency_contact_name_entry"
             android:paddingStart="20dip"
             android:paddingLeft="20dip"
-            android:textColor="@color/seerem_logo_colour"
-            android:textSize="22sp" />
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
     </TableRow>
 
