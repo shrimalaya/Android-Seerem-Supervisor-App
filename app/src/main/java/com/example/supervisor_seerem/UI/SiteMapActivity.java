@@ -110,8 +110,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             if (previousActivity == null) {
                 // ...then just show my current location
                 getDeviceLocation();
-            } else if (previousActivity.equals("SiteInfo")){
-                // TODO: Zoom to the worksite's location
+            } else if (previousActivity.equals("SiteInfo")){ // else if the user clicks on a site from the list of worksites
                 zoomToSiteLocationn();
             } else {
                 // TODO: Zoom to other specific location, such as worker's location
@@ -188,7 +187,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 dialog.show();
             } else {
                 Toast.makeText(SiteMapActivity.this,
-                                "No services available!",
+                                R.string.map_noServices_error_message,
                                 Toast.LENGTH_SHORT).show();
             }
         }
@@ -310,14 +309,15 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
         String info = "";
         if (previousActivity == null || previousActivity.equals("")) {
-           info = "This is my current location!";
+           info = "User; This is my current location!";
         } else if (previousActivity.equals("SiteInfo")) {
 //            String hseLink = "<a href=\"" + clickedSite.getHseLink() + "\"> HSE Link </a>";
-            info = "Site ID: " + clickedSite.getID() +
-                    "\nProject ID: " + clickedSite.getProjectID() +
-                    "\nHours: " + clickedSite.getOperationHour() +
-                    "\nHSE Link:" + clickedSite.getHseLink();
+            info = "Site;" + clickedSite.getID() +
+                    ";" + clickedSite.getProjectID() +
+                    ";" + clickedSite.getOperationHour() +
+                    ";" + clickedSite.getHseLink();
         }
+        Log.d("FROM MAP", "info = " + info);
         MarkerOptions options = new MarkerOptions()
                                 .position(latLng)
                                 .title(title)
