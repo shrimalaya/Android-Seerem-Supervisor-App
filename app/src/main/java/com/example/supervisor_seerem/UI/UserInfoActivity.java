@@ -169,12 +169,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private boolean areAnyInputsEmpty(String[] inputs){
-        for(int i = 0; i < inputs.length; i++){
-            Log.i("Checking!: ", inputs[i]);
-            if(inputs[i].isEmpty()){
+        for (String input : inputs) {
+            Log.i("Checking!: ", input);
+            if (input.isEmpty()) {
                 return false;
             }
-            Log.i("OKAY!: ", inputs[i] + " is okay!");
+            Log.i("OKAY!: ", input + " is okay!");
         }
         return true;
     }
@@ -187,7 +187,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         String emergencyContactNumber = emergencyContactNumberInput.getText().toString();
         String emergencyContactName = emergencyContactNameInput.getText().toString();
 
-        chosenEmergencyContactType = ((RadioButton)findViewById(emergencyContactTypes.getCheckedRadioButtonId())).getText().toString();
+        // Check if no radio button is checked; make it an empty string if so, to prevent crashing
+        if(emergencyContactTypes.getCheckedRadioButtonId() == -1){
+            chosenEmergencyContactType = "";
+        }else{
+            chosenEmergencyContactType = ((RadioButton) findViewById(emergencyContactTypes.getCheckedRadioButtonId())).getText().toString();
+        }
         String[] inputs = {firstName, lastName, id, medicalConsiderations, chosenEmergencyContactType,
                 emergencyContactNumber, emergencyContactName};
 
@@ -195,8 +200,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         if(!areAnyInputsEmpty(inputs)){
             Toast.makeText(this,getText(R.string.error_userinfo_incomplete), Toast.LENGTH_LONG).show();
         }else{
-            //Remove original
-
             // Refer to the collection for storing Supervisors.
             // Within that collection, create a document named after the user_id
             // If such a document already exists, its contents will be overwritten with the new contents
