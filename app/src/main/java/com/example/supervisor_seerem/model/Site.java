@@ -30,8 +30,6 @@ public class Site {
     // Getters
     public String getID() { return ID; }
 
-    public String getHseLink() { return hseLink; }
-
     public String getProjectID() {
         return projectID;
     }
@@ -48,7 +46,7 @@ public class Site {
         return masterpoint;
     }
 
-    public String getHse() {
+    public String getHseLink() {
         return hseLink;
     }
 
