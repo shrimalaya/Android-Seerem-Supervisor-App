@@ -5,19 +5,30 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.model.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdditionalInfoActivity extends AppCompatActivity {
 
     private String workerID;
     private DocumentSnapshot selectedWorker;
     private DocumentManager manager = DocumentManager.getInstance();
+
+    TextView workerName, monday, tuesday, wednesday, thursday, friday, saturday, sunday;
+    TextView totalHrs, overtimeHrs;
+    TextView bldGrp, medicalConditions, contact, number, relationship;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +36,85 @@ public class AdditionalInfoActivity extends AppCompatActivity {
 
         setupNavigationBar();
         receiveIntent();
+        populateData();
+    }
+
+    private void populateData() {
+        DocumentSnapshot emergencyInfo = null;
+        DocumentSnapshot availablity = null;
+
+        for(DocumentSnapshot doc: manager.getEmergencyInfo()) {
+            if(doc.getString(CONSTANTS.ID_KEY).equals(workerID)) {
+                emergencyInfo = doc;
+                break;
+            }
+        }
+
+        for(DocumentSnapshot doc: manager.getAvailabilities()) {
+            if(doc.getString(CONSTANTS.ID_KEY).equals(workerID)) {
+                availablity = doc;
+                break;
+            }
+        }
+
+        workerName = findViewById(R.id.txt_additionalInfo_workerName);
+        String name = selectedWorker.getString(CONSTANTS.FIRST_NAME_KEY) + " " + selectedWorker.getString(CONSTANTS.LAST_NAME_KEY);
+        workerName.setText(name);
+
+        if(availablity != null) {
+            monday = findViewById(R.id.txt_monday);
+            monday.setText(checkNull(availablity.getString(CONSTANTS.MONDAY_KEY)));
+
+            tuesday = findViewById(R.id.txt_tuesday);
+            tuesday.setText(checkNull(availablity.getString(CONSTANTS.TUESDAY_KEY)));
+
+            wednesday = findViewById(R.id.txt_wednesday);
+            wednesday.setText(checkNull(availablity.getString(CONSTANTS.WEDNESDAY_KEY)));
+
+            thursday = findViewById(R.id.txt_thursday);
+            thursday.setText(checkNull(availablity.getString(CONSTANTS.THURSDAY_KEY)));
+
+            friday = findViewById(R.id.txt_friday);
+            friday.setText(checkNull(availablity.getString(CONSTANTS.FRIDAY_KEY)));
+
+            saturday = findViewById(R.id.txt_saturday);
+            saturday.setText(checkNull(availablity.getString(CONSTANTS.SATURDAY_KEY)));
+
+            sunday = findViewById(R.id.txt_sunday);
+            sunday.setText(checkNull(availablity.getString(CONSTANTS.SUNDAY_KEY)));
+
+            totalHrs = findViewById(R.id.txt_additional_totalHrs);
+            totalHrs.setText("Not calculated!");
+
+            overtimeHrs = findViewById(R.id.txt_additional_overtimeHrs);
+            overtimeHrs.setText("Not calculated!");
+        }
+
+        if(emergencyInfo != null) {
+            bldGrp = findViewById(R.id.txt_additional_bldGrp);
+            bldGrp.setText(checkNull(emergencyInfo.getString(CONSTANTS.BLOOD_GROUP_KEY)));
+
+            medicalConditions = findViewById(R.id.txt_additional_medical);
+            medicalConditions.setText(checkNull(emergencyInfo.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY)));
+
+            contact = findViewById(R.id.txt_additional_contactName);
+            contact.setText(checkNull(emergencyInfo.getString(CONSTANTS.CONTACT_INFO_COLLECTION)));
+
+            number = findViewById(R.id.txt_additional_emerNumber);
+            number.setText(checkNull(emergencyInfo.getString(CONSTANTS.EMERGENCY_CONTACT_KEY)));
+
+            relationship = findViewById(R.id.txt_additional_relationship);
+            relationship.setText(checkNull(emergencyInfo.getString(CONSTANTS.RELATIONSHIP_KEY)));
+        }
+
+    }
+
+    private String checkNull(String data) {
+        if(data == null) {
+            return " - ";
+        } else {
+            return data;
+        }
     }
 
     private void receiveIntent() {
@@ -80,5 +170,34 @@ public class AdditionalInfoActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_additional_info, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case (R.id.menu_additional_contact):
+                Intent intent = new Intent(AdditionalInfoActivity.this, CommunicationActivity.class);
+                intent.putExtra("ID", selectedWorker.getString(CONSTANTS.ID_KEY));
+                startActivity(intent);
+                return true;
+
+            case (R.id.menu_additional_refresh):
+                manager.retrieveAllData();
+                populateData();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

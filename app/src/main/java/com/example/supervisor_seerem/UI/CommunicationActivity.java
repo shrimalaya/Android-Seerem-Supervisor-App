@@ -45,6 +45,10 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
     Button goToSkype;
     Button goToZoom;
 
+    String employeeID;
+    DocumentSnapshot employee;
+    DocumentSnapshot contactInfo = null;
+
     String employeeFirstName;
     String employeeLastName;
     String employeeFullName;
@@ -77,16 +81,36 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
 
     // Intent should include fields in Contact which the user was able to pass.
     private void retrieveIntent(){
-        employeeFirstName = getIntent().getStringExtra("EMPLOYEE_FIRST_NAME");
-        Log.i("EMPLOYEE FISRT IS:", employeeFirstName);
-        employeeLastName = getIntent().getStringExtra("EMPLOYEE_LAST_NAME");
-        employeePhoneNumber = getIntent().getStringExtra("EMPLOYEE_PHONE_NUMBER");
-        employeeEmail = getIntent().getStringExtra("EMPLOYEE_EMAIL");
 
-        //These should be passed as with implicit intents somehow to use with the appropriate app.
-        employeeMEETS = getIntent().getStringExtra("EMPLOYEE_MEETS");
-        employeeTEAMS = getIntent().getStringExtra("EMPLOYEE_TEAMS");
-        employeeZoom = getIntent().getStringExtra("EMPLOYEE_ZOOM");
+        employeeID = getIntent().getStringExtra("ID");
+
+        for(DocumentSnapshot doc: manager.getWorkers()) {
+            if(doc.getString(CONSTANTS.ID_KEY).equals(employeeID)) {
+                employee = doc;
+                break;
+            }
+        }
+
+        for(DocumentSnapshot doc: manager.getContacts()) {
+            if(doc.getString(CONSTANTS.ID_KEY).equals(employee.getString(CONSTANTS.ID_KEY))) {
+                contactInfo = doc;
+                break;
+            }
+        }
+
+        employeeFirstName = employee.getString(CONSTANTS.FIRST_NAME_KEY);
+        Log.i("EMPLOYEE FIRST IS:", employeeFirstName);
+        employeeLastName = employee.getString(CONSTANTS.LAST_NAME_KEY);
+
+        if(contactInfo != null) {
+            employeePhoneNumber = contactInfo.getString(CONSTANTS.PHONE_CONTACT_KEY);
+            employeeEmail = contactInfo.getString(CONSTANTS.EMAIL_CONTACT_KEY);
+
+            //These should be passed as with implicit intents somehow to use with the appropriate app.
+            employeeMEETS = "";
+            employeeTEAMS = "";
+            employeeZoom = contactInfo.getString(CONSTANTS.LINK_CONTACT_KEY);
+        }
 
     }
 
