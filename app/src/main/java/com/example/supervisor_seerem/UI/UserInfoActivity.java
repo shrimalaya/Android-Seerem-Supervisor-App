@@ -137,8 +137,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         SharedPreferences sharedPrefs = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
 
         firstNameInput = findViewById(R.id.editFirstName);
+        firstNameInput.setClickable(false);
         lastNameInput = findViewById(R.id.editLastName);
+        lastNameInput.setClickable(false);
         idInput = findViewById(R.id.editID);
+        idInput.setClickable(false);
+
         medicalConsiderationsInput = findViewById(R.id.editMedical);
         emergencyContactNameInput = findViewById(R.id.editEmergencyContactName);
         emergencyContactTypes = findViewById(R.id.radioContactType);
@@ -206,23 +210,24 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             // Within that collection, create a document named after the user_id
             // If such a document already exists, its contents will be overwritten with the new contents
             // Otherwise, the next line will create appropriately named username.
-            //TODO: Replace "sladha" in next line with an actual user key
-            DocumentReference supervisorDocRef = database.collection(CONSTANTS.SUPERVISORS_COLLECTION).document("sladha");
+
+            DocumentReference emergencyRef = FirebaseFirestore.getInstance()
+                    .collection(CONSTANTS.EMERGENCY_INFO_COLLECTION)
+                    .document(manager.getCurrentUser().getId());
             Map<String,Object> user = new HashMap<>();
-            user.put(CONSTANTS.FIRST_NAME_KEY, firstName);
-            user.put(CONSTANTS.LAST_NAME_KEY, lastName);
-            user.put(CONSTANTS.ID_KEY, id);
+            user.put(CONSTANTS.ID_KEY, manager.getCurrentUser().getId());
             user.put(CONSTANTS.MEDICAL_CONDITIONS_KEY, medicalConsiderations);
             user.put(CONSTANTS.RELATIONSHIP_KEY, chosenEmergencyContactType);
             user.put(CONSTANTS.EMERGENCY_CONTACT_KEY, emergencyContactNumber);
             user.put(CONSTANTS.EMERGENCY_NAME_KEY, emergencyContactName);
-            supervisorDocRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+            emergencyRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(getApplicationContext(), getText(R.string.user_info_save_success), Toast.LENGTH_LONG).show();
                 }
             });
-            supervisorDocRef.set(user).addOnFailureListener(new OnFailureListener() {
+            emergencyRef.set(user).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(getApplicationContext(), getText(R.string.user_info_save_fail), Toast.LENGTH_LONG).show();
@@ -235,9 +240,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     // Changed settings will not be saved unless the user clicks the save button
     @Override
     public void onClick(View view) {
-//        if(view.getId() == R.id.buttonUIPreferences){
-//            //Passing of intents should go in the code for the Button going to CommunicationActivity
-//            //Testing... why do t
+        if(view.getId() == R.id.buttonUIPreferences){
+            //Passing of intents should go in the code for the Button going to CommunicationActivity
+            //Testing... why do t
 //            Intent intent = new Intent(UserInfoActivity.this, CommunicationActivity.class);
 //            intent.putExtra( "EMPLOYEE_FIRST_NAME", "Beep");
 //            intent.putExtra("EMPLOYEE_LAST_NAME","Boop");
@@ -247,11 +252,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 //            intent.putExtra("EMPLOYEE_MEETS", "A google meets link");
 //            intent.putExtra("EMPLOYEE_TEAMS", "A team");
 //            startActivity(intent);
-//        }else if(view.getId() == R.id.buttonSaveUserInfo){
-//            storeInputs();
-//        }else if(view.getId() == R.id.buttonSiteMap){
-//            startActivity(new Intent(getBaseContext(), SiteInfoActivity.class));
-//        }
+        }else if(view.getId() == R.id.buttonSaveUserInfo){
+            storeInputs();
+        }else if(view.getId() == R.id.buttonSiteMap){
+            startActivity(new Intent(getBaseContext(), SiteInfoActivity.class));
+        }
     }
 
 
