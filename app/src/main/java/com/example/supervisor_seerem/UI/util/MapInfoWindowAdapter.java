@@ -37,7 +37,6 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             Log.d("FROM MapWindowAdapter", "snippet = " + snippet[0]);
             switch(displayPurpose) {
                 case "User":
-//                    mapWindow = LayoutInflater.from(context).inflate(R.layout.customized_user_map_info_window, null);
                     TextView snippetTextView = (TextView) view.findViewById(R.id.mapInfoWindow_userSnippet);
                     Log.d("FROM MapWindowAdapter", "snippet = " + snippet[1]);
                     if (!snippet[1].equals("")) {
@@ -45,7 +44,6 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                     }
                     break;
                 case "Site":
-//                    mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_site_map_info_window, null, true);
                     TextView snippetSiteID = (TextView) view.findViewById(R.id.mapInfoWindow_siteID);
                     if (snippetSiteID == null) {
                         Log.d("FROM MapWindowAdapter", "textview is null");
@@ -74,7 +72,32 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                     }
                     break;
                 case "Worker":
-                    // TODO: Add customized map info window for worker
+                    TextView snippetEmployeeID = (TextView) view.findViewById(R.id.mapInfoWindow_employeeID);
+                    if (snippetEmployeeID == null) {
+                        Log.d("FROM MapWindowAdapter", "textview is null");
+                    }
+                    Log.d("FROM MapWindowAdapter", "snippet = " + snippet[1]);
+                    if (!snippet[1].equals("")) {
+                        snippetEmployeeID.setText(snippet[1]);
+                    }
+
+                    TextView snippetFullName = (TextView) view.findViewById(R.id.mapInfoWindow_fullName);
+                    Log.d("FROM MapWindowAdapter", "snippet = " + snippet[2]);
+                    if (!snippet[2].equals("")) {
+                        snippetFullName.setText(snippet[2]);
+                    }
+
+                    TextView snippetCompany = (TextView) view.findViewById(R.id.mapInfoWindow_companyID);
+                    Log.d("FROM MapWindowAdapter", "snippet = " + snippet[3]);
+                    if (!snippet[3].equals("")) {
+                        snippetCompany.setText(snippet[3]);
+                    }
+
+                    TextView snippetSupervisor = (TextView) view.findViewById(R.id.mapInfoWindow_supervisor);
+                    Log.d("FROM MapWindowAdapter", "snippet = " + snippet[4]);
+                    if (!snippet[4].equals("")) {
+                        snippetSupervisor.setText(snippet[4]);
+                    }
                     break;
                 default:
                     break;
@@ -94,7 +117,10 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_user_map_info_window, null);
         } else if (displayPurpose.equals("Site")) {
             mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_site_map_info_window, null);
+        } else if (displayPurpose.equals("Worker")) {
+            mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_worker_map_info_window, null);
         } else {
+            // default
             mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_user_map_info_window, null);
         }
         renderWindowText(marker, mapWindow);
@@ -113,7 +139,10 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_user_map_info_window, null);
         } else if (displayPurpose.equals("Site")) {
             mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_site_map_info_window, null);
+        } else if (displayPurpose.equals("Worker")) {
+            mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_worker_map_info_window, null);
         } else {
+            // default
             mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_user_map_info_window, null);
         }
         renderWindowText(marker, mapWindow);

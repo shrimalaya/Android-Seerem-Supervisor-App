@@ -52,6 +52,14 @@ public class Worker {
         return worksiteID;
     }
 
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public ModelLocation getLocation() {
+        return location;
+    }
+
     public List<String> getSkills() {
         return skills;
     }
@@ -75,9 +83,5 @@ public class Worker {
                 ", worksiteID='" + worksiteID + '\'' +
                 ", skills=" + skills +
                 '}';
-    }
-
-    public ModelLocation getLocation() {
-        return location;
     }
 }

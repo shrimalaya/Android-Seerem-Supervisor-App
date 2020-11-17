@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -56,9 +57,9 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
         holder.locationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(context, SiteMapActivity.class);
-                i.putExtra("ID", curr.getString(CONSTANTS.ID_KEY));
-                context.startActivity(i);
+                Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(context, "WorkerInfo");
+                mapIntent.putExtra("WorkerID FROM WorkerInfoActivity", curr.getString(CONSTANTS.ID_KEY));
+                context.startActivity(mapIntent);
             }
         });
 
@@ -82,7 +83,7 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
         return mList.size();
     }
 
-    public class WorkerViewHolder extends RecyclerView.ViewHolder {
+    public class WorkerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ConstraintLayout mLayout;
         public TextView workerIDTextView;
@@ -105,8 +106,18 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
             skillsTextView = itemView.findViewById(R.id.workerRow_Skills);
             siteIdTextView = itemView.findViewById(R.id.workerRow_WorksiteId);
             supervisorIdTextView = itemView.findViewById(R.id.workerRow_supervisor);
-
             additionalInfo = itemView.findViewById(R.id.WorkerRow_fix_additionalInfo);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            String workerID = workerIDTextView.getText().toString();
+//            Toast.makeText(view.getContext(), workerID, Toast.LENGTH_SHORT).show();
+            Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(view.getContext(), "WorkerInfo");
+            mapIntent.putExtra("WorkerID FROM WorkerInfoActivity", workerID);
+            view.getContext().startActivity(mapIntent);
         }
     }
 }
