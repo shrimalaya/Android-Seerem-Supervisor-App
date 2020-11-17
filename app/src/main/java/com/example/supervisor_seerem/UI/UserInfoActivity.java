@@ -193,6 +193,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }else{
             chosenEmergencyContactType = ((RadioButton) findViewById(emergencyContactTypes.getCheckedRadioButtonId())).getText().toString();
         }
+        
         String[] inputs = {firstName, lastName, id, medicalConsiderations, chosenEmergencyContactType,
                 emergencyContactNumber, emergencyContactName};
 
