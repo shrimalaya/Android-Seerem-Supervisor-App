@@ -62,6 +62,12 @@
     <string name="sensor_navigation_bar_text">Sensors</string>
     <string name="user_navigation_bar_text">Me</string>
 
+    <string name="map_noServices_error_message">No services available!</string>
+    <string name="map_info_siteID">Site ID: </string>
+    <string name="map_info_projectID">Project ID: </string>
+    <string name="map_info_hours">Hours: </string>
+    <string name="map_info_hse">HSE Link: </string>
+
     <string name="temperatureTextView">Temperature</string>
     <string name="pressureTextView">Pressure</string>
 
