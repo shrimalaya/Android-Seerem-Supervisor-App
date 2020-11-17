@@ -109,7 +109,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
             Log.d("FROM MAP: ", "previousActivity is: " + previousActivity);
             if (previousActivity != null && previousActivity.equals("SiteInfo")){ // if the user clicks on a site from the list of worksites
-                zoomToSiteLocationn();
+                zoomToSiteLocation();
             } else if (previousActivity != null && previousActivity.equals("WorkerInfo")) { // if the user clicks on a worker from the list of workers
                zoomToWorkerPosition();
             } else {
