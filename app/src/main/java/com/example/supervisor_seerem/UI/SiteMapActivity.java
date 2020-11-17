@@ -1,6 +1,5 @@
 package com.example.supervisor_seerem.UI;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -168,9 +167,11 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-        navigation.setSelectedItemId(R.id.userNavigation);
+//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+//        navigation.setSelectedItemId(R.id.userNavigation);
+        finishAffinity();
+        Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
+        startActivity(intent);
     }
 
     @Override
@@ -348,8 +349,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         hideSoftKeyboard();
     }
 
-    private void zoomToSiteLocationn() {
-//        TODO: get location of the clicked site and zoom in it
+    private void zoomToSiteLocation() {
         Intent intent = getIntent();
         String clickedSiteID = intent.getStringExtra("SITE ID FROM SiteInfoActivity");
         Log.d("FROM MAP", "clickedSiteID = " + clickedSiteID);

@@ -28,7 +28,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 /**
- * Displays different way through which the user can talk to others.
+ * Displays different ways through which the user can talk to company employee,
+ * with intents to launch the supervisor's desired and available communication options.
  */
 public class CommunicationActivity extends AppCompatActivity implements View.OnClickListener{
 

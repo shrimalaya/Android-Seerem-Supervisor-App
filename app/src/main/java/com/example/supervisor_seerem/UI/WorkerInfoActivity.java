@@ -96,9 +96,12 @@ public class WorkerInfoActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-        navigation.setSelectedItemId(R.id.userNavigation);
+//        finish();
+//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+//        navigation.setSelectedItemId(R.id.userNavigation);
+        finishAffinity();
+        Intent intent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
+        startActivity(intent);
     }
 
     @Override

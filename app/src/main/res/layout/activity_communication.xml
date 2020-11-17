@@ -185,7 +185,8 @@
                 android:textSize="22sp"
                 android:gravity="center"
                 android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace" />
+                android:fontFamily="monospace"
+                android:textStyle="bold"/>
             <TextView
                 android:id="@+id/linkedZoom"
                 android:layout_width="wrap_content"
