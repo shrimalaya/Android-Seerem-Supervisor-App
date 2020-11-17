@@ -421,6 +421,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println("TEST3> Resuming UserInfo Activity");
+    }
 }
 
 
