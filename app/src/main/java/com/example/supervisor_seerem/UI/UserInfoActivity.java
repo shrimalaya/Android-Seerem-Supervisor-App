@@ -152,13 +152,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         Button saveUserInfo = (Button) findViewById(R.id.buttonSaveUserInfo);
         Button goToWorkSite = (Button) findViewById(R.id.buttonSiteMap);
 
-        goToUIPreferences.setOnClickListener(this);
+        goToUIPreferences.setOnClickListener(this
+        );
         saveUserInfo.setOnClickListener(this);
         goToWorkSite.setOnClickListener(this);
 
-        // TODO: Get user data from Cloud if it exists to autofill options during onCreate()
-
-//        setupButtons();
         emergencyContactTypes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -233,7 +231,17 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.buttonUIPreferences){
-            startActivity(new Intent(getBaseContext(), UIPreferencesActivity.class));
+            //Passing of intents should go in the code for the Button going to CommunicationActivity
+            //Testing... why do t
+            Intent intent = new Intent(UserInfoActivity.this, CommunicationActivity.class);
+            intent.putExtra( "EMPLOYEE_FIRST_NAME", "Beep");
+            intent.putExtra("EMPLOYEE_LAST_NAME","Boop");
+            intent.putExtra("EMPLOYEE_PHONE_NUMBER", "1234567890");
+            intent.putExtra("EMPLOYEE_EMAIL", "test@gmail.com");
+            intent.putExtra("EMPLOYEE_MEETS", "A google meets link");
+            intent.putExtra("EMPLOYEE_TEAMS", "A team");
+            intent.putExtra("EMPLOYEE_ZOOM", "A zoom link");
+            startActivity(intent);
         }else if(view.getId() == R.id.buttonSaveUserInfo){
             storeInputs();
         }else if(view.getId() == R.id.buttonSiteMap){
