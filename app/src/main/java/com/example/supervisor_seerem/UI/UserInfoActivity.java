@@ -154,8 +154,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         Button saveUserInfo = (Button) findViewById(R.id.buttonSaveUserInfo);
         Button goToWorkSite = (Button) findViewById(R.id.buttonSiteMap);
 
-        goToUIPreferences.setOnClickListener(this
-        );
+        goToUIPreferences.setOnClickListener(this);
         saveUserInfo.setOnClickListener(this);
         goToWorkSite.setOnClickListener(this);
 
@@ -271,42 +270,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     public void onCallback(List<DocumentSnapshot> docs) {
                         manager.setEmergencyInfo(docs);
 
-                        DocumentSnapshot userEmergencyInfo = null;
-                        for(DocumentSnapshot document: docs) {
-                            if(document.getString(CONSTANTS.ID_KEY).equals(manager.getCurrentUser().getId())) {
-                                userEmergencyInfo = document;
-                            }
-                        }
-                        if (userEmergencyInfo == null) {
-                            Toast.makeText(getApplicationContext(), getText(R.string.new_user_prompt),
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            String savedFirstName = manager.getCurrentUser().getFirstName();
-                            String savedLastName = manager.getCurrentUser().getLastName();
-                            String savedID = manager.getCurrentUser().getId();
-                            String savedMedicalConsiderations = userEmergencyInfo.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY);
-                            String savedEmergencyContactType = userEmergencyInfo.getString(CONSTANTS.RELATIONSHIP_KEY);
-                            String savedEmergencyContactNumber = userEmergencyInfo.getString(CONSTANTS.EMERGENCY_CONTACT_KEY);
-                            String savedEmergencyContactName = userEmergencyInfo.getString(CONSTANTS.EMERGENCY_NAME_KEY);
-
-                            firstNameInput.setText(savedFirstName);
-                            lastNameInput.setText(savedLastName);
-                            idInput.setText(savedID);
-                            medicalConsiderationsInput.setText(savedMedicalConsiderations);
-                            emergencyContactNameInput.setText(savedEmergencyContactName);
-                            //emergencyContactTypes = findViewById(R.id.radioContactType);
-                            emergencyContactNumberInput.setText(savedEmergencyContactNumber);
-                            if (savedEmergencyContactType.equals("Family")) {
-                                emergencyTypeFamily.setChecked(true);
-                                emergencyTypeFriend.setChecked(false);
-                            } else if (savedEmergencyContactType.equals("Friend")) {
-                                emergencyTypeFriend.setChecked(true);
-                                emergencyTypeFamily.setChecked(false);
-                            }
-                        }
-
-
-
                         getContactData(new DocListCallback() {
                             @Override
                             public void onCallback(List<DocumentSnapshot> docs) {
@@ -330,6 +293,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                                     @Override
                                     public void onCallback(List<DocumentSnapshot> docs) {
                                         manager.setSites(docs);
+                                        populateData();
                                     }
                                 });
                             }
@@ -338,6 +302,49 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 });
             }
         });
+    }
+
+    private void populateData() {
+        DocumentSnapshot userEmergencyInfo = null;
+        for(DocumentSnapshot document: manager.getEmergencyInfo()) {
+            System.out.println("TEST3> User ID: " + manager.getCurrentUser().getId());
+            System.out.println("TEST3> EMERGENCY ID: " + document.getString(CONSTANTS.ID_KEY));
+            if(document.getString(CONSTANTS.ID_KEY).equals(manager.getCurrentUser().getId())) {
+                userEmergencyInfo = document;
+                System.out.println("TEST3> USER EMERGENCY DOC FOUND");
+            }
+        }
+
+        if (userEmergencyInfo == null) {
+            Toast.makeText(getApplicationContext(), "NO USER EMERGENCY FOUND",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            String savedFirstName = manager.getCurrentUser().getFirstName();
+            String savedLastName = manager.getCurrentUser().getLastName();
+            String savedID = manager.getCurrentUser().getId();
+            String savedMedicalConsiderations = userEmergencyInfo.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY);
+            String savedEmergencyContactType = userEmergencyInfo.getString(CONSTANTS.RELATIONSHIP_KEY);
+            String savedEmergencyContactNumber = userEmergencyInfo.getString(CONSTANTS.EMERGENCY_CONTACT_KEY);
+            String savedEmergencyContactName = userEmergencyInfo.getString(CONSTANTS.EMERGENCY_NAME_KEY);
+
+            firstNameInput.setText(savedFirstName);
+            lastNameInput.setText(savedLastName);
+            idInput.setText(savedID);
+            medicalConsiderationsInput.setText(savedMedicalConsiderations);
+            emergencyContactNameInput.setText(savedEmergencyContactName);
+            //emergencyContactTypes = findViewById(R.id.radioContactType);
+            emergencyContactNumberInput.setText(savedEmergencyContactNumber);
+            if (savedEmergencyContactType.equals("Family")) {
+                emergencyTypeFamily.setChecked(true);
+                emergencyTypeFriend.setChecked(false);
+            } else if (savedEmergencyContactType.equals("Friend")) {
+                emergencyTypeFriend.setChecked(true);
+                emergencyTypeFamily.setChecked(false);
+            } else {
+                emergencyTypeFamily.setChecked(true);
+                emergencyTypeFriend.setChecked(false);
+            }
+        }
     }
 
     private void getWorkersData(final DocListCallback callback) {
