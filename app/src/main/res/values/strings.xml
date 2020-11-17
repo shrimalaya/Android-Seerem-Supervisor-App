@@ -31,6 +31,19 @@
     <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
     <string name="search_input_hint">Enter a worker\'s name or a site\'s ID</string>
 
+    <string name="communication_header">Communication</string>
+    <string name="communication_help">Select communication method</string>
+    <string name="communication_no_employee">(No Employee Selected)</string>
+    <string name="communication_phone">PHONE</string>
+    <string name="communication_no_phone">(No Phone #)</string>
+    <string name="communication_email">EMAIL</string>
+    <string name="communication_no_email">(No Email)</string>
+    <string name="communication_google_meet">Google MEET</string>
+    <string name="communication_no_google_meet">(No MEET contact)</string>
+    <string name="communication_microsoft_teams">Microsoft TEAMs</string>
+    <string name="communication_no_microsoft_teams">(No TEAMs contact)</string>
+    <string name="communications_skye">Skype</string>
+    <string name="communications_no_skye">(No Skype contact)</string>
 
     <string name="worker_navigation_bar_text">Worker</string>
     <string name="site_navigation_bar_text">Sites</string>

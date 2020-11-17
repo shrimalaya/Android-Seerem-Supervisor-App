@@ -221,7 +221,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.buttonUIPreferences){
-            startActivity(new Intent(getBaseContext(), UIPreferencesActivity.class));
+            startActivity(new Intent(getBaseContext(), CommunicationActivity.class));
         }else if(view.getId() == R.id.buttonSaveUserInfo){
             storeInputs();
         }else if(view.getId() == R.id.buttonSiteMap){
