@@ -62,4 +62,7 @@
     <string name="sensor_navigation_bar_text">Sensors</string>
     <string name="user_navigation_bar_text">Me</string>
 
+    <string name="temperatureTextView">Temperature</string>
+    <string name="pressureTextView">Pressure</string>
+
 </resources>

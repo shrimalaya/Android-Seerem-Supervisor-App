@@ -1,5 +1,6 @@
 package com.example.supervisor_seerem.UI;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -95,12 +96,14 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 switch(menuItem.getItemId()) {
                     case R.id.workerNavigation:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteMapActivity.this);
+                        finish();
                         startActivity(workerIntent);
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.siteNavigation:
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(SiteMapActivity.this);
+                        finish();
                         startActivity(siteIntent);
                         overridePendingTransition(0,0);
                         return true;
@@ -111,12 +114,14 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
                     case R.id.sensorNavigation:
                         Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(SiteMapActivity.this);
+                        finish();
                         startActivity(sensorIntent);
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.userNavigation:
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
+                        finish();
                         startActivity(userIntent);
                         overridePendingTransition(0,0);
                         return true;
@@ -124,6 +129,14 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.userNavigation);
     }
 
     @Override
