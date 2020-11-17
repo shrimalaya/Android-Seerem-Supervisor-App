@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -75,6 +76,7 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
     // Intent should include fields in Contact which the user was able to pass.
     private void retrieveIntent(){
         employeeFirstName = getIntent().getStringExtra("EMPLOYEE_FIRST_NAME");
+        Log.i("EMPLOYEE FISRT IS:", employeeFirstName);
         employeeLastName = getIntent().getStringExtra("EMPLOYEE_LAST_NAME");
         employeePhoneNumber = getIntent().getStringExtra("EMPLOYEE_PHONE_NUMBER");
         employeeEmail = getIntent().getStringExtra("EMPLOYEE_EMAIL");
@@ -134,7 +136,7 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         }
 
         if(employeeSkype == null){
-            employeeSkype = getString(R.string.communication_no_microsoft_teams);
+            employeeSkype = getString(R.string.communications_skype_exists);
             goToTeams.setEnabled(false);
         }else{
             employeeSkype = getString(R.string.communication_microsoft_teams_exists);

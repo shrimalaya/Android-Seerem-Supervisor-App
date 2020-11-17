@@ -233,6 +233,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/seerem_logo_colour"
                 android:text="@string/communication_no_microsoft_teams"
+                android:fontFamily="monospace"
                 android:textColor="@color/seerem_logo_colour"/>
         </TableRow>
         <TableRow

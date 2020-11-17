@@ -39,18 +39,22 @@
     <string name="communication_no_phone">(No Phone #)</string>
     <string name="communication_email">EMAIL</string>
     <string name="communication_no_email">(No Email)</string>
+
     <string name="communication_google_meet">Google MEET</string>
     <string name="communication_no_google_meet">(No MEET contact)</string>
-    <string name="communication_google_meet_exists">MEET account linked</string>
-    <string name="communication_microsoft_teams">Microsoft TEAMs</string>
-    <string name="communication_no_microsoft_teams">(No TEAMs contact)</string>
-    <string name="communication_microsoft_teams_exists">TEAMs account linked</string>
+    <string name="communication_google_meet_exists">MEET linked</string>
+
+    <string name="communication_microsoft_teams">Microsoft TEAMS</string>
+    <string name="communication_no_microsoft_teams">(No TEAMS contact)</string>
+    <string name="communication_microsoft_teams_exists">TEAMS linked</string>
+
     <string name="communications_skype">Skype</string>
     <string name="communications_no_skype">(No Skype contact)</string>
-    <string name="communications_skype_exists">Skye account linked</string>
+    <string name="communications_skype_exists">Skype linked</string>
+
     <string name="communication_zoom">Zoom</string>
     <string name="communication_no_zoom">(No Zoom link)</string>
-    <string name="communication_zoom_exists">(Zoom link exists)</string>
+    <string name="communication_zoom_exists">Zoom link exists</string>
 
     <string name="worker_navigation_bar_text">Worker</string>
     <string name="site_navigation_bar_text">Sites</string>
