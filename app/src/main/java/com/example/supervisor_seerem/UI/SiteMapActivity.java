@@ -27,6 +27,10 @@ import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.UI.util.MapInfoWindowAdapter;
+import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.DocumentManager;
+import com.example.supervisor_seerem.model.ModelLocation;
+import com.example.supervisor_seerem.model.Site;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -40,6 +44,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,18 +56,35 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     private GoogleMap siteMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    private EditText searchInputEditText;
-    private ImageView myLocationImageView;
-
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 10000;
     private static final float DEFAULT_ZOOM = 15f; // 15 = street level view
+    private static final String LAUNCH_FROM_ACTIVITY = "Launched map from other activities";
+    private String previousActivity;
+
+    private DocumentManager docManager = DocumentManager.getInstance();
+    private List<DocumentSnapshot> sitesList = new ArrayList<>();
+    private Site clickedSite;
+
+    private EditText searchInputEditText;
+    private ImageView myLocationImageView;
 
     public static Intent launchMapIntent(Context context) {
         Intent mapIntent = new Intent(context, SiteMapActivity.class);
         return mapIntent;
+    }
+
+    public static Intent launchMapWithZoomToLocation(Context context, String fromActivity) {
+        Intent mapIntent = new Intent(context, SiteMapActivity.class);
+        mapIntent.putExtra(LAUNCH_FROM_ACTIVITY, fromActivity);
+        return mapIntent;
+    }
+
+    private void getPreviousActivityName() {
+        Intent intent = getIntent();
+        previousActivity = intent.getStringExtra(LAUNCH_FROM_ACTIVITY);
     }
 
     @Override
@@ -71,7 +93,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         siteMap = googleMap;
 
         if (isLocationPermissionsGranted) {
-            getDeviceLocation();
             if (ActivityCompat.checkSelfPermission(this, FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(this, COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // if somehow the permissions are still not granted...
@@ -82,6 +103,19 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             setupMap();
             siteMap.setMyLocationEnabled(true);
             siteMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+            // if not coming from those activities that require zoom in to a specific location
+            // (i.e. no need to zoom in worksites' or worker' current location)
+            Log.d("FROM MAP: ", "previousActivity is: " + previousActivity);
+            if (previousActivity == null) {
+                // ...then just show my current location
+                getDeviceLocation();
+            } else if (previousActivity.equals("SiteInfo")){
+                // TODO: Zoom to the worksite's location
+                zoomToSiteLocationn();
+            } else {
+                // TODO: Zoom to other specific location, such as worker's location
+            }
         }
     }
 
@@ -131,14 +165,17 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_map);
         setupNavigationBar();
+        getPreviousActivityName();
+
+        sitesList.clear();
+        sitesList.addAll(docManager.getSites());
+        Log.d("FROM MAP", "onCreate(): sitesList.size() = " + sitesList.size());
 
         searchInputEditText = (EditText) findViewById(R.id.searchInputEditText);
         myLocationImageView = (ImageView) findViewById(R.id.myLocationImageView);
 
         checkGooglePlayServicesAvailable();
         getLocationPermission();
-
-//        zoomToLocation();
     }
 
     private void checkGooglePlayServicesAvailable() {
@@ -271,10 +308,16 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         siteMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
         siteMap.setInfoWindowAdapter(new MapInfoWindowAdapter(SiteMapActivity.this));
 
-        String info = "Site ID: \n" +
-                        "Project ID: \n" +
-                        "Hours: ";
-
+        String info = "";
+        if (previousActivity == null || previousActivity.equals("")) {
+           info = "This is my current location!";
+        } else if (previousActivity.equals("SiteInfo")) {
+//            String hseLink = "<a href=\"" + clickedSite.getHseLink() + "\"> HSE Link </a>";
+            info = "Site ID: " + clickedSite.getID() +
+                    "\nProject ID: " + clickedSite.getProjectID() +
+                    "\nHours: " + clickedSite.getOperationHour() +
+                    "\nHSE Link:" + clickedSite.getHseLink();
+        }
         MarkerOptions options = new MarkerOptions()
                                 .position(latLng)
                                 .title(title)
@@ -283,14 +326,36 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         hideSoftKeyboard();
     }
 
-    private void zoomToLocation() {
+    private void zoomToSiteLocationn() {
 //        TODO: get location of the clicked site and zoom in it
-//        Intent intent = getIntent();
-//        String location = intent.getStringExtra("LOCATION_FROM_SITEINFO");
-//        String[] attributes = location.split(",");
-//        double lat = Double.parseDouble(attributes[0]);
-//        double lng = Double.parseDouble(attributes[1]);
-//        moveCamera(new LatLng(lat, lng), DEFAULT_ZOOM, "Site Location");
+        Intent intent = getIntent();
+        String clickedSiteID = intent.getStringExtra("SITE ID FROM SiteInfoActivity");
+        Log.d("FROM MAP", "clickedSiteID = " + clickedSiteID);
+
+        DocumentSnapshot currentSite = null;
+        Log.d("FROM MAP", "zoomToSiteLocation(): sitesList.size() = " + sitesList.size());
+        for (DocumentSnapshot site : sitesList) {
+            Log.d("FROM MAP", site.toString());
+            Log.d("FROM MAP", "siteID = " + site.getString(CONSTANTS.ID_KEY));
+            if (site.getString(CONSTANTS.ID_KEY).equals(clickedSiteID)) {
+                currentSite = site;
+                break;
+            }
+        }
+
+        ModelLocation siteLocation = new ModelLocation(currentSite.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
+                currentSite.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+        String projectID = currentSite.getString(CONSTANTS.PROJECT_ID_KEY);
+        ModelLocation masterpointLocation = new ModelLocation(currentSite.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
+                currentSite.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
+        String hseLink = currentSite.getString(CONSTANTS.HSE_LINK_KEY);
+        String operationHour = currentSite.getString(CONSTANTS.OPERATION_HRS_KEY);
+
+        clickedSite = new Site(clickedSiteID, projectID, siteLocation,
+                                masterpointLocation,hseLink, operationHour);
+        System.out.println(clickedSite.toString());
+        moveCamera(new LatLng(siteLocation.getLatitude(), siteLocation.getLongitude()),
+                        DEFAULT_ZOOM, "Site Location");
     }
 
     private void hideSoftKeyboard() {
