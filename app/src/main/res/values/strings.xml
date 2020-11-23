@@ -72,7 +72,13 @@
     <string name="map_info_companyID">Company: </string>
     <string name="map_info_supervisorID">Supervisor: </string>
 
+    <string name="sensorsUsageTextView">Device Sensor Values</string>
+    <string name="sensorUsageExplanationTextView">The following are the current Temperature and Pressure values for this device as read by any applicable built-in sensors.</string>
     <string name="temperatureTextView">Temperature</string>
+    <string name="noTemperatureSensorTextView">(No Temperature sensor found)</string>
     <string name="pressureTextView">Pressure</string>
+    <string name="noPressureSensorTextView">(No Pressure sensor found)</string>
+    <string name="temperatureUnitsTextView">%1$f°C (Degrees Celsius)</string>
+    <string name="pressureUnitsTextView">%1$fhPA (Hectopascal)</string>
 
 </resources>

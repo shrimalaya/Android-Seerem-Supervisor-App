@@ -108,7 +108,19 @@ public class SensorsUsageActivity extends AppCompatActivity {
         pressureValueTextView = (TextView) findViewById(R.id.pressureValueTextView);
 
         mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        setupTemperatureSensor();
+
+        // Perform check for Temperature and Pressure sensors
+        if(mySensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) !=  null){
+            setupTemperatureSensor();
+        }else{
+            temperatureValueTextView.setText(R.string.noTemperatureSensorTextView);
+        }
+
+        if(mySensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
+            setupPressureSensor();
+        }else{
+            pressureValueTextView.setText(R.string.noPressureSensorTextView);
+        }
         setupPressureSensor();
     }
 
@@ -118,7 +130,8 @@ public class SensorsUsageActivity extends AppCompatActivity {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 float temperature = sensorEvent.values[0];
-                temperatureValueTextView.setText("" + temperature);
+                //temperatureValueTextView.setText("" + temperature);
+                temperatureValueTextView.setText(getString(R.string.temperatureUnitsTextView, temperature));
             }
 
             @Override
@@ -134,7 +147,8 @@ public class SensorsUsageActivity extends AppCompatActivity {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 float pressure = sensorEvent.values[0];
-                pressureValueTextView.setText("" + pressure);
+                //pressureValueTextView.setText("" + pressure);
+                pressureValueTextView.setText( getString(R.string.pressureUnitsTextView, pressure));
             }
 
             @Override

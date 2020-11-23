@@ -51,7 +51,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private boolean isLocationPermissionsGranted = false;
     private GoogleMap siteMap;
