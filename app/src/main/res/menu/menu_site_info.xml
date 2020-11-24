@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_display_all_user"
-        android:menuCategory="container"
-        android:title="Display All Worksites"
-        android:visible="true"
-        app:showAsAction="never" />
+        android:id="@+id/menu_site_search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="Search"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView"/>
     <item
         android:id="@+id/refresh_site_info"
         android:enabled="true"
@@ -16,8 +16,13 @@
         android:visible="true"
         app:showAsAction="always" />
     <item
-        android:id="@+id/map_menu_siteInfo"
-        android:icon="@drawable/ic_baseline_map_48"
-        android:title="Map"
-        app:showAsAction="always" />
+        android:id="@+id/menu_display_all_user"
+        android:title="Display All Worksites"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_site_clear"
+        android:title="Clear Search"
+        android:visible="false"
+        app:showAsAction="never" />
 </menu>

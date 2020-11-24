@@ -1,6 +1,5 @@
 package com.example.supervisor_seerem.UI;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,24 +9,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
-import com.example.supervisor_seerem.model.Supervisor;
 import com.example.supervisor_seerem.UI.util.WorksiteAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SiteInfoActivity extends AppCompatActivity {
 
@@ -141,10 +139,117 @@ public class SiteInfoActivity extends AppCompatActivity {
         displayData();
     }
 
+    private void updateDisplaySites() {
+        if(showAllSites) {
+            mShowDocs.clear();
+            mShowDocs.addAll(mAllDocs);
+        } else {
+            mShowDocs.clear();
+            mShowDocs.addAll(mUserDocs);
+        }
+    }
+
+    public void displayData() {
+        System.out.println("TEST1> Before adapter: size of docs = " + mAllDocs.size());
+
+        updateDisplaySites();
+        mAdapter = new WorksiteAdapter(mShowDocs);
+
+        if (mAdapter == null) {
+            System.out.println("TEST1> Adapter null");
+        } else {
+            mRecycler.setAdapter(mAdapter);
+        }
+    }
+
+    // Search function
+    private void search(String expr) {
+        List<DocumentSnapshot> results = new ArrayList<>();
+        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
+
+        for(DocumentSnapshot doc: manager.getSites()) {
+            if(results.contains(doc)) {
+                //skip
+            } else {
+                // Look for matching ID
+                Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching Project ID
+                matcher = pattern.matcher(doc.getString(CONSTANTS.PROJECT_ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+            }
+        }
+
+        mShowDocs.clear();
+        mShowDocs.addAll(results);
+        mAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_site_info, menu);
+
+        /**
+         * Search layout referenced from: https://www.youtube.com/watch?v=pM1fAmUQn8g&ab_channel=CodinginFlow
+         */
+        final MenuItem search = menu.findItem(R.id.menu_site_search);
+        final MenuItem clear = menu.findItem(R.id.menu_site_clear);
+
+        final SearchView searchView = (SearchView) search.getActionView();
+        searchView.setQueryHint("Search Here!");
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clear.setVisible(true);
+            }
+        });
+
+        clear.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+
+                TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
+                if(showAllSites) {
+                    displayAllOrSelectedSites.setText("All Company Worksites");
+                } else {
+                    displayAllOrSelectedSites.setText("Assigned Worksites");
+                }
+
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
+                item.setVisible(false);
+                return true;
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                TextView currentlyDisplaying = findViewById(R.id.txtAllOrSelectedSites);
+                currentlyDisplaying.setText("Search Results: All Sites");
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                TextView currentlyDisplaying = findViewById(R.id.txtAllOrSelectedSites);
+                currentlyDisplaying.setText("Search: All Sites");
+                search(newText);
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -188,40 +293,11 @@ public class SiteInfoActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
                 return true;
 
-            case (R.id.map_menu_siteInfo):
-                Intent i = new Intent(this, SiteMapActivity.class);
-                startActivity(i);
-                return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void updateDisplaySites() {
-        if(showAllSites) {
-            mShowDocs.clear();
-            mShowDocs.addAll(mAllDocs);
-        } else {
-            mShowDocs.clear();
-            mShowDocs.addAll(mUserDocs);
-        }
-    }
 
-    public void displayData() {
-        System.out.println("TEST1> Before adapter: size of docs = " + mAllDocs.size());
 
-        updateDisplaySites();
-        mAdapter = new WorksiteAdapter(mShowDocs);
-
-        if (mAdapter == null) {
-            System.out.println("TEST1> Adapter null");
-        } else {
-            mRecycler.setAdapter(mAdapter);
-        }
-    }
-
-    private interface refreshCallback {
-        void onCallback();
-    }
 }

@@ -2,7 +2,6 @@ package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -11,8 +10,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -117,7 +114,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
         displayData();
     }
 
-    private void updateDisplaySites() {
+    private void updateDisplayWorkers() {
         mAllDocs.clear();
         mAllDocs.addAll(manager.getWorkers());
 
@@ -142,7 +139,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
     }
 
     public void displayData() {
-        updateDisplaySites();
+        updateDisplayWorkers();
 
         mAdapter = new WorkerAdapter(mShowDocs);
 
@@ -180,7 +177,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 searchView.setQuery("", false);
                 searchView.setIconified(true);
 
-                updateDisplaySites();
+                updateDisplayWorkers();
                 mAdapter.notifyDataSetChanged();
                 item.setVisible(false);
                 return true;
@@ -217,7 +214,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
             case (R.id.menu_worker_refresh):
                 manager.retrieveAllData();
 
-                updateDisplaySites();
+                updateDisplayWorkers();
                 mAdapter.notifyDataSetChanged();
                 return true;
 
@@ -230,22 +227,16 @@ public class WorkerInfoActivity extends AppCompatActivity {
                     item.setTitle("Display My Workers");
                 }
 
-                updateDisplaySites();
+                updateDisplayWorkers();
                 mAdapter.notifyDataSetChanged();
                 return true;
-
-//            case (R.id.menu_worker_clear):
-//                updateDisplaySites();
-//                mAdapter.notifyDataSetChanged();
-//                item.setVisible(false);
-//                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    // Beta search function
+    // Search function
     private void search(String expr) {
         List<DocumentSnapshot> results = new ArrayList<>();
         Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
