@@ -365,19 +365,21 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             }
         }
 
-        ModelLocation siteLocation = new ModelLocation(currentSite.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
-                currentSite.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
-        String projectID = currentSite.getString(CONSTANTS.PROJECT_ID_KEY);
-        ModelLocation masterpointLocation = new ModelLocation(currentSite.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
-                currentSite.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
-        String hseLink = currentSite.getString(CONSTANTS.HSE_LINK_KEY);
-        String operationHour = currentSite.getString(CONSTANTS.OPERATION_HRS_KEY);
+        if (currentSite != null) {
+            ModelLocation siteLocation = new ModelLocation(currentSite.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
+                    currentSite.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+            String projectID = currentSite.getString(CONSTANTS.PROJECT_ID_KEY);
+            ModelLocation masterpointLocation = new ModelLocation(currentSite.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
+                    currentSite.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
+            String hseLink = currentSite.getString(CONSTANTS.HSE_LINK_KEY);
+            String operationHour = currentSite.getString(CONSTANTS.OPERATION_HRS_KEY);
 
-        clickedSite = new Site(clickedSiteID, projectID, siteLocation,
-                                masterpointLocation,hseLink, operationHour);
-        System.out.println(clickedSite.toString());
-        moveCamera(new LatLng(siteLocation.getLatitude(), siteLocation.getLongitude()),
-                        DEFAULT_ZOOM, "Site Location");
+            clickedSite = new Site(clickedSiteID, projectID, siteLocation,
+                    masterpointLocation,hseLink, operationHour);
+            System.out.println(clickedSite.toString());
+            moveCamera(new LatLng(siteLocation.getLatitude(), siteLocation.getLongitude()),
+                    DEFAULT_ZOOM, "Site Location");
+        }
     }
 
     private void zoomToWorkerPosition() {
