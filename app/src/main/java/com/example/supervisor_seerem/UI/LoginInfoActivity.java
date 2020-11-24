@@ -32,7 +32,6 @@ import java.util.List;
  * This class is meant to be the first one the user sees upon launching the app.
  * Allows the user to input a username and password to log in and access the full app functionality
  * These will be stored in Shared Preferences
- * @Author Michael Mora
  */
 public class LoginInfoActivity extends AppCompatActivity {
 

@@ -1,8 +1,8 @@
 package com.example.supervisor_seerem.UI;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -10,6 +10,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.supervisor_seerem.R;
@@ -17,15 +21,12 @@ import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
 import com.example.supervisor_seerem.model.Worker;
 import com.example.supervisor_seerem.UI.util.WorkerAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -107,6 +108,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_worker_info);
 
         setupNavigationBar();
@@ -126,10 +128,14 @@ public class WorkerInfoActivity extends AppCompatActivity {
             }
         }
 
+        TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
+
         if(showAllWorkers) {
+            currentlyDisplaying.setText("All Company Workers");
             mShowDocs.clear();
             mShowDocs.addAll(mAllDocs);
         } else {
+            currentlyDisplaying.setText("Assigned Workers");
             mShowDocs.clear();
             mShowDocs.addAll(mUserDocs);
         }
@@ -151,6 +157,53 @@ public class WorkerInfoActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_worker_info, menu);
+
+        /**
+         * Search layout referenced from: https://www.youtube.com/watch?v=pM1fAmUQn8g&ab_channel=CodinginFlow
+         */
+        final MenuItem search = menu.findItem(R.id.menu_worker_search);
+        final MenuItem clear = menu.findItem(R.id.menu_worker_clear);
+
+        final SearchView searchView = (SearchView) search.getActionView();
+        searchView.setQueryHint("Search Here!");
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clear.setVisible(true);
+            }
+        });
+
+        clear.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
+                item.setVisible(false);
+                return true;
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
+                currentlyDisplaying.setText("Search Results: All workers");
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
+                currentlyDisplaying.setText("Search: All workers");
+                search(newText);
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -159,6 +212,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         switch (item.getItemId()) {
             case (R.id.menu_worker_refresh):
                 manager.retrieveAllData();
@@ -168,15 +222,11 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 return true;
 
             case (R.id.menu_worker_display_filter):
-                TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
-
                 if(showAllWorkers) {
                     showAllWorkers = false;
-                    currentlyDisplaying.setText("Assigned Workers");
                     item.setTitle("Display All Workers");
                 } else {
                     showAllWorkers = true;
-                    currentlyDisplaying.setText("All Company Workers");
                     item.setTitle("Display My Workers");
                 }
 
@@ -184,13 +234,66 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
                 return true;
 
-            case (R.id.menu_worker_map):
-                Intent i = new Intent(this, SiteMapActivity.class);
-                startActivity(i);
-                return true;
+//            case (R.id.menu_worker_clear):
+//                updateDisplaySites();
+//                mAdapter.notifyDataSetChanged();
+//                item.setVisible(false);
+//                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    // Beta search function
+    private void search(String expr) {
+        List<DocumentSnapshot> results = new ArrayList<>();
+        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
+
+        for(DocumentSnapshot doc: manager.getWorkers()) {
+            if(results.contains(doc)) {
+                //skip
+            } else {
+                // Look for matching name
+                Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.FIRST_NAME_KEY)
+                + " " + doc.getString(CONSTANTS.LAST_NAME_KEY));
+                if(matcher.find() == true) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching Skills
+                matcher = pattern.matcher(doc.getString(CONSTANTS.SKILLS_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching ID
+                matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching Supervisor ID
+                matcher = pattern.matcher(doc.getString(CONSTANTS.SUPERVISOR_ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching Worksite
+                matcher = pattern.matcher(doc.getString(CONSTANTS.WORKSITE_ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+            }
+        }
+
+        mShowDocs.clear();
+        mShowDocs.addAll(results);
+        mAdapter.notifyDataSetChanged();
     }
 }
