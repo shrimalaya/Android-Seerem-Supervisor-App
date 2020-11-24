@@ -178,6 +178,13 @@ public class SiteInfoActivity extends AppCompatActivity {
                     continue;
                 }
 
+                // Look for matching name
+                matcher = pattern.matcher(doc.getString(CONSTANTS.WORKSITE_NAME_KEY));
+                if(matcher.find() == true) {
+                    results.add(doc);
+                    continue;
+                }
+
                 // Look for matching Project ID
                 matcher = pattern.matcher(doc.getString(CONSTANTS.PROJECT_ID_KEY));
                 if(matcher.find()) {

@@ -130,7 +130,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-        setupNavigationBar();
 
         // The username saved from sharedPreference will become the name
         // Of the document.
@@ -138,10 +137,15 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
         firstNameInput = findViewById(R.id.editFirstName);
         firstNameInput.setClickable(false);
+        firstNameInput.setActivated(false);
+
         lastNameInput = findViewById(R.id.editLastName);
         lastNameInput.setClickable(false);
+        lastNameInput.setActivated(false);
+
         idInput = findViewById(R.id.editID);
         idInput.setClickable(false);
+        idInput.setActivated(false);
 
         medicalConsiderationsInput = findViewById(R.id.editMedical);
         emergencyContactNameInput = findViewById(R.id.editEmergencyContactName);
@@ -299,6 +303,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                                     public void onCallback(List<DocumentSnapshot> docs) {
                                         manager.setSites(docs);
                                         populateData();
+                                        setupNavigationBar();
                                     }
                                 });
                             }
@@ -321,7 +326,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (userEmergencyInfo == null) {
-            Toast.makeText(getApplicationContext(), "NO USER EMERGENCY FOUND",
+            Toast.makeText(getApplicationContext(), "Fill in emergency information!",
                     Toast.LENGTH_LONG).show();
         } else {
             String savedFirstName = manager.getCurrentUser().getFirstName();

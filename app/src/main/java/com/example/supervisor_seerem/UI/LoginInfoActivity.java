@@ -42,12 +42,20 @@ public class LoginInfoActivity extends AppCompatActivity {
     private DocumentManager manager = DocumentManager.getInstance();
     List<DocumentSnapshot> allSupervisors = new ArrayList<>();
 
+    SharedPreferences loginSharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_info);
 
+        loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
+
         usernameInput = findViewById(R.id.editUsername);
+        if(loginSharedPreferences.getString("username", null) != null) {
+            usernameInput.setText(loginSharedPreferences.getString("username", null));
+        }
+
         passwordInput = findViewById(R.id.editPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
 
@@ -86,7 +94,7 @@ public class LoginInfoActivity extends AppCompatActivity {
             Intent toUserInfo = new Intent(this, UserInfoActivity.class);
 //            Intent siteInfoIntent = SiteInfoActivity.launchSiteInfoIntent(LoginInfoActivity.this);
 
-            SharedPreferences loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
+
             String savedUsername = loginSharedPreferences.getString("username", null);
             String savedpassword = loginSharedPreferences.getString("password", null);
 
