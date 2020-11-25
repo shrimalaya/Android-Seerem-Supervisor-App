@@ -32,7 +32,7 @@
         <activity android:name=".UI.WorkerInfoActivity"
             android:label="Worker Information"/>
         <activity android:name=".UI.UserInfoActivity"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:label="User Information"/>
         <activity android:name=".UI.CommunicationActivity"
             android:label="Individual Communication"/>
         <activity
