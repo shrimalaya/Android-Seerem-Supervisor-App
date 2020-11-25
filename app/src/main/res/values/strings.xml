@@ -62,6 +62,25 @@
     <string name="sensor_navigation_bar_text">Sensors</string>
     <string name="user_navigation_bar_text">Me</string>
 
+    <string name="display_all_worksites">Display All Worksites</string>
+    <string name="display_all_workers">Display All Workers</string>
+    <string name="refresh">Refresh</string>
+
+    <string name="sidebar_navigation_open">Open sidebar navigation drawer</string>
+    <string name="sidebar_navigation_close">Close sidebar navigation drawer</string>
+    <string name="user_sidebar_text">Me</string>
+    <string name="overtime_sidebar_text">Add overtime</string>
+    <string name="day_leave_sidebar_text">Add day leave</string>
+    <string name="search_sidebar_text">Find</string>
+    <string name="communication_sidebar_text">Communication</string>
+    <string name="all_workers_sidebar_text">All workers</string>
+    <string name="company_sidebar_text">Company</string>
+    <string name="settings_sidebar_text">Settings</string>
+    <string name="ui_prefs_sidebar_text">UI Preferences</string>
+    <string name="light_dark_mode_sidebar_text">Theme</string>
+    <string name="languages_sidebar_text">Languages</string>
+    <string name="change_password_sidebar_text">Change password</string>
+
     <string name="map_noServices_error_message">No services available!</string>
     <string name="map_info_siteID">Site ID: </string>
     <string name="map_info_projectID">Project ID: </string>
@@ -72,7 +91,20 @@
     <string name="map_info_companyID">Company: </string>
     <string name="map_info_supervisorID">Supervisor: </string>
 
+    <string name="sensorsUsageTextView">Device Sensor Values</string>
+    <string name="sensorUsageExplanationTextView">The following are the current Temperature and Pressure values for this device as read by any applicable built-in sensors.</string>
     <string name="temperatureTextView">Temperature</string>
+    <string name="noTemperatureSensorTextView">(No Temperature sensor found)</string>
     <string name="pressureTextView">Pressure</string>
+    <string name="noPressureSensorTextView">(No Pressure sensor found)</string>
+    <string name="temperatureUnitsTextView">%1$f°C (Degrees Celsius)</string>
+    <string name="pressureUnitsTextView">%1$fhPA (Hectopascal)</string>
+
+    <string name="change_password_title_toolbar">Change Password</string>
+    <string name="change_language_title_toolbar">Change App Language</string>
+    <string name="change_theme_title_toolbar">Change Theme</string>
+    <string name="set_ui_prefs_title_toolbar">Set UI Preferences</string>
+    <string name="add_overtime_title_toolbar">Add overtime</string>
+    <string name="add_day_leave_title_toolbar">Add Day Leave</string>
 
 </resources>
