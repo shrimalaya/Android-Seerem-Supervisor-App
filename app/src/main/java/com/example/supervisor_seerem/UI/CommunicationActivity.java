@@ -322,6 +322,5 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
                 }
             }
         }
-
     }
 }
