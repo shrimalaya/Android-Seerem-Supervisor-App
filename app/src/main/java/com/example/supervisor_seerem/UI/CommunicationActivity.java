@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -128,6 +131,10 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         goToTeams = findViewById(R.id.buttonMicrosoftTeams);
         goToSkype = findViewById(R.id.buttonSkype);
 
+        goToMeets.setOnClickListener(this);
+        goToTeams.setOnClickListener(this);
+        goToSkype.setOnClickListener(this);
+
         if(employeeLastName == null || employeeFirstName == null){
             employeeFullName = getString(R.string.communication_no_employee);
         }else{
@@ -164,11 +171,11 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         }
 
         if(employeeSkype == null){
-            employeeSkype = getString(R.string.communications_skype_exists);
+            employeeSkype = getString(R.string.communications_no_skype);
             goToTeams.setEnabled(false);
             goToSkype.setBackgroundColor(ContextCompat.getColor(this, R.color.grey));
         }else{
-            employeeSkype = getString(R.string.communication_microsoft_teams_exists);
+            employeeSkype = getString(R.string.communications_skype_exists);
             goToMeets.setEnabled(true);
         }
 
@@ -237,15 +244,83 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
 //                    }
 //                });
 //    }
+    // Return true if the app is installed
+    // False if not
+    private boolean checkForCommunicatioNAppPackages(String packageName, PackageManager packageManager){
+        try{
+            packageManager.getPackageInfo(packageName, 0);
+            return true;
+        }catch(PackageManager.NameNotFoundException e){
+            return false;
+        }
+    }
+
+
     // For apps which autolink do not cover, we will have to creat Implicit Intents ourselves.
     @Override
     public void onClick(View view) {
+        Context context = getApplicationContext();
+        PackageManager pm = context.getPackageManager();
+        String zoomPackage = "us.zoom.videomeetings";
+        String googleMeetsPackage = "com.google.android.apps.meetings";
+        String microsoftTeamsPackage = "com.microsoft.teams";
+        String skypePackage = "com.skype.raider";
+
         if(view.getId() == R.id.buttonGoogleMeet){
-
+            //com.google.android.apps.meetings
+            // Package name taken from google play url
+            // Code for checking for installed Apps and launching the Play Store adapted from:
+            // https://stackoverflow.com/questions/11753000/how-to-open-the-google-play-store-directly-from-my-android-application
+            if(checkForCommunicatioNAppPackages(googleMeetsPackage,
+                    pm)){
+                Intent googleMeetIntent = getPackageManager()
+                        .getLaunchIntentForPackage(googleMeetsPackage);
+                startActivity(googleMeetIntent);
+            }else{
+                Toast.makeText(this, R.string.install_meets_prompt, Toast.LENGTH_LONG).show();
+                try{
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=" + googleMeetsPackage)));
+                }catch(android.content.ActivityNotFoundException e){
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id="
+                            + googleMeetsPackage)));
+                }
+            }
         }else if(view.getId() == R.id.buttonMicrosoftTeams){
-
+            if(checkForCommunicatioNAppPackages(microsoftTeamsPackage,
+                    pm)){
+                Intent googleMeetIntent = getPackageManager()
+                        .getLaunchIntentForPackage(microsoftTeamsPackage);
+                startActivity(googleMeetIntent);
+            }else{
+                Toast.makeText(this, R.string.install_teams_prompt, Toast.LENGTH_LONG).show();
+                try{
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=" + microsoftTeamsPackage)));
+                }catch(android.content.ActivityNotFoundException e){
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id="
+                                    + microsoftTeamsPackage)));
+                }
+            }
         }else if(view.getId() == R.id.buttonSkype){
-
+            if(checkForCommunicatioNAppPackages(skypePackage,
+                    pm)){
+                Intent googleMeetIntent = getPackageManager()
+                        .getLaunchIntentForPackage(skypePackage);
+                startActivity(googleMeetIntent);
+            }else{
+                Toast.makeText(this, R.string.install_skype_prompt, Toast.LENGTH_LONG).show();
+                try{
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=" + skypePackage)));
+                }catch(android.content.ActivityNotFoundException e){
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id="
+                                    + skypePackage)));
+                }
+            }
         }
 
     }

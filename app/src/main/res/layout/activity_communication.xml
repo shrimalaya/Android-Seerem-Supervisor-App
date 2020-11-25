@@ -216,8 +216,6 @@
                 android:layout_weight="0"
                 android:backgroundTint="@color/turquoise"
                 android:fontFamily="monospace"
-                android:paddingStart="20dip"
-                android:paddingLeft="20dip"
                 android:text="@string/communication_google_meet"
                 android:textColor="@color/white"
                 android:textSize="22sp"
@@ -252,8 +250,6 @@
                 android:layout_weight="0"
                 android:backgroundTint="@color/lilac"
                 android:fontFamily="monospace"
-                android:paddingStart="20dip"
-                android:paddingLeft="20dip"
                 android:text="@string/communication_microsoft_teams"
                 android:textColor="@color/white"
                 android:textSize="22sp"
@@ -283,13 +279,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:backgroundTint="@color/cyan"
-                android:ems="10"
                 android:fontFamily="monospace"
-                android:paddingStart="20dip"
-                android:paddingLeft="20dip"
                 android:text="@string/communications_skype"
                 android:textColor="@color/white"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/linkedSkype"
