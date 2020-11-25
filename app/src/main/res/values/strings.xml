@@ -40,6 +40,8 @@
     <string name="communication_email">EMAIL</string>
     <string name="communication_no_email">(No Email)</string>
 
+    <string name="communication_other_link">LINK</string>
+    <string name="communication_no_other_link">(No other communication links available)</string>
     <string name="communication_google_meet">Google MEET</string>
     <string name="communication_no_google_meet">(No MEET contact)</string>
     <string name="communication_google_meet_exists">MEET linked</string>
