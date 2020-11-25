@@ -15,13 +15,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.ChangePasswordActivity" />
-        <activity android:name=".UI.ChangeLanguageActivity" />
-        <activity android:name=".UI.ChangeThemeActivity" />
-        <activity android:name=".UI.AddDayLeaveActivity" />
-        <activity android:name=".UI.AddOvertimeActivity" />
+        <activity
+            android:name=".UI.ChangePasswordActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.ChangeLanguageActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.ChangeThemeActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.AddDayLeaveActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.AddOvertimeActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
         <activity android:name=".UI.AdditionalInfoActivity" />
-        <activity android:name=".UI.UIPreferencesActivity" />
+        <activity
+            android:name=".UI.UIPreferencesActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.SensorsUsageActivity"
             android:theme="@style/AppTheme_NoActionBar" />

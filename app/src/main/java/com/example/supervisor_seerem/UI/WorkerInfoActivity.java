@@ -86,58 +86,49 @@ public class WorkerInfoActivity extends AppCompatActivity {
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
                         startActivity(userIntent);
                         finish();
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_overtime:
                         Intent overtimeIntent = AddOvertimeActivity.launchAddOvertimeIntent(WorkerInfoActivity.this);
                         startActivity(overtimeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_day_leave:
                         Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(WorkerInfoActivity.this);
                         startActivity(dayLeaveIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_search:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_all_workers:
                         // just close sidebar because it goes to the same activity
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_company:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_ui_preferences:
                         Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(WorkerInfoActivity.this);
                         startActivity(uiPrefsIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
                         Intent changeThemeIntent = ChangeThemeActivity.launchChangeThemeIntent(WorkerInfoActivity.this);
                         startActivity(changeThemeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_languages:
                         Intent changeLanguageIntent = ChangeLanguageActivity.launchChangeLanguageIntent(WorkerInfoActivity.this);
                         startActivity(changeLanguageIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(WorkerInfoActivity.this);
                         startActivity(changePasswordIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
                 }
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
@@ -279,11 +270,6 @@ public class WorkerInfoActivity extends AppCompatActivity {
 
                 updateDisplaySites();
                 mAdapter.notifyDataSetChanged();
-                return true;
-
-            case (R.id.menu_worker_map):
-                Intent i = new Intent(this, SiteMapActivity.class);
-                startActivity(i);
                 return true;
 
             default:

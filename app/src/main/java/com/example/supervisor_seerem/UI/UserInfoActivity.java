@@ -102,60 +102,51 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 switch (item.getItemId()) {
                     case R.id.sidebar_user:
                         // just close sidebar because it goes to the same activity
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_overtime:
                         Intent overtimeIntent = AddOvertimeActivity.launchAddOvertimeIntent(UserInfoActivity.this);
                         startActivity(overtimeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_day_leave:
                         Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(UserInfoActivity.this);
                         startActivity(dayLeaveIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_search:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
                         startActivity(workerIntent);
                         finish();
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_company:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_ui_preferences:
                         Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(UserInfoActivity.this);
                         startActivity(uiPrefsIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
                         Intent changeThemeIntent = ChangeThemeActivity.launchChangeThemeIntent(UserInfoActivity.this);
                         startActivity(changeThemeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_languages:
                         Intent changeLanguageIntent = ChangeLanguageActivity.launchChangeLanguageIntent(UserInfoActivity.this);
                         startActivity(changeLanguageIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(UserInfoActivity.this);
                         startActivity(changePasswordIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
                 }
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
         });

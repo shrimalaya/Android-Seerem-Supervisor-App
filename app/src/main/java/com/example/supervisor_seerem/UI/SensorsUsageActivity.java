@@ -86,60 +86,51 @@ public class SensorsUsageActivity extends AppCompatActivity {
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
                         startActivity(userIntent);
                         finish();
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_overtime:
                         Intent overtimeIntent = AddOvertimeActivity.launchAddOvertimeIntent(SensorsUsageActivity.this);
                         startActivity(overtimeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_day_leave:
                         Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(SensorsUsageActivity.this);
                         startActivity(dayLeaveIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_search:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SensorsUsageActivity.this);
                         startActivity(workerIntent);
                         finish();
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_company:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_ui_preferences:
                         Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(SensorsUsageActivity.this);
                         startActivity(uiPrefsIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
                         Intent changeThemeIntent = ChangeThemeActivity.launchChangeThemeIntent(SensorsUsageActivity.this);
                         startActivity(changeThemeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_languages:
                         Intent changeLanguageIntent = ChangeLanguageActivity.launchChangeLanguageIntent(SensorsUsageActivity.this);
                         startActivity(changeLanguageIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(SensorsUsageActivity.this);
                         startActivity(changePasswordIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
                 }
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
         });

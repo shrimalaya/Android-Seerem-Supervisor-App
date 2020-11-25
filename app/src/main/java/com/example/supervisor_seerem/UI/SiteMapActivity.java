@@ -134,12 +134,6 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         Toolbar toolbar = findViewById(R.id.toolbar_for_sidebar);
         setSupportActionBar(toolbar);
 
-        // toggle to open/close the sidebar
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.sidebar_navigation_open, R.string.sidebar_navigation_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
         // header
         View headerView = navigationView.getHeaderView(0);
         String savedFirstName = documentManager.getCurrentUser().getFirstName();
@@ -161,60 +155,51 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
                         startActivity(userIntent);
                         finish();
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_overtime:
                         Intent overtimeIntent = AddOvertimeActivity.launchAddOvertimeIntent(SiteMapActivity.this);
                         startActivity(overtimeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_day_leave:
                         Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(SiteMapActivity.this);
                         startActivity(dayLeaveIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_search:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteMapActivity.this);
                         startActivity(workerIntent);
                         finish();
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_company:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_ui_preferences:
                         Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(SiteMapActivity.this);
                         startActivity(uiPrefsIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
                         Intent changeThemeIntent = ChangeThemeActivity.launchChangeThemeIntent(SiteMapActivity.this);
                         startActivity(changeThemeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_languages:
                         Intent changeLanguageIntent = ChangeLanguageActivity.launchChangeLanguageIntent(SiteMapActivity.this);
                         startActivity(changeLanguageIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(SiteMapActivity.this);
                         startActivity(changePasswordIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
                 }
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
         });

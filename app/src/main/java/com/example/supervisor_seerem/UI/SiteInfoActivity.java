@@ -90,60 +90,51 @@ public class SiteInfoActivity extends AppCompatActivity {
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(SiteInfoActivity.this);
                         startActivity(userIntent);
                         finish();
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_overtime:
                         Intent overtimeIntent = AddOvertimeActivity.launchAddOvertimeIntent(SiteInfoActivity.this);
                         startActivity(overtimeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_day_leave:
                         Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(SiteInfoActivity.this);
                         startActivity(dayLeaveIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_search:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteInfoActivity.this);
                         startActivity(workerIntent);
                         finish();
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_company:
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_ui_preferences:
                         Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(SiteInfoActivity.this);
                         startActivity(uiPrefsIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
                         Intent changeThemeIntent = ChangeThemeActivity.launchChangeThemeIntent(SiteInfoActivity.this);
                         startActivity(changeThemeIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_languages:
                         Intent changeLanguageIntent = ChangeLanguageActivity.launchChangeLanguageIntent(SiteInfoActivity.this);
                         startActivity(changeLanguageIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(SiteInfoActivity.this);
                         startActivity(changePasswordIntent);
-                        drawer.closeDrawer(GravityCompat.START);
                         break;
                 }
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
@@ -287,11 +278,6 @@ public class SiteInfoActivity extends AppCompatActivity {
 
                 updateDisplaySites();
                 mAdapter.notifyDataSetChanged();
-                return true;
-
-            case (R.id.map_menu_siteInfo):
-                Intent i = new Intent(this, SiteMapActivity.class);
-                startActivity(i);
                 return true;
 
             default:

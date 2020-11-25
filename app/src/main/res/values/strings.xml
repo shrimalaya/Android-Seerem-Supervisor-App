@@ -62,6 +62,10 @@
     <string name="sensor_navigation_bar_text">Sensors</string>
     <string name="user_navigation_bar_text">Me</string>
 
+    <string name="display_all_worksites">Display All Worksites</string>
+    <string name="display_all_workers">Display All Workers</string>
+    <string name="refresh">Refresh</string>
+
     <string name="sidebar_navigation_open">Open sidebar navigation drawer</string>
     <string name="sidebar_navigation_close">Close sidebar navigation drawer</string>
     <string name="user_sidebar_text">Me</string>
@@ -95,5 +99,12 @@
     <string name="noPressureSensorTextView">(No Pressure sensor found)</string>
     <string name="temperatureUnitsTextView">%1$f°C (Degrees Celsius)</string>
     <string name="pressureUnitsTextView">%1$fhPA (Hectopascal)</string>
+
+    <string name="change_password_title_toolbar">Change Password</string>
+    <string name="change_language_title_toolbar">Change App Language</string>
+    <string name="change_theme_title_toolbar">Change Theme</string>
+    <string name="set_ui_prefs_title_toolbar">Set UI Preferences</string>
+    <string name="add_overtime_title_toolbar">Add overtime</string>
+    <string name="add_day_leave_title_toolbar">Add Day Leave</string>
 
 </resources>
