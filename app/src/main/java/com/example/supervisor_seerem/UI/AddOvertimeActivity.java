@@ -8,16 +8,16 @@ import android.os.Bundle;
 
 import com.example.supervisor_seerem.R;
 
-public class UIPreferencesActivity extends AppCompatActivity {
+public class AddOvertimeActivity extends AppCompatActivity {
 
-    public static Intent launchUIPreferencesIntent(Context context) {
-        Intent uiPrefsIntent = new Intent(context, UIPreferencesActivity.class);
-        return uiPrefsIntent;
+    public static Intent launchAddOvertimeIntent(Context context) {
+        Intent overtimeIntent = new Intent(context, AddOvertimeActivity.class);
+        return overtimeIntent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_u_i_preferences);
+        setContentView(R.layout.activity_add_overtime);
     }
 }

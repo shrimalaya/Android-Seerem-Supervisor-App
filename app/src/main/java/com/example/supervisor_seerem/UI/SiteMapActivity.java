@@ -1,14 +1,19 @@
 package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -45,6 +50,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.IOException;
@@ -65,7 +71,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
     private static final String LAUNCH_FROM_ACTIVITY = "Launched map from other activities";
     private String previousActivity;
 
-    private DocumentManager docManager = DocumentManager.getInstance();
+    private DocumentManager documentManager = DocumentManager.getInstance();
     private List<DocumentSnapshot> sitesList = new ArrayList<>();
     private Site clickedSite;
     private List<DocumentSnapshot> workersList = new ArrayList<>();
@@ -73,6 +79,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
 
     private EditText searchInputEditText;
     private ImageView myLocationImageView;
+    private DrawerLayout drawer;
 
     public static Intent launchMapIntent(Context context) {
         Intent mapIntent = new Intent(context, SiteMapActivity.class);
@@ -117,6 +124,100 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                 getDeviceLocation();
             }
         }
+    }
+
+    private void setupSidebarNavigationDrawer() {
+        drawer = findViewById(R.id.sidebar_drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
+
+        // customized toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar_for_sidebar);
+        setSupportActionBar(toolbar);
+
+        // toggle to open/close the sidebar
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.sidebar_navigation_open, R.string.sidebar_navigation_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // header
+        View headerView = navigationView.getHeaderView(0);
+        String savedFirstName = documentManager.getCurrentUser().getFirstName();
+        String savedLastName = documentManager.getCurrentUser().getLastName();
+        TextView sidebarFullName = (TextView) headerView.findViewById(R.id.sidebar_header_fullname_textview);
+        sidebarFullName.setText(savedFirstName + " " + savedLastName);
+
+        final SharedPreferences loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
+        String savedUsername = loginSharedPreferences.getString("username", null);
+        TextView sidebarUsername = (TextView) headerView.findViewById(R.id.sidebar_header_username_textview);
+        sidebarUsername.setText(savedUsername);
+
+        // onClickListener
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.sidebar_user:
+                        Intent userIntent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
+                        startActivity(userIntent);
+                        finish();
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_overtime:
+                        Intent overtimeIntent = AddOvertimeActivity.launchAddOvertimeIntent(SiteMapActivity.this);
+                        startActivity(overtimeIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_day_leave:
+                        Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(SiteMapActivity.this);
+                        startActivity(dayLeaveIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_search:
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_all_workers:
+                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteMapActivity.this);
+                        startActivity(workerIntent);
+                        finish();
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_company:
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_ui_preferences:
+                        Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(SiteMapActivity.this);
+                        startActivity(uiPrefsIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_light_dark_mode:
+                        Intent changeThemeIntent = ChangeThemeActivity.launchChangeThemeIntent(SiteMapActivity.this);
+                        startActivity(changeThemeIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_languages:
+                        Intent changeLanguageIntent = ChangeLanguageActivity.launchChangeLanguageIntent(SiteMapActivity.this);
+                        startActivity(changeLanguageIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_change_password:
+                        Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(SiteMapActivity.this);
+                        startActivity(changePasswordIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     private void setupNavigationBar() {
@@ -166,12 +267,14 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-//        navigation.setSelectedItemId(R.id.userNavigation);
-        finishAffinity();
-        Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
-        startActivity(intent);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+            finishAffinity();
+            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -179,13 +282,14 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_map);
         setupNavigationBar();
+        setupSidebarNavigationDrawer();
         getPreviousActivityName();
 
         sitesList.clear();
-        sitesList.addAll(docManager.getSites());
+        sitesList.addAll(documentManager.getSites());
         Log.d("FROM MAP", "onCreate(): sitesList.size() = " + sitesList.size());
         workersList.clear();
-        workersList.addAll(docManager.getWorkers());
+        workersList.addAll(documentManager.getWorkers());
         Log.d("FROM MAP", "onCreate(): workersList.size() = " + workersList.size());
 
         searchInputEditText = (EditText) findViewById(R.id.searchInputEditText);

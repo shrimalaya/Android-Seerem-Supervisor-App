@@ -8,16 +8,16 @@ import android.os.Bundle;
 
 import com.example.supervisor_seerem.R;
 
-public class UIPreferencesActivity extends AppCompatActivity {
+public class ChangePasswordActivity extends AppCompatActivity {
 
-    public static Intent launchUIPreferencesIntent(Context context) {
-        Intent uiPrefsIntent = new Intent(context, UIPreferencesActivity.class);
-        return uiPrefsIntent;
+    public static Intent launchChangePasswordIntent(Context context) {
+        Intent changePasswordIntent = new Intent(context, ChangePasswordActivity.class);
+        return changePasswordIntent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_u_i_preferences);
+        setContentView(R.layout.activity_change_password);
     }
 }

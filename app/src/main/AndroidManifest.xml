@@ -15,7 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.AdditionalInfoActivity"></activity>
+        <activity android:name=".UI.ChangePasswordActivity" />
+        <activity android:name=".UI.ChangeLanguageActivity" />
+        <activity android:name=".UI.ChangeThemeActivity" />
+        <activity android:name=".UI.AddDayLeaveActivity" />
+        <activity android:name=".UI.AddOvertimeActivity" />
+        <activity android:name=".UI.AdditionalInfoActivity" />
         <activity android:name=".UI.UIPreferencesActivity" />
         <activity
             android:name=".UI.SensorsUsageActivity"
@@ -28,14 +33,20 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".UI.WorkerInfoActivity" />
-        <activity android:name=".UI.UserInfoActivity" />
+        <activity
+            android:name=".UI.WorkerInfoActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.UserInfoActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
         <activity android:name=".UI.MainActivity" />
         <activity android:name=".UI.CommunicationActivity" />
         <activity
             android:name=".UI.SiteMapActivity"
             android:theme="@style/AppTheme_NoActionBar" />
-        <activity android:name=".UI.SiteInfoActivity" />
+        <activity
+            android:name=".UI.SiteInfoActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
         <activity android:name=".UI.LoginInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

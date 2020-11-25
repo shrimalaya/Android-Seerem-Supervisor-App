@@ -8,16 +8,16 @@ import android.os.Bundle;
 
 import com.example.supervisor_seerem.R;
 
-public class UIPreferencesActivity extends AppCompatActivity {
+public class ChangeLanguageActivity extends AppCompatActivity {
 
-    public static Intent launchUIPreferencesIntent(Context context) {
-        Intent uiPrefsIntent = new Intent(context, UIPreferencesActivity.class);
-        return uiPrefsIntent;
+    public static Intent launchChangeLanguageIntent(Context context) {
+        Intent languageIntent = new Intent(context, ChangeLanguageActivity.class);
+        return languageIntent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_u_i_preferences);
+        setContentView(R.layout.activity_change_language);
     }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="AppTheme_NoActionBar_Sidebar">
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>

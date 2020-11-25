@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.DocumentManager;
@@ -51,10 +52,14 @@ public class SensorsUsageActivity extends AppCompatActivity {
     }
 
     private void setupSidebarNavigationDrawer() {
+        drawer = findViewById(R.id.sidebar_drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
+
+        // customized toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_for_sidebar);
         setSupportActionBar(toolbar);
-        drawer = findViewById(R.id.sidebar_drawer_layout);
+
+        // toggle to open/close the sidebar
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.sidebar_navigation_open, R.string.sidebar_navigation_close);
         drawer.addDrawerListener(toggle);
@@ -67,12 +72,77 @@ public class SensorsUsageActivity extends AppCompatActivity {
         TextView sidebarFullName = (TextView) headerView.findViewById(R.id.sidebar_header_fullname_textview);
         sidebarFullName.setText(savedFirstName + " " + savedLastName);
 
-        SharedPreferences loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
+        final SharedPreferences loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
         String savedUsername = loginSharedPreferences.getString("username", null);
         TextView sidebarUsername = (TextView) headerView.findViewById(R.id.sidebar_header_username_textview);
         sidebarUsername.setText(savedUsername);
 
+        // onClickListener
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.sidebar_user:
+                        Intent userIntent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
+                        startActivity(userIntent);
+                        finish();
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
 
+                    case R.id.sidebar_overtime:
+                        Intent overtimeIntent = AddOvertimeActivity.launchAddOvertimeIntent(SensorsUsageActivity.this);
+                        startActivity(overtimeIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_day_leave:
+                        Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(SensorsUsageActivity.this);
+                        startActivity(dayLeaveIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_search:
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_all_workers:
+                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SensorsUsageActivity.this);
+                        startActivity(workerIntent);
+                        finish();
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_company:
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_ui_preferences:
+                        Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(SensorsUsageActivity.this);
+                        startActivity(uiPrefsIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_light_dark_mode:
+                        Intent changeThemeIntent = ChangeThemeActivity.launchChangeThemeIntent(SensorsUsageActivity.this);
+                        startActivity(changeThemeIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_languages:
+                        Intent changeLanguageIntent = ChangeLanguageActivity.launchChangeLanguageIntent(SensorsUsageActivity.this);
+                        startActivity(changeLanguageIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+
+                    case R.id.sidebar_change_password:
+                        Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(SensorsUsageActivity.this);
+                        startActivity(changePasswordIntent);
+                        drawer.closeDrawer(GravityCompat.START);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     private void setupNavigationBar() {
@@ -126,9 +196,6 @@ public class SensorsUsageActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-//            finish();
-//            BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-//            navigation.setSelectedItemId(R.id.userNavigation);
             finishAffinity();
             Intent intent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
             startActivity(intent);
