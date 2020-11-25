@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimary">@color/seerem_logo_colour</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="seerem_logo_colour">#bf1e2e</color>
@@ -9,5 +9,5 @@
     <color name="lilac">#5a3dff</color>
     <color name="cyan">#2f92ad</color>
     <color name="cerulean">#3280c9</color>
-    <color name="grey">#8a8a8a</color>
+    <color name="grey">#A5A5A5</color>
 </resources>

@@ -65,15 +65,14 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     String chosenEmergencyContactType;
     FirebaseAuth firebaseAuthentication;
 
+    BottomNavigationView navigation;
+
     public static Intent launchUserInfoIntent(Context context) {
         Intent userInfoIntent = new Intent(context, UserInfoActivity.class);
         return userInfoIntent;
     }
 
     private void setupNavigationBar() {
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-        navigation.setSelectedItemId(R.id.userNavigation);
-
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -123,7 +122,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         startActivity(intent);
     }
 
-
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
 
     @Override
@@ -131,8 +129,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
+        navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.userNavigation);
+
         // The username saved from sharedPreference will become the name
-        // Of the document.
+        // of the document.
         SharedPreferences sharedPrefs = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
 
         firstNameInput = findViewById(R.id.editFirstName);

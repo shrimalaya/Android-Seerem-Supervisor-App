@@ -27,13 +27,13 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:paddingStart="20dip"
                 android:paddingLeft="20dip"
                 android:text="@string/user_info_header"
-                android:textSize="30sp"
                 android:textColor="@color/white"
-                android:fontFamily="monospace"
+                android:textSize="30sp"
                 android:textStyle="bold" />
         </TableRow>
 
@@ -47,13 +47,13 @@
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:text="@string/name_entry"
-                android:textStyle="bold"
-                android:textSize="24dp"
                 android:layout_weight="3"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center"
+                android:text="@string/name_entry"
                 android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
-                android:gravity="center"/>
+                android:textSize="24dp"
+                android:textStyle="bold" />
         </TableRow>
 
         <TableRow
@@ -71,7 +71,7 @@
                 android:backgroundTint="@color/seerem_logo_colour"
                 android:clickable="false"
                 android:ems="10"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
                 android:hint="@string/first_name_entry"
                 android:inputType="none"
                 android:paddingStart="20dip"
@@ -88,7 +88,7 @@
                 android:backgroundTint="@color/seerem_logo_colour"
                 android:clickable="false"
                 android:ems="10"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
                 android:hint="@string/last_name_entry"
                 android:inputType="none"
                 android:paddingStart="20dip"
@@ -108,14 +108,14 @@
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:text="@string/id_entry"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:layout_weight="2"
-                android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
                 android:paddingStart="20dip"
-                android:paddingLeft="20dip"/>
+                android:paddingLeft="20dip"
+                android:text="@string/id_entry"
+                android:textColor="@color/seerem_logo_colour"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editID"
@@ -124,7 +124,7 @@
                 android:backgroundTint="@color/seerem_logo_colour"
                 android:clickable="false"
                 android:ems="10"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
                 android:inputType="none"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimaryDark"
@@ -141,14 +141,14 @@
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:text="@string/medical_considerations_entry"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
                 android:layout_weight="2"
+                android:fontFamily="sans-serif-smallcaps"
                 android:paddingStart="20dip"
-                android:paddingLeft="20dip"/>
+                android:paddingLeft="20dip"
+                android:text="@string/medical_considerations_entry"
+                android:textColor="@color/seerem_logo_colour"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editMedical"
@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/seerem_logo_colour"
                 android:ems="10"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
                 android:inputType="textPersonName"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimaryDark"
@@ -174,14 +174,14 @@
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:text="@string/emergency_contact_entry"
-                android:textStyle="bold"
-                android:textSize="22sp"
-                android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
                 android:layout_weight="5"
+                android:fontFamily="sans-serif-smallcaps"
                 android:paddingStart="20dip"
-                android:paddingLeft="20dip"/>
+                android:paddingLeft="20dip"
+                android:text="@string/emergency_contact_entry"
+                android:textColor="@color/seerem_logo_colour"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <RadioGroup
                 android:id="@+id/radioContactType"
@@ -192,24 +192,26 @@
                 android:paddingRight="20dip"
                 android:textColor="@color/seerem_logo_colour">
 
-                <RadioButton android:id="@+id/radio_family"
+                <RadioButton
+                    android:id="@+id/radio_family"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif-smallcaps"
                     android:text="@string/emergency_contact_type_family"
                     android:textColor="@color/seerem_logo_colour"
-                    android:textSize="20dp"
-                    android:fontFamily="monospace"
-                    android:layout_gravity="center"/>
+                    android:textSize="20dp" />
 
 
-                <RadioButton android:id="@+id/radio_friend"
+                <RadioButton
+                    android:id="@+id/radio_friend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif-smallcaps"
                     android:text="@string/emergency_contact_type_friend"
                     android:textColor="@color/seerem_logo_colour"
-                    android:textSize="20dp"
-                    android:fontFamily="monospace"
-                    android:layout_gravity="center"/>
+                    android:textSize="20dp" />
             </RadioGroup>
         </TableRow>
     </TableLayout>
@@ -228,7 +230,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:backgroundTint="@color/seerem_logo_colour"
-            android:fontFamily="monospace"
+            android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/emergency_contact_number_entryy"
             android:inputType="number"
             android:paddingStart="20dip"
@@ -243,9 +245,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:backgroundTint="@color/seerem_logo_colour"
-            android:fontFamily="monospace"
-            android:inputType="textPersonName"
+            android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/emergency_contact_name_entry"
+            android:inputType="textPersonName"
             android:paddingStart="20dip"
             android:paddingLeft="20dp"
             android:textAllCaps="true"
@@ -258,40 +260,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:background="@color/seerem_logo_colour">
+        android:layout_weight="1"
+        android:background="@color/seerem_logo_colour"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/buttonUIPreferences"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:fontFamily="sans-serif-smallcaps"
             android:text="@string/go_to_ui_preferences_button"
             android:textColor="@color/seerem_logo_colour"
-            android:backgroundTint="@color/white"
-            android:fontFamily="monospace"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/buttonSaveUserInfo"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:fontFamily="sans-serif-smallcaps"
             android:text="@string/save_user_info_button"
             android:textColor="@color/seerem_logo_colour"
-            android:backgroundTint="@color/white"
-            android:fontFamily="monospace"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/buttonSiteMap"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:fontFamily="sans-serif-smallcaps"
             android:text="@string/go_to_worksite"
             android:textColor="@color/seerem_logo_colour"
-            android:backgroundTint="@color/white"
-            android:fontFamily="monospace"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -300,9 +305,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@color/colorPrimary"
+        android:background="#A8A8A8"
+        android:paddingTop="2dp"
+        app:itemBackground="@color/seerem_logo_colour"
         app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector"
+        app:itemTextColor="@color/white"
         app:menu="@menu/menu_navigation_bar" />
 
 </LinearLayout>

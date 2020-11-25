@@ -21,28 +21,17 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/deviceSensorHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:textStyle="bold"
-                android:textSize="30sp"
-                android:textColor="@color/seerem_logo_colour"
-                android:text="@string/sensorsUsageTextView">
-            </TextView>
-
-            <TextView
                 android:id="@+id/deviceSensorExplanation"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:textStyle="bold"
-                android:textSize="22sp"
-                android:textColor="@color/seerem_logo_colour"
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp"
+                android:fontFamily="sans-serif-thin"
+                android:gravity="center"
                 android:text="@string/sensorUsageExplanationTextView"
-                android:gravity="center">
-            </TextView>
-    </LinearLayout>
+                android:textColor="@color/seerem_logo_colour"
+                android:textSize="22sp"
+                android:textStyle="bold"></TextView>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/temperatureLinearLayout"
@@ -50,21 +39,20 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/temperatureTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:textColor="@color/seerem_logo_colour"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
                 tools:text="@string/temperatureTextView" />
 
             <TextView
@@ -72,21 +60,21 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:fontFamily="monospace"
-                android:textStyle="bold"
-                android:textSize="18sp"
+                android:text="@string/noTemperatureSensorTextView"
                 android:textColor="@color/seerem_logo_colour"
-                android:text="@string/noTemperatureSensorTextView"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/pressureLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -95,13 +83,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:textColor="@color/seerem_logo_colour"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
                 tools:text="@string/pressureTextView" />
 
             <TextView
@@ -109,14 +97,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:fontFamily="monospace"
-                android:textStyle="bold"
+                android:text="@string/noPressureSensorTextView"
                 android:textColor="@color/seerem_logo_colour"
                 android:textSize="18sp"
-                android:text="@string/noPressureSensorTextView"/>
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 

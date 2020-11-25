@@ -7,6 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".UI.WorkerInfoActivity">
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/seerem_logo_colour"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+        app:menu="@menu/menu_navigation_bar" />
+
     <TextView
         android:id="@+id/fix_workerInfo_displayingText"
         android:layout_width="wrap_content"
@@ -15,6 +29,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginTop="5dp"
         android:text="Displaying:"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,7 +41,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:text="Assigned Workers"
-        android:textColor="#000000"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toEndOf="@+id/fix_workerInfo_displayingText"
@@ -151,19 +166,5 @@
                 app:layout_constraintTop_toTopOf="@+id/textView8" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </HorizontalScrollView>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:itemBackground="@color/colorPrimary"
-        app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
-        app:menu="@menu/menu_navigation_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
