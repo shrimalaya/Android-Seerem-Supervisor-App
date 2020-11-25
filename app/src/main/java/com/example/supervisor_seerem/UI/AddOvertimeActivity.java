@@ -14,19 +14,19 @@ import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
 
-public class UIPreferencesActivity extends AppCompatActivity {
+public class AddOvertimeActivity extends AppCompatActivity {
 
-    public static Intent launchUIPreferencesIntent(Context context) {
-        Intent uiPrefsIntent = new Intent(context, UIPreferencesActivity.class);
-        return uiPrefsIntent;
+    public static Intent launchAddOvertimeIntent(Context context) {
+        Intent overtimeIntent = new Intent(context, AddOvertimeActivity.class);
+        return overtimeIntent;
     }
 
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.back_and_save_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
-        toolbar.setTitle(R.string.set_ui_prefs_title_toolbar);
-        getSupportActionBar().setTitle(R.string.set_ui_prefs_title_toolbar);
+        toolbar.setTitle(R.string.add_overtime_title_toolbar);
+        getSupportActionBar().setTitle(R.string.add_overtime_title_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +60,7 @@ public class UIPreferencesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ui_preferences);
+        setContentView(R.layout.activity_add_overtime);
         setupToolbar();
     }
 }

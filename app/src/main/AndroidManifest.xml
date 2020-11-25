@@ -15,9 +15,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.AdditionalInfoActivity"></activity>
-        <activity android:name=".UI.UIPreferencesActivity" />
-        <activity android:name=".UI.SensorsUsageActivity" />
+        <activity
+            android:name=".UI.ChangePasswordActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.ChangeLanguageActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.ChangeThemeActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.AddDayLeaveActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.AddOvertimeActivity"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.AdditionalInfoActivity"
+            android:label="Additional Information" />
+        <activity
+            android:name=".UI.UIPreferencesActivity"
+            android:label="UI Preferences"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.SensorsUsageActivity"
+            android:label="Device Sensor Usage"
+            android:theme="@style/AppTheme_NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -26,15 +49,27 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".UI.WorkerInfoActivity" />
-        <activity android:name=".UI.UserInfoActivity" />
-        <activity android:name=".UI.MainActivity" />
-        <activity android:name=".UI.CommunicationActivity" />
+        <activity
+            android:name=".UI.WorkerInfoActivity"
+            android:label="Worker Information"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.UserInfoActivity"
+            android:label="User Information"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.CommunicationActivity"
+            android:label="Individual Communication" />
         <activity
             android:name=".UI.SiteMapActivity"
             android:theme="@style/AppTheme_NoActionBar" />
-        <activity android:name=".UI.SiteInfoActivity" />
-        <activity android:name=".UI.LoginInfoActivity">
+        <activity
+            android:name=".UI.SiteInfoActivity"
+            android:label="Worksite Information"
+            android:theme="@style/AppTheme_NoActionBar" />
+        <activity
+            android:name=".UI.LoginInfoActivity"
+            android:theme="@style/AppTheme_NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

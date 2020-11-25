@@ -17,7 +17,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_weight="1"
             android:background="@color/seerem_logo_colour"
             android:gravity="center">
@@ -27,13 +27,13 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:paddingStart="20dip"
                 android:paddingLeft="20dip"
                 android:text="@string/communication_header"
-                android:textSize="30sp"
                 android:textColor="@color/white"
-                android:fontFamily="monospace"
+                android:textSize="30sp"
                 android:textStyle="bold" />
         </TableRow>
 
@@ -47,13 +47,13 @@
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:text="@string/communication_help"
-                android:textStyle="bold"
-                android:textSize="20dp"
                 android:layout_weight="3"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center"
+                android:text="@string/communication_help"
                 android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
-                android:gravity="center"/>
+                android:textSize="20dp"
+                android:textStyle="bold" />
         </TableRow>
 
 
@@ -69,7 +69,7 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:text="@string/communication_no_employee"
                 android:textColor="@color/seerem_logo_colour"
@@ -89,11 +89,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="monospace"
-                android:text="@string/communication_phone"
-                android:textSize="22sp"
+                android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
-                android:textColor="@color/seerem_logo_colour" />
+                android:text="@string/communication_phone"
+                android:textColor="@color/seerem_logo_colour"
+                android:textSize="22sp" />
 
             <!--            <Button-->
             <!--                android:id="@+id/editFirstName"-->
@@ -117,10 +117,10 @@
                 android:layout_weight="1"
                 android:autoLink="phone"
                 android:ems="10"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
                 android:text="@string/communication_no_phone"
-                android:textSize="16dp"
-                android:textColor="@color/seerem_logo_colour" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp" />
         </TableRow>
 
         <TableRow
@@ -135,11 +135,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/communication_email"
-                android:textSize="22sp"
+                android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
+                android:text="@string/communication_email"
                 android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace" />
+                android:textSize="22sp" />
 
             <!--            <Button-->
             <!--                android:layout_width="match_parent"-->
@@ -160,13 +160,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="10"
                 android:autoLink="email"
+                android:ems="10"
+                android:fontFamily="sans-serif-smallcaps"
                 android:text="@string/communication_no_email"
-                android:textSize="16sp"
-                android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
-                />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp" />
         </TableRow>
 
         <TableRow
@@ -181,24 +180,25 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/communication_zoom"
-                android:textSize="22sp"
+                android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
+                android:text="@string/communication_zoom"
                 android:textColor="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
-                android:textStyle="bold"/>
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/linkedZoom"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:autoLink="web"
                 android:backgroundTint="@color/seerem_logo_colour"
                 android:ems="10"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
                 android:inputType="textPersonName"
                 android:text="@string/communication_no_zoom"
-                android:textColor="@color/seerem_logo_colour"
-                android:autoLink="web"/>
+                android:textColor="@color/colorPrimaryDark" />
 
         </TableRow>
 
@@ -215,7 +215,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:backgroundTint="@color/turquoise"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"
                 android:text="@string/communication_google_meet"
                 android:textColor="@color/white"
                 android:textSize="22sp"
@@ -225,13 +227,13 @@
                 android:id="@+id/linkedGoogleMeet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:backgroundTint="@color/seerem_logo_colour"
                 android:ems="10"
-                android:layout_weight="1"
-                android:fontFamily="monospace"
+                android:fontFamily="serif"
                 android:inputType="textPersonName"
                 android:text="@string/communication_no_google_meet"
-                android:textColor="@color/seerem_logo_colour" />
+                android:textColor="@color/colorPrimaryDark" />
 
         </TableRow>
 
@@ -249,7 +251,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:backgroundTint="@color/lilac"
-                android:fontFamily="monospace"
+                android:fontFamily="sans-serif-smallcaps"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"
                 android:text="@string/communication_microsoft_teams"
                 android:textColor="@color/white"
                 android:textSize="22sp"
@@ -261,9 +265,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/seerem_logo_colour"
+                android:fontFamily="serif"
                 android:text="@string/communication_no_microsoft_teams"
-                android:fontFamily="monospace"
-                android:textColor="@color/seerem_logo_colour"/>
+                android:textColor="@color/colorPrimaryDark" />
         </TableRow>
         <TableRow
             android:id="@+id/contactNameEntry"
@@ -279,7 +283,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:backgroundTint="@color/cyan"
-                android:fontFamily="monospace"
+                android:ems="10"
+                android:fontFamily="sans-serif-smallcaps"
+                android:paddingStart="20dip"
+                android:paddingLeft="20dip"
                 android:text="@string/communications_skype"
                 android:textColor="@color/white"
                 android:textSize="22sp"
@@ -287,15 +294,15 @@
 
             <TextView
                 android:id="@+id/linkedSkype"
-                android:layout_width="0dip"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
+                android:fontFamily="serif"
 
                 android:hint="@string/emergency_contact_name_entry"
                 android:text="@string/communications_no_skype"
-                android:textColor="@color/seerem_logo_colour" />
+                android:textColor="@color/colorPrimaryDark" />
 
         </TableRow>
 

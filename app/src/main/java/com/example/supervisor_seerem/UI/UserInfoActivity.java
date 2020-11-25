@@ -1,8 +1,11 @@
 package com.example.supervisor_seerem.UI;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,24 +18,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
-import com.example.supervisor_seerem.model.Availability;
 import com.example.supervisor_seerem.model.CONSTANTS;
-import com.example.supervisor_seerem.model.Contact;
-import com.example.supervisor_seerem.model.Emergency;
-import com.example.supervisor_seerem.model.Site;
-import com.example.supervisor_seerem.model.Supervisor;
-import com.example.supervisor_seerem.model.Worker;
 import com.example.supervisor_seerem.model.DocumentManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -49,31 +47,114 @@ import java.util.Map;
  */
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
     FirebaseFirestore mRef = FirebaseFirestore.getInstance();
-    private DocumentManager manager = DocumentManager.getInstance();
+    private DocumentManager documentManager = DocumentManager.getInstance();
 
     // Storing of data in Cloud Firebase guided by SmallAcademy @https://www.youtube.com/watch?v=RiHGwJ_u27k
 
-    EditText firstNameInput;
-    EditText lastNameInput;
-    EditText idInput;
-    EditText medicalConsiderationsInput;
-    EditText emergencyContactNameInput;
-    EditText emergencyContactNumberInput;
-    RadioGroup emergencyContactTypes;
-    RadioButton emergencyTypeFamily;
-    RadioButton emergencyTypeFriend;
-    String chosenEmergencyContactType;
-    FirebaseAuth firebaseAuthentication;
+    private EditText firstNameInput;
+    private EditText lastNameInput;
+    private EditText idInput;
+    private EditText medicalConsiderationsInput;
+    private EditText emergencyContactNameInput;
+    private EditText emergencyContactNumberInput;
+    private RadioGroup emergencyContactTypes;
+    private RadioButton emergencyTypeFamily;
+    private RadioButton emergencyTypeFriend;
+    private String chosenEmergencyContactType;
+    private FirebaseAuth firebaseAuthentication;
+    private DrawerLayout drawer;
+
+    BottomNavigationView navigation;
 
     public static Intent launchUserInfoIntent(Context context) {
         Intent userInfoIntent = new Intent(context, UserInfoActivity.class);
         return userInfoIntent;
     }
 
-    private void setupNavigationBar() {
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-        navigation.setSelectedItemId(R.id.userNavigation);
+    private void setupSidebarNavigationDrawer() {
+        drawer = findViewById(R.id.sidebar_drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
 
+        // customized toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar_for_sidebar);
+        setSupportActionBar(toolbar);
+
+        // toggle to open/close the sidebar
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.sidebar_navigation_open, R.string.sidebar_navigation_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // header
+        View headerView = navigationView.getHeaderView(0);
+        String savedFirstName = documentManager.getCurrentUser().getFirstName();
+        String savedLastName = documentManager.getCurrentUser().getLastName();
+        TextView sidebarFullName = (TextView) headerView.findViewById(R.id.sidebar_header_fullname_textview);
+        sidebarFullName.setText(savedFirstName + " " + savedLastName);
+
+        final SharedPreferences loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
+        String savedUsername = loginSharedPreferences.getString("username", null);
+        TextView sidebarUsername = (TextView) headerView.findViewById(R.id.sidebar_header_username_textview);
+        sidebarUsername.setText(savedUsername);
+
+        // onClickListener
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.sidebar_user:
+                        // just close sidebar because it goes to the same activity
+                        break;
+
+                    case R.id.sidebar_overtime:
+                        Intent overtimeIntent = AddOvertimeActivity.launchAddOvertimeIntent(UserInfoActivity.this);
+                        startActivity(overtimeIntent);
+                        break;
+
+                    case R.id.sidebar_day_leave:
+                        Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(UserInfoActivity.this);
+                        startActivity(dayLeaveIntent);
+                        break;
+
+                    case R.id.sidebar_search:
+                        break;
+
+                    case R.id.sidebar_all_workers:
+                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
+                        startActivity(workerIntent);
+                        finish();
+                        break;
+
+                    case R.id.sidebar_company:
+                        break;
+
+                    case R.id.sidebar_ui_preferences:
+                        Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(UserInfoActivity.this);
+                        startActivity(uiPrefsIntent);
+                        break;
+
+                    case R.id.sidebar_light_dark_mode:
+                        Intent changeThemeIntent = ChangeThemeActivity.launchChangeThemeIntent(UserInfoActivity.this);
+                        startActivity(changeThemeIntent);
+                        break;
+
+                    case R.id.sidebar_languages:
+                        Intent changeLanguageIntent = ChangeLanguageActivity.launchChangeLanguageIntent(UserInfoActivity.this);
+                        startActivity(changeLanguageIntent);
+                        break;
+
+                    case R.id.sidebar_change_password:
+                        Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(UserInfoActivity.this);
+                        startActivity(changePasswordIntent);
+                        break;
+                }
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+    }
+
+    private void setupNavigationBar() {
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -117,12 +198,15 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finishAffinity();
-        Intent intent = new Intent(UserInfoActivity.this, LoginInfoActivity.class);
-        startActivity(intent);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+            finishAffinity();
+            Intent intent = new Intent(UserInfoActivity.this, LoginInfoActivity.class);
+            startActivity(intent);
+        }
     }
-
 
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -130,18 +214,25 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-        setupNavigationBar();
+
+        navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.userNavigation);
 
         // The username saved from sharedPreference will become the name
-        // Of the document.
+        // of the document.
         SharedPreferences sharedPrefs = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
 
         firstNameInput = findViewById(R.id.editFirstName);
         firstNameInput.setClickable(false);
+        firstNameInput.setActivated(false);
+
         lastNameInput = findViewById(R.id.editLastName);
         lastNameInput.setClickable(false);
+        lastNameInput.setActivated(false);
+
         idInput = findViewById(R.id.editID);
         idInput.setClickable(false);
+        idInput.setActivated(false);
 
         medicalConsiderationsInput = findViewById(R.id.editMedical);
         emergencyContactNameInput = findViewById(R.id.editEmergencyContactName);
@@ -213,9 +304,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
             DocumentReference emergencyRef = FirebaseFirestore.getInstance()
                     .collection(CONSTANTS.EMERGENCY_INFO_COLLECTION)
-                    .document(manager.getCurrentUser().getId());
+                    .document(documentManager.getCurrentUser().getId());
             Map<String,Object> user = new HashMap<>();
-            user.put(CONSTANTS.ID_KEY, manager.getCurrentUser().getId());
+            user.put(CONSTANTS.ID_KEY, documentManager.getCurrentUser().getId());
             user.put(CONSTANTS.MEDICAL_CONDITIONS_KEY, medicalConsiderations);
             user.put(CONSTANTS.RELATIONSHIP_KEY, chosenEmergencyContactType);
             user.put(CONSTANTS.EMERGENCY_CONTACT_KEY, emergencyContactNumber);
@@ -268,37 +359,39 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         getSupervisorData(new DocListCallback() {
             @Override
             public void onCallback(List<DocumentSnapshot> docs) {
-                manager.setSupervisors(docs);
+                documentManager.setSupervisors(docs);
 
                 getEmergencyData(new DocListCallback() {
                     @Override
                     public void onCallback(List<DocumentSnapshot> docs) {
-                        manager.setEmergencyInfo(docs);
+                        documentManager.setEmergencyInfo(docs);
 
                         getContactData(new DocListCallback() {
                             @Override
                             public void onCallback(List<DocumentSnapshot> docs) {
-                                manager.setContacts(docs);
+                                documentManager.setContacts(docs);
 
                                 getWorkersData(new DocListCallback() {
                                     @Override
                                     public void onCallback(List<DocumentSnapshot> docs) {
-                                        manager.setWorkers(docs);
+                                        documentManager.setWorkers(docs);
                                     }
                                 });
 
                                 getAvailabilityData(new DocListCallback() {
                                     @Override
                                     public void onCallback(List<DocumentSnapshot> docs) {
-                                        manager.setAvailabilities(docs);
+                                        documentManager.setAvailabilities(docs);
                                     }
                                 });
 
                                 getSitesData(new DocListCallback() {
                                     @Override
                                     public void onCallback(List<DocumentSnapshot> docs) {
-                                        manager.setSites(docs);
+                                        documentManager.setSites(docs);
                                         populateData();
+                                        setupNavigationBar();
+                                        setupSidebarNavigationDrawer();
                                     }
                                 });
                             }
@@ -311,22 +404,22 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void populateData() {
         DocumentSnapshot userEmergencyInfo = null;
-        for(DocumentSnapshot document: manager.getEmergencyInfo()) {
-            System.out.println("TEST3> User ID: " + manager.getCurrentUser().getId());
+        for(DocumentSnapshot document: documentManager.getEmergencyInfo()) {
+            System.out.println("TEST3> User ID: " + documentManager.getCurrentUser().getId());
             System.out.println("TEST3> EMERGENCY ID: " + document.getString(CONSTANTS.ID_KEY));
-            if(document.getString(CONSTANTS.ID_KEY).equals(manager.getCurrentUser().getId())) {
+            if(document.getString(CONSTANTS.ID_KEY).equals(documentManager.getCurrentUser().getId())) {
                 userEmergencyInfo = document;
                 System.out.println("TEST3> USER EMERGENCY DOC FOUND");
             }
         }
 
         if (userEmergencyInfo == null) {
-            Toast.makeText(getApplicationContext(), "NO USER EMERGENCY FOUND",
+            Toast.makeText(getApplicationContext(), "Fill in emergency information!",
                     Toast.LENGTH_LONG).show();
         } else {
-            String savedFirstName = manager.getCurrentUser().getFirstName();
-            String savedLastName = manager.getCurrentUser().getLastName();
-            String savedID = manager.getCurrentUser().getId();
+            String savedFirstName = documentManager.getCurrentUser().getFirstName();
+            String savedLastName = documentManager.getCurrentUser().getLastName();
+            String savedID = documentManager.getCurrentUser().getId();
             String savedMedicalConsiderations = userEmergencyInfo.getString(CONSTANTS.MEDICAL_CONDITIONS_KEY);
             String savedEmergencyContactType = userEmergencyInfo.getString(CONSTANTS.RELATIONSHIP_KEY);
             String savedEmergencyContactNumber = userEmergencyInfo.getString(CONSTANTS.EMERGENCY_CONTACT_KEY);
@@ -354,7 +447,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void getWorkersData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.WORKERS_COLLECTION)
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, manager.getCurrentUser().getCompany_id())
+                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, documentManager.getCurrentUser().getCompany_id())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -426,7 +519,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void getSupervisorData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.SUPERVISORS_COLLECTION)
-                .whereEqualTo(CONSTANTS.ID_KEY, manager.getCurrentUser().getId())
+                .whereEqualTo(CONSTANTS.ID_KEY, documentManager.getCurrentUser().getId())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

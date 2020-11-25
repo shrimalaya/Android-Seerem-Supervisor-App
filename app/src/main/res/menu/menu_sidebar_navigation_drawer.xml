@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/sidebar_user"
+            android:icon="@drawable/ic_user"
+            android:title="@string/user_sidebar_text" />
+        <item
+            android:id="@+id/sidebar_overtime"
+            android:icon="@drawable/ic_overtime"
+            android:title="@string/overtime_sidebar_text" />
+        <item
+            android:id="@+id/sidebar_day_leave"
+            android:icon="@drawable/ic_day_leave"
+            android:title="@string/day_leave_sidebar_text" />
+        <item
+            android:id="@+id/sidebar_search"
+            android:icon="@drawable/ic_search"
+            android:title="@string/search_sidebar_text" />
+    </group>
+
+    <item android:title="@string/communication_sidebar_text">
+        <menu>
+            <item
+                android:id="@+id/sidebar_all_workers"
+                android:icon="@drawable/ic_all_workers"
+                android:title="@string/all_workers_sidebar_text" />
+            <item
+                android:id="@+id/sidebar_company"
+                android:icon="@drawable/ic_company"
+                android:title="@string/company_sidebar_text" />
+        </menu>
+    </item>
+
+    <item android:title="@string/settings_sidebar_text">
+        <menu>
+            <item
+                android:id="@+id/sidebar_ui_preferences"
+                android:icon="@drawable/ic_ui_preferences"
+                android:title="@string/ui_prefs_sidebar_text" />
+            <item
+                android:id="@+id/sidebar_light_dark_mode"
+                android:icon="@drawable/ic_light_dark_mode"
+                android:title="@string/light_dark_mode_sidebar_text" />
+            <item
+                android:id="@+id/sidebar_languages"
+                android:icon="@drawable/ic_languages"
+                android:title="@string/languages_sidebar_text" />
+            <item
+                android:id="@+id/sidebar_change_password"
+                android:icon="@drawable/ic_settings"
+                android:title="@string/change_password_sidebar_text" />
+
+        </menu>
+    </item>
+</menu>
