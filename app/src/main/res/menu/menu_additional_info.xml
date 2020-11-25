@@ -9,7 +9,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_additional_refresh"
-        android:icon="@drawable/ic_baseline_refresh_48"
+        android:icon="@drawable/ic_refresh"
         android:title="refresh"
         app:showAsAction="always" />
 </menu>
