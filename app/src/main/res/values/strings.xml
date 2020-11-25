@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SeeRem: Supervisor</string>
-    <string name="welcome_text">Welcome, Supervisor.</string>
+    <string name="welcome_text">Supervisor</string>
     <string name="login_help">Please input your Username and Password.</string>
     <string name="username_entry">Username:</string>
     <string name="password_entry">Password:</string>
@@ -11,7 +11,7 @@
 
     <string name="user_info_header">User Info</string>
     <string name="user_info_help">Edit personal information and UI settings here. </string>
-    <string name="name_entry">First and last name</string>
+    <string name="name_entry">First and Last name</string>
     <string name="first_name_entry">First name</string>
     <string name="last_name_entry">Last name</string>
     <string name="id_entry">ID (driver licence or company ID)</string>
