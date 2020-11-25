@@ -264,7 +264,7 @@ public class SiteInfoActivity extends AppCompatActivity {
         List<DocumentSnapshot> results = new ArrayList<>();
         Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
 
-        for(DocumentSnapshot doc: manager.getSites()) {
+        for(DocumentSnapshot doc: documentManager.getSites()) {
             if(results.contains(doc)) {
                 //skip
             } else {

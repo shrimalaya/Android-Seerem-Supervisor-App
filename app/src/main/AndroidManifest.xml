@@ -50,7 +50,6 @@
 
         <activity
             android:name=".UI.WorkerInfoActivity"
-            android:theme="@style/AppTheme_NoActionBar"
             android:label="Worker Information"/>
         <activity
             android:name=".UI.UserInfoActivity"
