@@ -64,6 +64,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth firebaseAuthentication;
     private DrawerLayout drawer;
 
+    BottomNavigationView navigation;
+
     public static Intent launchUserInfoIntent(Context context) {
         Intent userInfoIntent = new Intent(context, UserInfoActivity.class);
         return userInfoIntent;
@@ -153,9 +155,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setupNavigationBar() {
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-        navigation.setSelectedItemId(R.id.userNavigation);
-
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -209,26 +208,31 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-        setupNavigationBar();
-        setupSidebarNavigationDrawer();
+
+        navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+        navigation.setSelectedItemId(R.id.userNavigation);
 
         // The username saved from sharedPreference will become the name
-        // Of the document.
+        // of the document.
         SharedPreferences sharedPrefs = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
 
         firstNameInput = findViewById(R.id.editFirstName);
         firstNameInput.setClickable(false);
+        firstNameInput.setActivated(false);
+
         lastNameInput = findViewById(R.id.editLastName);
         lastNameInput.setClickable(false);
+        lastNameInput.setActivated(false);
+
         idInput = findViewById(R.id.editID);
         idInput.setClickable(false);
+        idInput.setActivated(false);
 
         medicalConsiderationsInput = findViewById(R.id.editMedical);
         emergencyContactNameInput = findViewById(R.id.editEmergencyContactName);
@@ -386,6 +390,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                                     public void onCallback(List<DocumentSnapshot> docs) {
                                         documentManager.setSites(docs);
                                         populateData();
+                                        setupNavigationBar();
+                                        setupSidebarNavigationDrawer();
                                     }
                                 });
                             }
@@ -408,7 +414,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (userEmergencyInfo == null) {
-            Toast.makeText(getApplicationContext(), "NO USER EMERGENCY FOUND",
+            Toast.makeText(getApplicationContext(), "Fill in emergency information!",
                     Toast.LENGTH_LONG).show();
         } else {
             String savedFirstName = documentManager.getCurrentUser().getFirstName();
