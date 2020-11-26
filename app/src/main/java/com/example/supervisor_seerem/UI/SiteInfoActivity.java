@@ -71,6 +71,300 @@ public class SiteInfoActivity extends AppCompatActivity {
         return siteInfoIntent;
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_site_info);
+
+        setupNavigationBar();
+        setupSidebarNavigationDrawer();
+
+        mRecycler = findViewById(R.id.siteInfoRecyclerView);
+
+        retrieveData();
+
+        /**
+         * Update list of sites every 1 minute to check for hours of operation
+         * Learned from https://stackoverflow.com/a/21554060
+         */
+        final Handler handler =new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(SiteInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
+                handler.postDelayed(this, 60000);
+            }
+        }, 60000);
+    }
+
+    /**
+     -> Get user info
+     -> Display using WorksiteAdapter by passing List of DocumentSnapshots
+     */
+    private void retrieveData() {
+        mAllDocs.clear();
+        mAllDocs.addAll(documentManager.getSites());
+
+        mUserDocs.clear();
+        for (DocumentSnapshot site: documentManager.getSites()) {
+            for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
+                if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
+                    mUserDocs.add(site);
+                }
+            }
+        }
+        displayData();
+    }
+
+    private void checkDisplayingSitesHeader() {
+        TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
+
+        if(showOfflineSites && showAllSites) {
+            displayAllOrSelectedSites.setText("Offline Company Worksites");
+        } else if (showOfflineSites && !showAllSites) {
+            displayAllOrSelectedSites.setText("Offline Assigned Worksites");
+        } else if (!showOfflineSites && showAllSites) {
+            displayAllOrSelectedSites.setText("Online Company Worksites");
+        } else {
+            displayAllOrSelectedSites.setText("Online Assigned Worksites");
+        }
+    }
+
+    private void updateDisplaySites() {
+        checkDisplayingSitesHeader();
+
+        if(showAllSites) {
+            mShowDocs.clear();
+            mShowDocs.addAll(mAllDocs);
+        } else {
+            mShowDocs.clear();
+            mShowDocs.addAll(mUserDocs);
+        }
+
+        mOnlineDocs.clear();
+        mOfflineDocs.clear();
+
+        for (DocumentSnapshot doc : mShowDocs) {
+            try {
+                Boolean withinOpHours = timeParser(doc.getString(CONSTANTS.OPERATION_HRS_KEY));
+                if (withinOpHours) {
+                    mOnlineDocs.add(doc);
+                } else {
+                    mOfflineDocs.add(doc);
+                }
+            } catch (ParseException e) {
+                Log.d("SITEINFO","Parse Exception" + e.toString());
+                mOnlineDocs.add(doc); // A site with no operation hours specified will be added to Online Docs
+            }
+        }
+
+        mShowDocs.clear();
+        if(showOfflineSites) {
+            mShowDocs.addAll(mOfflineDocs);
+            if(mOfflineDocs.isEmpty()) {
+                Toast.makeText(this, "No Offline Sites!", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            mShowDocs.addAll(mOnlineDocs);
+            if(mOnlineDocs.isEmpty()) {
+                Toast.makeText(this, "No Online Sites!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public void displayData() {
+        updateDisplaySites();
+        mAdapter = new WorksiteAdapter(mShowDocs);
+        mRecycler.setAdapter(mAdapter);
+    }
+
+    // Search function
+    private void search(String expr) {
+        List<DocumentSnapshot> results = new ArrayList<>();
+        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
+
+        for(DocumentSnapshot doc: documentManager.getSites()) {
+            if(results.contains(doc)) {
+                //skip
+            } else {
+                // Look for matching ID
+                Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching name
+                matcher = pattern.matcher(doc.getString(CONSTANTS.WORKSITE_NAME_KEY));
+                if(matcher.find() == true) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching Project ID
+                matcher = pattern.matcher(doc.getString(CONSTANTS.PROJECT_ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+            }
+        }
+
+        mShowDocs.clear();
+        mShowDocs.addAll(results);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_site_info, menu);
+
+        /**
+         * Search layout referenced from: https://www.youtube.com/watch?v=pM1fAmUQn8g&ab_channel=CodinginFlow
+         */
+        final MenuItem search = menu.findItem(R.id.menu_site_search);
+        final MenuItem clear = menu.findItem(R.id.menu_site_clear);
+
+        final SearchView searchView = (SearchView) search.getActionView();
+        searchView.setQueryHint("Search Here!");
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clear.setVisible(true);
+            }
+        });
+
+        clear.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+
+                TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
+                if(showAllSites) {
+                    displayAllOrSelectedSites.setText("All Company Worksites");
+                } else {
+                    displayAllOrSelectedSites.setText("Assigned Worksites");
+                }
+
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
+                item.setVisible(false);
+                return true;
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                TextView currentlyDisplaying = findViewById(R.id.txtAllOrSelectedSites);
+                currentlyDisplaying.setText("Search Results: All Sites");
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                TextView currentlyDisplaying = findViewById(R.id.txtAllOrSelectedSites);
+                currentlyDisplaying.setText("Search: All Sites");
+                search(newText);
+                return true;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        switch (item.getItemId()) {
+            case (R.id.refresh_site_info):
+                documentManager.retrieveAllData();
+                mAllDocs.clear();
+                mAllDocs.addAll(documentManager.getSites());
+
+                mUserDocs.clear();
+                for (DocumentSnapshot site: mAllDocs) {
+                    for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
+                        if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
+                            mUserDocs.add(site);
+                        }
+                    }
+                }
+
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
+                return true;
+
+            case (R.id.menu_display_all_user):
+                if(showAllSites) {
+                    showAllSites = false;
+                    item.setTitle("Display All Worksites");
+                } else {
+                    showAllSites = true;
+                    item.setTitle("Display My Worksites");
+                }
+
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
+                return true;
+
+                case (R.id.menu_site_offline):
+                    if (showOfflineSites) {
+                        showOfflineSites = false;
+                        item.setTitle("Display Offline Sites");
+                    } else {
+                        showOfflineSites = true;
+                        item.setTitle("Display Online Sites");
+                    }
+
+                    updateDisplaySites();
+                    mAdapter.notifyDataSetChanged();
+                    return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * HH:mm = 24hr format
+     * hh:mm = 12 hr format
+     * Return true if operationTime includes the current time
+     */
+    private boolean timeParser(String operation) throws ParseException {
+        String arr[] = null;
+        if(operation != null) {
+            if(operation.split(" - ") != null) {
+                arr = operation.split(" - ");
+            } else {
+                arr = operation.split("-");
+            }
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date d1 = dateFormat.parse(arr[0]);
+        Date d2 = dateFormat.parse(arr[1]);
+        String currTime = dateFormat.format(Calendar.getInstance().getTime());
+        Log.d("SITEINFO", "TEST4> Curr time: " + currTime);
+        Date current = dateFormat.parse(currTime);
+        Log.d("SITEINFO","TEST4> Curr time in Date format: " + current);
+        Log.d("SITEINFO","TEST4> d1 time: " + d1);
+        Log.d("SITEINFO","TEST4> d2 time: " + d2);
+
+        Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
+
+        Log.d("SITEINFO","TEST4> Within op hours: " + withinOpHrs);
+
+        return withinOpHrs;
+    }
+
     private void setupSidebarNavigationDrawer() {
         drawer = findViewById(R.id.sidebar_drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
@@ -211,321 +505,6 @@ public class SiteInfoActivity extends AppCompatActivity {
             Intent intent = UserInfoActivity.launchUserInfoIntent(SiteInfoActivity.this);
             startActivity(intent);
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_site_info);
-
-        setupNavigationBar();
-        setupSidebarNavigationDrawer();
-
-        mRecycler = findViewById(R.id.siteInfoRecyclerView);
-
-        retrieveData();
-
-        /**
-         * Update list of sites every 1 minute to check for hours of operation
-         * Learned from https://stackoverflow.com/a/21554060
-         */
-        final Handler handler =new Handler();
-        handler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                Toast.makeText(SiteInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
-                updateDisplaySites();
-                mAdapter.notifyDataSetChanged();
-                handler.postDelayed(this, 60000);
-            }
-        }, 60000);
-    }
-
-    /**
-     -> This is an async task and therefore requires a callback in order to wait for the data to be
-        received
-     -> Get user info
-     -> Use company_id of user to get all sites of that company (in DocumentSnapshot data type)
-     -> Display using WorksiteAdapter by passing List of DocumentSnapshots
-     */
-    private void retrieveData() {
-        mAllDocs.clear();
-        mAllDocs.addAll(documentManager.getSites());
-
-        mUserDocs.clear();
-        for (DocumentSnapshot site: documentManager.getSites()) {
-            for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
-                if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
-                    mUserDocs.add(site);
-                    System.out.println("TEST3> size of worksites user: " + mUserDocs.size());
-                }
-            }
-        }
-        displayData();
-    }
-
-    private void updateDisplaySites() {
-        if(showAllSites) {
-            mShowDocs.clear();
-            mShowDocs.addAll(mAllDocs);
-        } else {
-            mShowDocs.clear();
-            mShowDocs.addAll(mUserDocs);
-            System.out.println("TEST4> size of worksites user: " + mUserDocs.size());
-        }
-
-        mOnlineDocs.clear();
-        mOfflineDocs.clear();
-
-        for (DocumentSnapshot doc : mShowDocs) {
-            try {
-                Boolean withinOpHours = timeParser(doc.getString(CONSTANTS.OPERATION_HRS_KEY));
-                if (withinOpHours) {
-                    mOnlineDocs.add(doc);
-                } else {
-                    mOfflineDocs.add(doc);
-                }
-            } catch (ParseException e) {
-                Log.d("Parse Exception", e.toString());
-                mOnlineDocs.add(doc); // A site with no operation hours specified will be added to Online Docs
-            }
-        }
-
-        mShowDocs.clear();
-        if(showOfflineSites) {
-            mShowDocs.addAll(mOfflineDocs);
-            if(mOfflineDocs.isEmpty()) {
-                Toast.makeText(this, "No Offline Sites!", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            mShowDocs.addAll(mOnlineDocs);
-            if(mOnlineDocs.isEmpty()) {
-                Toast.makeText(this, "No Online Sites!", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    public void displayData() {
-        System.out.println("TEST1> Before adapter: size of docs = " + mAllDocs.size());
-
-        updateDisplaySites();
-        mAdapter = new WorksiteAdapter(mShowDocs);
-
-        if (mAdapter == null) {
-            System.out.println("TEST1> Adapter null");
-        } else {
-            mRecycler.setAdapter(mAdapter);
-        }
-    }
-
-    // Search function
-    private void search(String expr) {
-        List<DocumentSnapshot> results = new ArrayList<>();
-        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
-
-        for(DocumentSnapshot doc: documentManager.getSites()) {
-            if(results.contains(doc)) {
-                //skip
-            } else {
-                // Look for matching ID
-                Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
-                if(matcher.find()) {
-                    results.add(doc);
-                    continue;
-                }
-
-                // Look for matching name
-                matcher = pattern.matcher(doc.getString(CONSTANTS.WORKSITE_NAME_KEY));
-                if(matcher.find() == true) {
-                    results.add(doc);
-                    continue;
-                }
-
-                // Look for matching Project ID
-                matcher = pattern.matcher(doc.getString(CONSTANTS.PROJECT_ID_KEY));
-                if(matcher.find()) {
-                    results.add(doc);
-                    continue;
-                }
-            }
-        }
-
-        mShowDocs.clear();
-        mShowDocs.addAll(results);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_site_info, menu);
-
-        /**
-         * Search layout referenced from: https://www.youtube.com/watch?v=pM1fAmUQn8g&ab_channel=CodinginFlow
-         */
-        final MenuItem search = menu.findItem(R.id.menu_site_search);
-        final MenuItem clear = menu.findItem(R.id.menu_site_clear);
-
-        final SearchView searchView = (SearchView) search.getActionView();
-        searchView.setQueryHint("Search Here!");
-
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clear.setVisible(true);
-            }
-        });
-
-        clear.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                searchView.setQuery("", false);
-                searchView.setIconified(true);
-
-                TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
-                if(showAllSites) {
-                    displayAllOrSelectedSites.setText("All Company Worksites");
-                } else {
-                    displayAllOrSelectedSites.setText("Assigned Worksites");
-                }
-
-                updateDisplaySites();
-                mAdapter.notifyDataSetChanged();
-                item.setVisible(false);
-                return true;
-            }
-        });
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                TextView currentlyDisplaying = findViewById(R.id.txtAllOrSelectedSites);
-                currentlyDisplaying.setText("Search Results: All Sites");
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                TextView currentlyDisplaying = findViewById(R.id.txtAllOrSelectedSites);
-                currentlyDisplaying.setText("Search: All Sites");
-                search(newText);
-                return true;
-            }
-        });
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
-
-        switch (item.getItemId()) {
-            case (R.id.refresh_site_info):
-                documentManager.retrieveAllData();
-                mAllDocs.clear();
-                mAllDocs.addAll(documentManager.getSites());
-
-                mUserDocs.clear();
-                for (DocumentSnapshot site: mAllDocs) {
-                    for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
-                        if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
-                            mUserDocs.add(site);
-                        }
-                    }
-                }
-                System.out.println("TEST4> size of worksites user: " + mUserDocs.size());
-
-                updateDisplaySites();
-                mAdapter.notifyDataSetChanged();
-                return true;
-
-            case (R.id.menu_display_all_user):
-                if(showAllSites) {
-                    showAllSites = false;
-                    if(showOfflineSites) {
-                        displayAllOrSelectedSites.setText("Offline Assigned Worksites");
-                    } else {
-                        displayAllOrSelectedSites.setText("Online Assigned Worksites");
-                    }
-                    item.setTitle("Display All Worksites");
-                } else {
-                    showAllSites = true;
-                    if(showOfflineSites) {
-                        displayAllOrSelectedSites.setText("Offline Company Worksites");
-                    } else {
-                        displayAllOrSelectedSites.setText("Online Company Worksites");
-                    }
-                    item.setTitle("Display My Worksites");
-                }
-
-                updateDisplaySites();
-                mAdapter.notifyDataSetChanged();
-                return true;
-
-                case (R.id.menu_site_offline):
-                    if (showOfflineSites) {
-                        showOfflineSites = false;
-                        item.setTitle("Display Offline Sites");
-                        if(showAllSites) {
-                            displayAllOrSelectedSites.setText("Online Company Worksites");
-                        } else {
-                            displayAllOrSelectedSites.setText("Online Assigned Worksites");
-                        }
-
-                    } else {
-                        showOfflineSites = true;
-                        item.setTitle("Display Online Sites");
-                        if(showAllSites) {
-                            displayAllOrSelectedSites.setText("Offline Company Worksites");
-                        } else {
-                            displayAllOrSelectedSites.setText("Offline Assigned Worksites");
-                        }
-                    }
-
-                    updateDisplaySites();
-                    mAdapter.notifyDataSetChanged();
-                    return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * HH:mm = 24hr format
-     * hh:mm = 12 hr format
-     * Return true if operationTime includes the current time
-     */
-    private boolean timeParser(String operation) throws ParseException {
-        String arr[] = null;
-        if(operation != null) {
-            if(operation.split(" - ") != null) {
-                arr = operation.split(" - ");
-            } else {
-                arr = operation.split("-");
-            }
-        }
-
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        Date d1 = dateFormat.parse(arr[0]);
-        Date d2 = dateFormat.parse(arr[1]);
-        String currTime = dateFormat.format(Calendar.getInstance().getTime());
-        System.out.println("TEST4> Curr time: " + currTime);
-        Date current = dateFormat.parse(currTime);
-        System.out.println("TEST4> Curr time in Date format: " + current);
-        System.out.println("TEST4> d1 time: " + d1);
-        System.out.println("TEST4> d2 time: " + d2);
-
-        Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
-
-        System.out.println("TEST4> Within op hours: " + withinOpHrs);
-        System.out.println("");
-
-        return withinOpHrs;
     }
 
 }
