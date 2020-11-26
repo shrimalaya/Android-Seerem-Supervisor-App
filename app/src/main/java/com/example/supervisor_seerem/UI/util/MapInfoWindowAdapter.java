@@ -99,6 +99,10 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                     break;
 
                 default:
+                    snippetTextView = (TextView) view.findViewById(R.id.mapInfoWindow_userSnippet);
+                    if (!snippet[0].equals("")) {
+                        snippetTextView.setText(snippet[0]);
+                    }
                     break;
             }
         }

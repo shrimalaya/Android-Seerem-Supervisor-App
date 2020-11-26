@@ -86,6 +86,8 @@
     <string name="map_info_window_user_location_title">My Location</string>
     <string name="map_info_window_site_location_title">Site Location</string>
     <string name="map_info_window_worker_location_title">Worker Location</string>
+    <string name="map_info_window_masterpoint_title">Master point</string>
+    <string name="map_info_window_masterpoint_snippet">Go here in case of emergency!</string>
     <string name="map_info_siteName">Site Name: </string>
     <string name="map_info_siteID">Site ID: </string>
     <string name="map_info_projectID">Project ID: </string>
