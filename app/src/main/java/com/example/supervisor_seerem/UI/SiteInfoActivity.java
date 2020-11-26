@@ -65,6 +65,8 @@ public class SiteInfoActivity extends AppCompatActivity {
     public List<DocumentSnapshot> mOfflineDocs = new ArrayList<>();
 
     private DrawerLayout drawer;
+    private Handler handler;
+    private Runnable runnable;
 
     public static Intent launchSiteInfoIntent(Context context) {
         Intent siteInfoIntent = new Intent(context, SiteInfoActivity.class);
@@ -87,8 +89,8 @@ public class SiteInfoActivity extends AppCompatActivity {
          * Update list of sites every 1 minute to check for hours of operation
          * Learned from https://stackoverflow.com/a/21554060
          */
-        final Handler handler =new Handler();
-        handler.postDelayed(new Runnable() {
+        handler =new Handler();
+        runnable = new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(SiteInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
@@ -96,7 +98,9 @@ public class SiteInfoActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
                 handler.postDelayed(this, 60000);
             }
-        }, 60000);
+        };
+
+        handler.postDelayed(runnable, 60000);
     }
 
     /**
@@ -507,4 +511,15 @@ public class SiteInfoActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.postDelayed(runnable,60000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
+    }
 }
