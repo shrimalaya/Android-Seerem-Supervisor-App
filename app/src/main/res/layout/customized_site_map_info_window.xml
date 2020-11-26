@@ -1,147 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@drawable/white_round_corners_background"
+    android:orientation="vertical"
     android:padding="10dp">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/mapInfoWindow_mainTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:gravity="center"
         android:ellipsize="end"
+        android:gravity="center"
         android:maxLines="1"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/mapInfoWindow_worksite_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_worksite_map_info_window"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/mapInfoWindow_siteNameTitle"
+        app:layout_constraintBottom_toBottomOf="@id/mapInfoWindow_hourTitle" />
+
+    <TextView
+        android:id="@+id/mapInfoWindow_siteNameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="10"
+        android:text="@string/map_info_siteName"
         android:textColor="#000000"
         android:textSize="14sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toRightOf="@id/mapInfoWindow_worksite_image"
+        app:layout_constraintTop_toBottomOf="@+id/mapInfoWindow_mainTitle" />
 
-    <LinearLayout
-        android:id="@+id/map_siteID_LinearLayout"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/mapInfoWindow_siteName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="10"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/mapInfoWindow_siteNameTitle"
+        app:layout_constraintLeft_toRightOf="@id/mapInfoWindow_siteNameTitle"
+        app:layout_constraintTop_toTopOf="@id/mapInfoWindow_siteNameTitle" />
 
-        <TextView
-            android:id="@+id/mapInfoWindow_siteIDTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:text="@string/map_info_siteID"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/mapInfoWindow_siteID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:textColor="#000000"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/map_projectID_LinearLayout"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/mapInfoWindow_siteIDTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="10"
+        android:text="@string/map_info_siteID"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/mapInfoWindow_siteNameTitle"
+        app:layout_constraintStart_toStartOf="@+id/mapInfoWindow_siteNameTitle"
+        app:layout_constraintTop_toBottomOf="@+id/mapInfoWindow_siteNameTitle" />
 
-        <TextView
-            android:id="@+id/mapInfoWindow_projectIDTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:text="@string/map_info_projectID"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/mapInfoWindow_projectID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:textColor="#000000"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/map_hours_LinearLayout"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/mapInfoWindow_siteID"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="10"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mapInfoWindow_siteIDTitle"
+        app:layout_constraintLeft_toRightOf="@id/mapInfoWindow_siteIDTitle"
+        app:layout_constraintTop_toTopOf="@+id/mapInfoWindow_siteIDTitle" />
 
-        <TextView
-            android:id="@+id/mapInfoWindow_hourTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:text="@string/map_info_hours"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/mapInfoWindow_hour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:textColor="#000000"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/map_hse_LinearLayout"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/mapInfoWindow_projectIDTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="10"
+        android:text="@string/map_info_projectID"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/mapInfoWindow_siteNameTitle"
+        app:layout_constraintStart_toStartOf="@+id/mapInfoWindow_siteNameTitle"
+        app:layout_constraintTop_toBottomOf="@+id/mapInfoWindow_siteIDTitle" />
 
-        <TextView
-            android:id="@+id/mapInfoWindow_hseTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:text="@string/map_info_hse"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/mapInfoWindow_projectID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="10"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mapInfoWindow_projectIDTitle"
+        app:layout_constraintStart_toEndOf="@+id/mapInfoWindow_projectIDTitle"
+        app:layout_constraintTop_toTopOf="@id/mapInfoWindow_projectIDTitle" />
 
-        <TextView
-            android:id="@+id/mapInfoWindow_hse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:autoLink="web"
-            android:clickable="true"
-            android:focusable="true"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:textColor="#000000"
-            android:textSize="14sp" />
-    </LinearLayout>
-</LinearLayout>
+    <TextView
+        android:id="@+id/mapInfoWindow_hourTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="10"
+        android:text="@string/map_info_hours"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/mapInfoWindow_siteNameTitle"
+        app:layout_constraintStart_toStartOf="@+id/mapInfoWindow_siteNameTitle"
+        app:layout_constraintTop_toBottomOf="@+id/mapInfoWindow_projectIDTitle" />
+
+    <TextView
+        android:id="@+id/mapInfoWindow_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="10"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mapInfoWindow_hourTitle"
+        app:layout_constraintStart_toEndOf="@+id/mapInfoWindow_hourTitle"
+        app:layout_constraintTop_toTopOf="@id/mapInfoWindow_hourTitle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

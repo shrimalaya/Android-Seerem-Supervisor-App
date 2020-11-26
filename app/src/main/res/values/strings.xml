@@ -82,6 +82,13 @@
     <string name="change_password_sidebar_text">Change password</string>
 
     <string name="map_noServices_error_message">No services available!</string>
+    <string name="map_info_window_user_location_snippet">This is my current location!</string>
+    <string name="map_info_window_user_location_title">My Location</string>
+    <string name="map_info_window_site_location_title">Site Location</string>
+    <string name="map_info_window_worker_location_title">Worker Location</string>
+    <string name="map_info_window_masterpoint_title">Master point</string>
+    <string name="map_info_window_masterpoint_snippet">Go here in case of emergency!</string>
+    <string name="map_info_siteName">Site Name: </string>
     <string name="map_info_siteID">Site ID: </string>
     <string name="map_info_projectID">Project ID: </string>
     <string name="map_info_hours">Hours: </string>
@@ -90,6 +97,7 @@
     <string name="map_info_fullName">Full name:</string>
     <string name="map_info_companyID">Company: </string>
     <string name="map_info_supervisorID">Supervisor: </string>
+    <string name="map_info_window_image_description">Default image for map info window</string>
 
     <string name="sensorsUsageTextView">Device Sensor Values</string>
     <string name="sensorUsageExplanationTextView">The following are the current Temperature and Pressure values for this device as read by any applicable built-in sensors.</string>
