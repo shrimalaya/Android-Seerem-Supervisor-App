@@ -392,7 +392,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
 //            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()),
 //                    DEFAULT_ZOOM,
 //                    address.getAddressLine(0));
-            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()),
+            zoomCamera(new LatLng(address.getLatitude(), address.getLongitude()),
                     DEFAULT_ZOOM);
         }
     }
@@ -409,7 +409,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                         if (task.isSuccessful()) {
                             Location currentLocation = (Location) task.getResult();
                             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            moveCamera(latLng, DEFAULT_ZOOM);
+                            zoomCamera(latLng, DEFAULT_ZOOM);
                             displayUserMarker(latLng);
                         } else {
                             Toast.makeText(SiteMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
@@ -425,7 +425,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
     private void showAllWorksitesLocations() {
         for (DocumentSnapshot site : sitesList) {
             Site newSite = createSite(site);
-            LatLng latLng = new LatLng(newSite.getLocation().getLatitude(), newSite.getLocation().getLongitude());
+            LatLng latLng = new LatLng(newSite.getLocation().getLatitude(),
+                                        newSite.getLocation().getLongitude());
             String title = getResources().getString(R.string.map_info_window_site_location_title);
             displayWorksiteMarker(newSite);
             displayMasterpointMarker(new LatLng(newSite.getMasterpoint().getLatitude(),
@@ -436,13 +437,14 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
     private void showAllWorkersPositions() {
         for (DocumentSnapshot worker : workersList) {
             Worker newWorker = createWorker(worker);
-            LatLng latLng = new LatLng(newWorker.getLocation().getLatitude(), newWorker.getLocation().getLongitude());
+            LatLng latLng = new LatLng(newWorker.getLocation().getLatitude(),
+                                        newWorker.getLocation().getLongitude());
             String title = getResources().getString(R.string.map_info_window_worker_location_title);
             displayWorkerMarker(newWorker);
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom) {
+    private void zoomCamera(LatLng latLng, float zoom) {
         // zoom to the specific latLng
         siteMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
         siteMap.setInfoWindowAdapter(new MapInfoWindowAdapter(SiteMapActivity.this));
@@ -469,11 +471,13 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         if (currentSite != null) {
             clickedSite = createSite(currentSite);
             System.out.println(clickedSite.toString());
-            moveCamera(new LatLng(clickedSite.getLocation().getLatitude(), clickedSite.getLocation().getLongitude()),
-                    DEFAULT_ZOOM);
-            displayWorksiteMarker(clickedSite);
-            displayMasterpointMarker(new LatLng(clickedSite.getMasterpoint().getLatitude(),
-                                                clickedSite.getMasterpoint().getLongitude()));
+            zoomCamera(new LatLng(clickedSite.getLocation().getLatitude(),
+                                clickedSite.getLocation().getLongitude()),
+                        DEFAULT_ZOOM);
+
+            // zoom to clicked site, but also display all worksites and workers around
+            showAllWorksitesLocations();
+            showAllWorkersPositions();
         }
     }
 
@@ -496,9 +500,13 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         if (currentWorker != null) {
             clickedWorker = createWorker(currentWorker);
             System.out.println(clickedWorker.toString());
-            moveCamera(new LatLng(clickedWorker.getLocation().getLatitude(), clickedWorker.getLocation().getLongitude()),
-                    DEFAULT_ZOOM);
-            displayWorkerMarker(clickedWorker);
+            zoomCamera(new LatLng(clickedWorker.getLocation().getLatitude(),
+                                clickedWorker.getLocation().getLongitude()),
+                        DEFAULT_ZOOM);
+
+            // zoom to clicked worker, but also display all worksites and workers around
+            showAllWorksitesLocations();
+            showAllWorkersPositions();
         }
     }
 
@@ -508,7 +516,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                 ";" + site.getProjectID() +
                 ";" + site.getOperationHour();
 
-        LatLng latLng = new LatLng(site.getLocation().getLatitude(), site.getLocation().getLongitude());
+        LatLng latLng = new LatLng(site.getLocation().getLatitude(),
+                                    site.getLocation().getLongitude());
 
         // set worksite's marker's color to green
         MarkerOptions options = new MarkerOptions()
@@ -526,7 +535,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                 ";" + worker.getCompanyID() +
                 ";" + worker.getSupervisorID();
 
-        LatLng latLng = new LatLng(worker.getLocation().getLatitude(), worker.getLocation().getLongitude());
+        LatLng latLng = new LatLng(worker.getLocation().getLatitude(),
+                                    worker.getLocation().getLongitude());
 
         // set worker's marker's color to blue
         MarkerOptions options = new MarkerOptions()
@@ -569,7 +579,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                 site.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
         String projectID = site.getString(CONSTANTS.PROJECT_ID_KEY);
         ModelLocation masterpointLocation = new ModelLocation(site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
-                site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
+                                                            site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
         String hseLink = site.getString(CONSTANTS.HSE_LINK_KEY);
         String operationHour = site.getString(CONSTANTS.OPERATION_HRS_KEY);
 
@@ -587,7 +597,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         String siteID = worker.getString(CONSTANTS.WORKSITE_ID_KEY);
         String companyID = worker.getString(CONSTANTS.COMPANY_ID_KEY);
         ModelLocation workerPosition = new ModelLocation(worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
-                worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+                                                         worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
         List<String> skills = new ArrayList<String>();
         String[] workerSkills = worker.getString(CONSTANTS.SKILLS_KEY).split(",");
         for (String skill : workerSkills) {
@@ -601,7 +611,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     public Bitmap resizeBitmap(String imageName) {
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(imageName, "drawable", getPackageName()));
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
+                    getResources().getIdentifier(imageName, "drawable", getPackageName()));
         int imageWidth = imageBitmap.getWidth();
         int imageHeight = imageBitmap.getHeight();
         Log.d("FROM MAP", "imageWidth = " + imageWidth + " and imageHeight = " + imageHeight);
