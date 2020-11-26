@@ -21,7 +21,6 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     public MapInfoWindowAdapter(Context context) {
         this.context = context;
-//        mapWindow = (View) LayoutInflater.from(context).inflate(R.layout.customized_user_map_info_window, null);
     }
 
     private void renderWindowText (Marker marker, View view) {
@@ -43,34 +42,33 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                         snippetTextView.setText(snippet[1]);
                     }
                     break;
+
                 case "Site":
                     TextView snippetSiteID = (TextView) view.findViewById(R.id.mapInfoWindow_siteID);
-                    if (snippetSiteID == null) {
-                        Log.d("FROM MapWindowAdapter", "textview is null");
-                    }
                     Log.d("FROM MapWindowAdapter", "snippet = " + snippet[1]);
                     if (!snippet[1].equals("")) {
                         snippetSiteID.setText(snippet[1]);
                     }
 
-                    TextView snippetProjectID = (TextView) view.findViewById(R.id.mapInfoWindow_projectID);
+                    TextView snippetSiteName = (TextView) view.findViewById(R.id.mapInfoWindow_siteName);
                     Log.d("FROM MapWindowAdapter", "snippet = " + snippet[2]);
                     if (!snippet[2].equals("")) {
-                        snippetProjectID.setText(snippet[2]);
+                        snippetSiteName.setText(snippet[2]);
+                    }
+
+                    TextView snippetProjectID = (TextView) view.findViewById(R.id.mapInfoWindow_projectID);
+                    Log.d("FROM MapWindowAdapter", "snippet = " + snippet[3]);
+                    if (!snippet[3].equals("")) {
+                        snippetProjectID.setText(snippet[3]);
                     }
 
                     TextView snippetHours = (TextView) view.findViewById(R.id.mapInfoWindow_hour);
-                    Log.d("FROM MapWindowAdapter", "snippet = " + snippet[3]);
-                    if (!snippet[3].equals("")) {
-                        snippetHours.setText(snippet[3]);
-                    }
-
-                    TextView snippetHSE = (TextView) view.findViewById(R.id.mapInfoWindow_hse);
                     Log.d("FROM MapWindowAdapter", "snippet = " + snippet[4]);
                     if (!snippet[4].equals("")) {
-                        snippetHSE.setText(snippet[4]);
+                        snippetHours.setText(snippet[4]);
                     }
                     break;
+
                 case "Worker":
                     TextView snippetEmployeeID = (TextView) view.findViewById(R.id.mapInfoWindow_employeeID);
                     if (snippetEmployeeID == null) {
@@ -99,6 +97,7 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                         snippetSupervisor.setText(snippet[4]);
                     }
                     break;
+
                 default:
                     break;
             }
