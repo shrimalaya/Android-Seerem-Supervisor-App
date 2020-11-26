@@ -53,22 +53,18 @@ public class SiteInfoActivity extends AppCompatActivity {
     WorksiteAdapter mAdapter;
 
     private Boolean showAllSites = false;
+    private Boolean showOfflineSites = false;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference mWorksitesRef = db.collection(CONSTANTS.WORKSITES_COLLECTION);
     private DocumentManager documentManager = DocumentManager.getInstance();
     public List<DocumentSnapshot> mAllDocs = new ArrayList<>();
     public List<DocumentSnapshot> mUserDocs = new ArrayList<>();
     public List<DocumentSnapshot> mShowDocs = new ArrayList<>();
-    public List<DocumentSnapshot> mTimedDocs = new ArrayList<>();
     public List<DocumentSnapshot> mOnlineDocs = new ArrayList<>();
     public List<DocumentSnapshot> mOfflineDocs = new ArrayList<>();
-    public List<DocumentSnapshot> mOnlineUserDocs = new ArrayList<>();
-    public List<DocumentSnapshot> mOfflineUserSites = new ArrayList<>();
-    public List<DocumentSnapshot> mOfflineAllSites = new ArrayList<>();
-    public List<DocumentSnapshot> mOnlineAllSites = new ArrayList<>();
 
     private DrawerLayout drawer;
-    private boolean showOfflineSites = false;
 
     public static Intent launchSiteInfoIntent(Context context) {
         Intent siteInfoIntent = new Intent(context, SiteInfoActivity.class);
@@ -239,10 +235,8 @@ public class SiteInfoActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Toast.makeText(SiteInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
-                if(!showOfflineSites) {
-                    updateDisplaySites();
-                    mAdapter.notifyDataSetChanged();
-                }
+                updateDisplaySites();
+                mAdapter.notifyDataSetChanged();
                 handler.postDelayed(this, 60000);
             }
         }, 60000);
@@ -259,7 +253,7 @@ public class SiteInfoActivity extends AppCompatActivity {
         mAllDocs.clear();
         mAllDocs.addAll(documentManager.getSites());
 
-        mUserDocs = new ArrayList<>();
+        mUserDocs.clear();
         for (DocumentSnapshot site: documentManager.getSites()) {
             for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
                 if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
@@ -278,24 +272,38 @@ public class SiteInfoActivity extends AppCompatActivity {
         } else {
             mShowDocs.clear();
             mShowDocs.addAll(mUserDocs);
+            System.out.println("TEST4> size of worksites user: " + mUserDocs.size());
         }
 
-        mTimedDocs.clear();
+        mOnlineDocs.clear();
+        mOfflineDocs.clear();
+
         for (DocumentSnapshot doc : mShowDocs) {
             try {
                 Boolean withinOpHours = timeParser(doc.getString(CONSTANTS.OPERATION_HRS_KEY));
                 if (withinOpHours) {
-                    mTimedDocs.add(doc);
-                } else if(showOfflineSites) {
-                    mTimedDocs.add(doc);
+                    mOnlineDocs.add(doc);
+                } else {
+                    mOfflineDocs.add(doc);
                 }
             } catch (ParseException e) {
                 Log.d("Parse Exception", e.toString());
+                mOnlineDocs.add(doc); // A site with no operation hours specified will be added to Online Docs
             }
         }
 
         mShowDocs.clear();
-        mShowDocs.addAll(mTimedDocs);
+        if(showOfflineSites) {
+            mShowDocs.addAll(mOfflineDocs);
+            if(mOfflineDocs.isEmpty()) {
+                Toast.makeText(this, "No Offline Sites!", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            mShowDocs.addAll(mOnlineDocs);
+            if(mOnlineDocs.isEmpty()) {
+                Toast.makeText(this, "No Online Sites!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     public void displayData() {
@@ -422,23 +430,25 @@ public class SiteInfoActivity extends AppCompatActivity {
                 mAllDocs.clear();
                 mAllDocs.addAll(documentManager.getSites());
 
-                mUserDocs = new ArrayList<>();
-                for (DocumentSnapshot doc: documentManager.getSites()) {
-                    if(doc.getString(CONSTANTS.ID_KEY).equals(documentManager.getCurrentUser().getId())) {
-                        mUserDocs.add(doc);
+                mUserDocs.clear();
+                for (DocumentSnapshot site: mAllDocs) {
+                    for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
+                        if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
+                            mUserDocs.add(site);
+                        }
                     }
                 }
+                System.out.println("TEST4> size of worksites user: " + mUserDocs.size());
 
                 updateDisplaySites();
                 mAdapter.notifyDataSetChanged();
-
                 return true;
 
             case (R.id.menu_display_all_user):
                 if(showAllSites) {
                     showAllSites = false;
                     if(showOfflineSites) {
-                        displayAllOrSelectedSites.setText("All Assigned Worksites");
+                        displayAllOrSelectedSites.setText("Offline Assigned Worksites");
                     } else {
                         displayAllOrSelectedSites.setText("Online Assigned Worksites");
                     }
@@ -446,7 +456,7 @@ public class SiteInfoActivity extends AppCompatActivity {
                 } else {
                     showAllSites = true;
                     if(showOfflineSites) {
-                        displayAllOrSelectedSites.setText("All Company Worksites");
+                        displayAllOrSelectedSites.setText("Offline Company Worksites");
                     } else {
                         displayAllOrSelectedSites.setText("Online Company Worksites");
                     }
@@ -471,9 +481,9 @@ public class SiteInfoActivity extends AppCompatActivity {
                         showOfflineSites = true;
                         item.setTitle("Display Online Sites");
                         if(showAllSites) {
-                            displayAllOrSelectedSites.setText("All Company Worksites");
+                            displayAllOrSelectedSites.setText("Offline Company Worksites");
                         } else {
-                            displayAllOrSelectedSites.setText("All Assigned Worksites");
+                            displayAllOrSelectedSites.setText("Offline Assigned Worksites");
                         }
                     }
 

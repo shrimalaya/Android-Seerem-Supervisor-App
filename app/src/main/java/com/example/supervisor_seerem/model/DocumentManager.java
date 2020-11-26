@@ -153,7 +153,7 @@ public class DocumentManager {
     }
 
     private void getSupervisorData(final DocListCallback callback) {
-        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
+        mRef.collection(CONSTANTS.SUPERVISORS_COLLECTION)
                 .whereEqualTo(CONSTANTS.ID_KEY, CONSTANTS.USER_ID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

@@ -210,7 +210,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
         mAllDocs.clear();
         mAllDocs.addAll(documentManager.getWorkers());
 
-        mUserDocs = new ArrayList<>();
+        mUserDocs.clear();
         for (DocumentSnapshot doc: documentManager.getWorkers()) {
             if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
                 mUserDocs.add(doc);
