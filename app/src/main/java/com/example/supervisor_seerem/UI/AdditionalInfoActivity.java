@@ -46,7 +46,13 @@ public class AdditionalInfoActivity extends AppCompatActivity {
         populateData();
     }
 
+    /**
+     * HH:mm = 24hr format
+     * hh:mm = 12 hr format
+     */
     private double timeParser(String time) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
         String arr[] = null;
         if(time != null) {
            if(time.split(" - ") != null) {
@@ -56,7 +62,6 @@ public class AdditionalInfoActivity extends AppCompatActivity {
            }
         }
 
-        DateFormat dateFormat = new SimpleDateFormat("hh:mm");
         Date d1 = dateFormat.parse(arr[0]);
         Date d2 = dateFormat.parse(arr[1]);
         double difference = (d2.getTime() - d1.getTime())/(1000*60*60.0);

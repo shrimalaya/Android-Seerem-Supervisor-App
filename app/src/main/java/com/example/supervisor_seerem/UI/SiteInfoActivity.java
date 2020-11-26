@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,10 +32,17 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class SiteInfoActivity extends AppCompatActivity {
 
@@ -50,8 +59,16 @@ public class SiteInfoActivity extends AppCompatActivity {
     public List<DocumentSnapshot> mAllDocs = new ArrayList<>();
     public List<DocumentSnapshot> mUserDocs = new ArrayList<>();
     public List<DocumentSnapshot> mShowDocs = new ArrayList<>();
+    public List<DocumentSnapshot> mTimedDocs = new ArrayList<>();
+    public List<DocumentSnapshot> mOnlineDocs = new ArrayList<>();
+    public List<DocumentSnapshot> mOfflineDocs = new ArrayList<>();
+    public List<DocumentSnapshot> mOnlineUserDocs = new ArrayList<>();
+    public List<DocumentSnapshot> mOfflineUserSites = new ArrayList<>();
+    public List<DocumentSnapshot> mOfflineAllSites = new ArrayList<>();
+    public List<DocumentSnapshot> mOnlineAllSites = new ArrayList<>();
 
     private DrawerLayout drawer;
+    private boolean showOfflineSites = false;
 
     public static Intent launchSiteInfoIntent(Context context) {
         Intent siteInfoIntent = new Intent(context, SiteInfoActivity.class);
@@ -211,6 +228,24 @@ public class SiteInfoActivity extends AppCompatActivity {
         mRecycler = findViewById(R.id.siteInfoRecyclerView);
 
         retrieveData();
+
+        /**
+         * Update list of sites every 1 minute to check for hours of operation
+         * Learned from https://stackoverflow.com/a/21554060
+         */
+        final Handler handler =new Handler();
+        handler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(SiteInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                if(!showOfflineSites) {
+                    updateDisplaySites();
+                    mAdapter.notifyDataSetChanged();
+                }
+                handler.postDelayed(this, 60000);
+            }
+        }, 60000);
     }
 
     /**
@@ -244,6 +279,23 @@ public class SiteInfoActivity extends AppCompatActivity {
             mShowDocs.clear();
             mShowDocs.addAll(mUserDocs);
         }
+
+        mTimedDocs.clear();
+        for (DocumentSnapshot doc : mShowDocs) {
+            try {
+                Boolean withinOpHours = timeParser(doc.getString(CONSTANTS.OPERATION_HRS_KEY));
+                if (withinOpHours) {
+                    mTimedDocs.add(doc);
+                } else if(showOfflineSites) {
+                    mTimedDocs.add(doc);
+                }
+            } catch (ParseException e) {
+                Log.d("Parse Exception", e.toString());
+            }
+        }
+
+        mShowDocs.clear();
+        mShowDocs.addAll(mTimedDocs);
     }
 
     public void displayData() {
@@ -362,6 +414,8 @@ public class SiteInfoActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
+
         switch (item.getItemId()) {
             case (R.id.refresh_site_info):
                 documentManager.retrieveAllData();
@@ -381,15 +435,21 @@ public class SiteInfoActivity extends AppCompatActivity {
                 return true;
 
             case (R.id.menu_display_all_user):
-                TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
-
                 if(showAllSites) {
                     showAllSites = false;
-                    displayAllOrSelectedSites.setText("Assigned Worksites");
+                    if(showOfflineSites) {
+                        displayAllOrSelectedSites.setText("All Assigned Worksites");
+                    } else {
+                        displayAllOrSelectedSites.setText("Online Assigned Worksites");
+                    }
                     item.setTitle("Display All Worksites");
                 } else {
                     showAllSites = true;
-                    displayAllOrSelectedSites.setText("All Company Worksites");
+                    if(showOfflineSites) {
+                        displayAllOrSelectedSites.setText("All Company Worksites");
+                    } else {
+                        displayAllOrSelectedSites.setText("Online Company Worksites");
+                    }
                     item.setTitle("Display My Worksites");
                 }
 
@@ -397,11 +457,65 @@ public class SiteInfoActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
                 return true;
 
+                case (R.id.menu_site_offline):
+                    if (showOfflineSites) {
+                        showOfflineSites = false;
+                        item.setTitle("Display Offline Sites");
+                        if(showAllSites) {
+                            displayAllOrSelectedSites.setText("Online Company Worksites");
+                        } else {
+                            displayAllOrSelectedSites.setText("Online Assigned Worksites");
+                        }
+
+                    } else {
+                        showOfflineSites = true;
+                        item.setTitle("Display Online Sites");
+                        if(showAllSites) {
+                            displayAllOrSelectedSites.setText("All Company Worksites");
+                        } else {
+                            displayAllOrSelectedSites.setText("All Assigned Worksites");
+                        }
+                    }
+
+                    updateDisplaySites();
+                    mAdapter.notifyDataSetChanged();
+                    return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    /**
+     * HH:mm = 24hr format
+     * hh:mm = 12 hr format
+     * Return true if operationTime includes the current time
+     */
+    private boolean timeParser(String operation) throws ParseException {
+        String arr[] = null;
+        if(operation != null) {
+            if(operation.split(" - ") != null) {
+                arr = operation.split(" - ");
+            } else {
+                arr = operation.split("-");
+            }
+        }
 
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date d1 = dateFormat.parse(arr[0]);
+        Date d2 = dateFormat.parse(arr[1]);
+        String currTime = dateFormat.format(Calendar.getInstance().getTime());
+        System.out.println("TEST4> Curr time: " + currTime);
+        Date current = dateFormat.parse(currTime);
+        System.out.println("TEST4> Curr time in Date format: " + current);
+        System.out.println("TEST4> d1 time: " + d1);
+        System.out.println("TEST4> d2 time: " + d2);
+
+        Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
+
+        System.out.println("TEST4> Within op hours: " + withinOpHrs);
+        System.out.println("");
+
+        return withinOpHrs;
+    }
 
 }
