@@ -80,9 +80,10 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
              the user will now be stopped if they input the same
              hings before they are told if their inputted current password is right or not.
              (If it was the other way around, the user can tell if they guessed the right password
-             if the "current and new password are the same prompt" because the message to say their
+             if the "current and new password are the same prompt" is shown because that toast
+             would only possibly be shown after it is confirmed that the inputted current password
+             is the same as the saved password.)
              */
-            // For current and new password.
             if (currentPasswordToCheck.equals(newPasswordToCheck)) {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.change_password_current_and_new_are_same
@@ -92,7 +93,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                         getString(R.string.change_password_wrong_current_password),
                         Toast.LENGTH_LONG).show();
             } else {
-                //Success. Store password now.
+                // Success. Store password now and return to UserInfo
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.change_password_successful_change),
                         Toast.LENGTH_LONG).show();
@@ -105,7 +106,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                 Intent intent = UserInfoActivity.launchUserInfoIntent(ChangePasswordActivity.this);
                 startActivity(intent);
             }
-        } else {//The user did not input something for the current and/or new password
+        } else { // The user did not input something for the current and/or new password
             if (currentPasswordToCheck.isEmpty()) {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.change_password_current_empty),
