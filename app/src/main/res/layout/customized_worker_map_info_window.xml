@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@drawable/white_round_corners_background"
     android:padding="10dp">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/mapInfoWindow_mainTitle"
         android:layout_gravity="center_horizontal"
@@ -15,18 +16,56 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="#000000"
-        android:textSize="14sp"
-        android:textStyle="bold"/>
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <LinearLayout
-        android:id="@+id/map_employeeID_LinearLayout"
+    <ImageView
+        android:id="@+id/mapInfoWindow_worksite_image"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_worker_map_info_window"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/mapInfoWindow_fullNameTitle"
+        app:layout_constraintBottom_toBottomOf="@id/mapInfoWindow_supervisorTitle" />
+
+    <TextView
+        android:id="@+id/mapInfoWindow_fullNameTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:ellipsize="end"
+        android:maxLines="10"
+        android:gravity="start"
+        android:text="@string/map_info_fullName"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/mapInfoWindow_employeeIDTitle"
+        app:layout_constraintStart_toStartOf="@+id/mapInfoWindow_employeeIDTitle"
+        app:layout_constraintTop_toBottomOf="@+id/mapInfoWindow_mainTitle" />
+
+    <TextView
+        android:id="@+id/mapInfoWindow_fullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:ellipsize="end"
+        android:maxLines="10"
+        android:gravity="start"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mapInfoWindow_fullNameTitle"
+        app:layout_constraintLeft_toRightOf="@id/mapInfoWindow_fullNameTitle"
+        app:layout_constraintTop_toTopOf="@+id/mapInfoWindow_fullNameTitle"/>
 
         <TextView
             android:id="@+id/mapInfoWindow_employeeIDTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="10"
@@ -34,61 +73,30 @@
             android:text="@string/map_info_employeeID"
             android:textColor="#000000"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toRightOf="@id/mapInfoWindow_worksite_image"
+            app:layout_constraintTop_toBottomOf="@+id/mapInfoWindow_fullNameTitle" />
 
         <TextView
             android:id="@+id/mapInfoWindow_employeeID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:ellipsize="end"
             android:maxLines="10"
             android:gravity="start"
-            android:textColor="#000000"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/map_fullName_LinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/mapInfoWindow_fullNameTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:text="@string/map_info_fullName"
             android:textColor="#000000"
             android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/mapInfoWindow_fullName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:gravity="start"
-            android:textColor="#000000"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/map_companyID_LinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            app:layout_constraintBottom_toBottomOf="@id/mapInfoWindow_employeeIDTitle"
+            app:layout_constraintLeft_toRightOf="@id/mapInfoWindow_employeeIDTitle"
+            app:layout_constraintTop_toTopOf="@id/mapInfoWindow_employeeIDTitle"/>
 
         <TextView
             android:id="@+id/mapInfoWindow_companyIDTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="10"
@@ -96,30 +104,29 @@
             android:text="@string/map_info_companyID"
             android:textColor="#000000"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/mapInfoWindow_employeeIDTitle"
+            app:layout_constraintStart_toStartOf="@+id/mapInfoWindow_employeeIDTitle"
+            app:layout_constraintTop_toBottomOf="@+id/mapInfoWindow_employeeIDTitle" />
 
         <TextView
             android:id="@+id/mapInfoWindow_companyID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:ellipsize="end"
             android:maxLines="10"
             android:gravity="start"
             android:textColor="#000000"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/map_supervisor_LinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/mapInfoWindow_companyIDTitle"
+            app:layout_constraintLeft_toRightOf="@id/mapInfoWindow_companyIDTitle"
+            app:layout_constraintTop_toTopOf="@id/mapInfoWindow_companyIDTitle"/>
 
         <TextView
             android:id="@+id/mapInfoWindow_supervisorTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="10"
@@ -127,14 +134,17 @@
             android:text="@string/map_info_supervisorID"
             android:textColor="#000000"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/mapInfoWindow_companyIDTitle"
+            app:layout_constraintStart_toStartOf="@+id/mapInfoWindow_companyIDTitle"
+            app:layout_constraintTop_toBottomOf="@+id/mapInfoWindow_companyIDTitle"/>
 
         <TextView
             android:id="@+id/mapInfoWindow_supervisor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:autoLink="web"
             android:clickable="true"
             android:focusable="true"
@@ -142,6 +152,8 @@
             android:maxLines="10"
             android:gravity="start"
             android:textColor="#000000"
-            android:textSize="14sp" />
-    </LinearLayout>
-</LinearLayout>
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/mapInfoWindow_supervisorTitle"
+            app:layout_constraintLeft_toRightOf="@id/mapInfoWindow_supervisorTitle"
+            app:layout_constraintTop_toTopOf="@id/mapInfoWindow_supervisorTitle"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
