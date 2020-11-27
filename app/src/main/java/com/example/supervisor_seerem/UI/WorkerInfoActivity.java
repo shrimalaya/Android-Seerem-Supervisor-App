@@ -8,15 +8,19 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
@@ -26,7 +30,12 @@ import com.example.supervisor_seerem.UI.util.WorkerAdapter;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,22 +44,387 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class WorkerInfoActivity extends AppCompatActivity {
 
-    private DocumentManager documentManager = DocumentManager.getInstance();
+    private DocumentManager documentManager;
 
     private WorkerAdapter mAdapter;
     private RecyclerView mRecycler;
     private DrawerLayout drawer;
 
-    private List<Worker> mList = new ArrayList<>();
     private List<DocumentSnapshot> mAllDocs = new ArrayList<>();
     private List<DocumentSnapshot> mUserDocs = new ArrayList<>();
     private List<DocumentSnapshot> mShowDocs = new ArrayList<>();
+    private List<DocumentSnapshot> mOnlineDocs = new ArrayList<>();
+    private List<DocumentSnapshot> mOfflineDocs = new ArrayList<>();
 
     private Boolean showAllWorkers = false;
+    private Boolean showOfflineWorkers = false;
+    private String dayKey = CONSTANTS.SUNDAY_KEY;
+    private Handler handler;
+    private Runnable runnable;
 
     public static Intent launchWorkerInfoIntent(Context context) {
         Intent workerInfoIntent = new Intent(context, WorkerInfoActivity.class);
         return workerInfoIntent;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_worker_info);
+
+        documentManager = DocumentManager.getInstance();
+
+        setupNavigationBar();
+        setupSidebarNavigationDrawer();
+
+        updateDayOfWeek();
+        displayData();
+
+        /**
+         * Update list of workers every 1 minute to check for hours of operation
+         * Learned from https://stackoverflow.com/a/21554060
+         */
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(WorkerInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                updateDayOfWeek();
+                updateDisplayWorkers();
+                mAdapter.notifyDataSetChanged();
+                handler.postDelayed(this, 60000);
+            }
+        };
+        handler.postDelayed(runnable, 60000);
+    }
+
+    private void updateDayOfWeek() {
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        switch (day) {
+            case Calendar.MONDAY:
+                dayKey = CONSTANTS.MONDAY_KEY;
+                break;
+            case Calendar.TUESDAY:
+                dayKey = CONSTANTS.TUESDAY_KEY;
+                break;
+            case Calendar.WEDNESDAY:
+                dayKey = CONSTANTS.WEDNESDAY_KEY;
+                break;
+            case Calendar.THURSDAY:
+                dayKey = CONSTANTS.THURSDAY_KEY;
+                break;
+            case Calendar.FRIDAY:
+                dayKey = CONSTANTS.FRIDAY_KEY;
+                break;
+            case Calendar.SATURDAY:
+                dayKey = CONSTANTS.SATURDAY_KEY;
+                break;
+            case Calendar.SUNDAY:
+                dayKey = CONSTANTS.SUNDAY_KEY;
+                break;
+    }
+
+}
+
+    private String checkNull(String data) {
+        if(data == null || data.isEmpty()) {
+            return " - ";
+        } else {
+            return data;
+        }
+    }
+
+    private void updateDisplayWorkers() {
+        checkDisplayingWorkersHeader();
+
+        if(showAllWorkers) {
+            mShowDocs.clear();
+            mShowDocs.addAll(mAllDocs);
+        } else {
+            mShowDocs.clear();
+            mShowDocs.addAll(mUserDocs);
+        }
+
+        mOnlineDocs.clear();
+        mOfflineDocs.clear();
+
+        // Check for "TODAY's" available workers who are online
+        // A worker with no availability data will be shown as offline
+        for(DocumentSnapshot worker: mShowDocs) {
+            DocumentSnapshot avail = null;
+            for(DocumentSnapshot availability: documentManager.getAvailabilities()) {
+                if (availability.getString(CONSTANTS.ID_KEY).equals(worker.getString(CONSTANTS.ID_KEY))) {
+                    avail = availability;
+                    try {
+                        Boolean withinOpHours = timeParser(checkNull(availability.getString(dayKey)));
+                        if(withinOpHours) {
+                            mOnlineDocs.add(worker);
+                        } else {
+                            mOfflineDocs.add(worker);
+                        }
+                    } catch (ParseException e) {
+                        Log.d("WORKERINFO", e.toString());
+                        mOfflineDocs.add(worker); // Consider a worker without availability to be offline
+                    }
+                }
+            }
+
+            if (avail == null) { // No availability data found
+                mOfflineDocs.add(worker);
+            }
+        }
+
+        mShowDocs.clear();
+        if(showOfflineWorkers) {
+            mShowDocs.addAll(mOfflineDocs);
+            if(mOfflineDocs.isEmpty()) {
+                Toast.makeText(this, "No Offline Workers!", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            mShowDocs.addAll(mOnlineDocs);
+            if(mOnlineDocs.isEmpty()) {
+                Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+
+    public void displayData() {
+        mAllDocs.clear();
+        mAllDocs.addAll(documentManager.getWorkers());
+
+        mUserDocs.clear();
+        for (DocumentSnapshot doc: documentManager.getWorkers()) {
+            if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
+                mUserDocs.add(doc);
+            }
+        }
+        updateDisplayWorkers();
+
+        mRecycler = findViewById(R.id.workerInfoRecycler);
+        mAdapter = new WorkerAdapter(mShowDocs);
+        mRecycler.setAdapter(mAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_worker_info, menu);
+
+        /**
+         * Search layout referenced from: https://www.youtube.com/watch?v=pM1fAmUQn8g&ab_channel=CodinginFlow
+         */
+        final MenuItem search = menu.findItem(R.id.menu_worker_search);
+        final MenuItem clear = menu.findItem(R.id.menu_worker_clear);
+
+        final SearchView searchView = (SearchView) search.getActionView();
+        searchView.setQueryHint("Search Here!");
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clear.setVisible(true);
+            }
+        });
+
+        clear.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+
+                updateDisplayWorkers();
+                mAdapter.notifyDataSetChanged();
+                item.setVisible(false);
+                return true;
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
+                currentlyDisplaying.setText("Search Results: All workers");
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
+                currentlyDisplaying.setText("Search: All workers");
+                search(newText);
+                return true;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        switch (item.getItemId()) {
+            case (R.id.menu_worker_refresh):
+                final ProgressDialog progressDialog = new ProgressDialog(WorkerInfoActivity.this);
+                progressDialog.setMessage("Refreshing All Data!");
+                progressDialog.setTitle("Please wait");
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
+
+                documentManager.retrieveAllData(new DocumentManager.RetrieveCallback() {
+                    @Override
+                    public void onCallback(Boolean result) {
+                        if(result) {
+                            mAllDocs.clear();
+                            mAllDocs.addAll(documentManager.getWorkers());
+
+                            mUserDocs.clear();
+                            for (DocumentSnapshot doc: documentManager.getWorkers()) {
+                                if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
+                                    mUserDocs.add(doc);
+                                }
+                            }
+
+                            updateDisplayWorkers();
+                            progressDialog.dismiss();
+                            mAdapter.notifyDataSetChanged();
+                            Log.d("WORKERINFO", "All data refreshed");
+                        }
+                    }
+                });
+                return true;
+
+            case (R.id.menu_worker_display_filter):
+                if(showAllWorkers) {
+                    showAllWorkers = false;
+                    item.setTitle("Display All Workers");
+                } else {
+                    showAllWorkers = true;
+                    item.setTitle("Display My Workers");
+                }
+
+                updateDisplayWorkers();
+                mAdapter.notifyDataSetChanged();
+                return true;
+
+            case (R.id.menu_worker_offline):
+                if (showOfflineWorkers) {
+                    showOfflineWorkers = false;
+                    item.setTitle("Display Offline Workers");
+                } else {
+                    showOfflineWorkers = true;
+                    item.setTitle("Display Online Workers");
+                }
+
+                updateDisplayWorkers();
+                mAdapter.notifyDataSetChanged();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // Search function
+    private void search(String expr) {
+        List<DocumentSnapshot> results = new ArrayList<>();
+        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
+
+        for(DocumentSnapshot doc: documentManager.getWorkers()) {
+            if(results.contains(doc)) {
+                //skip
+            } else {
+                // Look for matching name
+                Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.FIRST_NAME_KEY)
+                        + " " + doc.getString(CONSTANTS.LAST_NAME_KEY));
+                if(matcher.find() == true) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching Skills
+                matcher = pattern.matcher(doc.getString(CONSTANTS.SKILLS_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching ID
+                matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching Supervisor ID
+                matcher = pattern.matcher(doc.getString(CONSTANTS.SUPERVISOR_ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+
+                // Look for matching Worksite
+                matcher = pattern.matcher(doc.getString(CONSTANTS.WORKSITE_ID_KEY));
+                if(matcher.find()) {
+                    results.add(doc);
+                    continue;
+                }
+            }
+        }
+
+        mShowDocs.clear();
+        mShowDocs.addAll(results);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * HH:mm = 24hr format
+     * hh:mm = 12 hr format
+     * Return true if operationTime includes the current time
+     */
+    private boolean timeParser(String availability) throws ParseException {
+        String arr[] = null;
+        if(availability.equals(" - ") || availability.equals("-") || availability == null ) {
+            return false;
+        } else if(availability != null) {
+            if(availability.split("-") != null) {
+                arr = availability.split("-");
+            }
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date d1 = dateFormat.parse(arr[0]);
+        Date d2 = dateFormat.parse(arr[1]);
+        String currTime = dateFormat.format(Calendar.getInstance().getTime());
+        Log.d("WORKERINFO", "TEST4> Curr time: " + currTime);
+        Date current = dateFormat.parse(currTime);
+        Log.d("WORKERINFO","TEST4> Curr time in Date format: " + current);
+        Log.d("WORKERINFO","TEST4> d1 time: " + d1);
+        Log.d("WORKERINFO","TEST4> d2 time: " + d2);
+
+        Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
+
+        Log.d("WORKERINFO","TEST4> Within op hours: " + withinOpHrs);
+
+        return withinOpHrs;
+    }
+
+    private void checkDisplayingWorkersHeader() {
+        TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
+
+        if(showOfflineWorkers && showAllWorkers) {
+            currentlyDisplaying.setText("Offline Company Workers");
+        } else if (showOfflineWorkers && !showAllWorkers) {
+            currentlyDisplaying.setText("Offline Assigned Workers");
+        } else if (!showOfflineWorkers && showAllWorkers) {
+            currentlyDisplaying.setText("Online Company Workers");
+        } else {
+            currentlyDisplaying.setText("Online Assigned Workers");
+        }
     }
 
     private void setupSidebarNavigationDrawer() {
@@ -194,189 +568,16 @@ public class WorkerInfoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_worker_info);
-
-        setupNavigationBar();
-        setupSidebarNavigationDrawer();
-        mRecycler = findViewById(R.id.workerInfoRecycler);
-
-        displayData();
-    }
-
-    private void updateDisplayWorkers() {
-        mAllDocs.clear();
-        mAllDocs.addAll(documentManager.getWorkers());
-
-        mUserDocs = new ArrayList<>();
-        for (DocumentSnapshot doc: documentManager.getWorkers()) {
-            if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
-                mUserDocs.add(doc);
-            }
-        }
-
-        TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
-
-        if(showAllWorkers) {
-            currentlyDisplaying.setText("All Company Workers");
-            mShowDocs.clear();
-            mShowDocs.addAll(mAllDocs);
-        } else {
-            currentlyDisplaying.setText("Assigned Workers");
-            mShowDocs.clear();
-            mShowDocs.addAll(mUserDocs);
-        }
-    }
-
-    public void displayData() {
+    protected void onResume() {
+        super.onResume();
+        updateDayOfWeek();
         updateDisplayWorkers();
-
-        mAdapter = new WorkerAdapter(mShowDocs);
-
-        if (mAdapter == null) {
-            System.out.println("TEST1> Adapter null");
-        } else {
-            mRecycler.setAdapter(mAdapter);
-        }
+        handler.postDelayed(runnable,60000);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_worker_info, menu);
-
-        /**
-         * Search layout referenced from: https://www.youtube.com/watch?v=pM1fAmUQn8g&ab_channel=CodinginFlow
-         */
-        final MenuItem search = menu.findItem(R.id.menu_worker_search);
-        final MenuItem clear = menu.findItem(R.id.menu_worker_clear);
-
-        final SearchView searchView = (SearchView) search.getActionView();
-        searchView.setQueryHint("Search Here!");
-
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clear.setVisible(true);
-            }
-        });
-
-        clear.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                searchView.setQuery("", false);
-                searchView.setIconified(true);
-
-                updateDisplayWorkers();
-                mAdapter.notifyDataSetChanged();
-                item.setVisible(false);
-                return true;
-            }
-        });
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
-                currentlyDisplaying.setText("Search Results: All workers");
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
-                currentlyDisplaying.setText("Search: All workers");
-                search(newText);
-                return true;
-            }
-        });
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        switch (item.getItemId()) {
-            case (R.id.menu_worker_refresh):
-                documentManager.retrieveAllData();
-
-                updateDisplayWorkers();
-                mAdapter.notifyDataSetChanged();
-                return true;
-
-            case (R.id.menu_worker_display_filter):
-                if(showAllWorkers) {
-                    showAllWorkers = false;
-                    item.setTitle("Display All Workers");
-                } else {
-                    showAllWorkers = true;
-                    item.setTitle("Display My Workers");
-                }
-
-                updateDisplayWorkers();
-                mAdapter.notifyDataSetChanged();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    // Search function
-    private void search(String expr) {
-        List<DocumentSnapshot> results = new ArrayList<>();
-        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
-
-        for(DocumentSnapshot doc: documentManager.getWorkers()) {
-            if(results.contains(doc)) {
-                //skip
-            } else {
-                // Look for matching name
-                Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.FIRST_NAME_KEY)
-                        + " " + doc.getString(CONSTANTS.LAST_NAME_KEY));
-                if(matcher.find() == true) {
-                    results.add(doc);
-                    continue;
-                }
-
-                // Look for matching Skills
-                matcher = pattern.matcher(doc.getString(CONSTANTS.SKILLS_KEY));
-                if(matcher.find()) {
-                    results.add(doc);
-                    continue;
-                }
-
-                // Look for matching ID
-                matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
-                if(matcher.find()) {
-                    results.add(doc);
-                    continue;
-                }
-
-                // Look for matching Supervisor ID
-                matcher = pattern.matcher(doc.getString(CONSTANTS.SUPERVISOR_ID_KEY));
-                if(matcher.find()) {
-                    results.add(doc);
-                    continue;
-                }
-
-                // Look for matching Worksite
-                matcher = pattern.matcher(doc.getString(CONSTANTS.WORKSITE_ID_KEY));
-                if(matcher.find()) {
-                    results.add(doc);
-                    continue;
-                }
-            }
-        }
-
-        mShowDocs.clear();
-        mShowDocs.addAll(results);
-        mAdapter.notifyDataSetChanged();
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
     }
 }

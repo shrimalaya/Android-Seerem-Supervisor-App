@@ -1,15 +1,14 @@
 package com.example.supervisor_seerem.model;
 
 public class CONSTANTS {
-    public static String USER_ID = "00";
-    public static String USER_COMPANY = "00";
-
     public static final String WORKERS_COLLECTION = "workers";
     public static final String WORKSITES_COLLECTION = "worksites";
     public static final String SUPERVISORS_COLLECTION = "supervisors";
     public static final String EMERGENCY_INFO_COLLECTION = "emergency_info";
     public static final String CONTACT_INFO_COLLECTION = "contact_info";
     public static final String AVAILABILITY_COLLECTION = "availability";
+    public static final String PENDING_OVERTIME_COLLECTION = "pending_overtime";
+    public static final String PENDING_SICKLEAVE_COLLECTION = "pending_sickleave";
 
     public static final String ID_KEY = "ID";
     public static final String FIRST_NAME_KEY = "FIRSTNAME";

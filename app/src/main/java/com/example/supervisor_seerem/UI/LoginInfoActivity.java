@@ -3,6 +3,7 @@ package com.example.supervisor_seerem.UI;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,16 +41,16 @@ public class LoginInfoActivity extends AppCompatActivity {
     private EditText passwordInput;
     private Button buttonLogin;
     FirebaseFirestore mRef = FirebaseFirestore.getInstance();
-    private DocumentManager manager = DocumentManager.getInstance();
     List<DocumentSnapshot> allSupervisors = new ArrayList<>();
 
+    DocumentManager manager;
     SharedPreferences loginSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_info);
-
+        manager = DocumentManager.getInstance();
         loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
 
         usernameInput = findViewById(R.id.editUsername);
@@ -79,6 +80,13 @@ public class LoginInfoActivity extends AppCompatActivity {
     }
 
     private void checkInputs() {
+        final ProgressDialog progressDialog = new ProgressDialog(LoginInfoActivity.this);
+        progressDialog.setMessage("Fetching data relevant to you!");
+        progressDialog.setTitle("Logging In");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+
         String usernameToCheck = usernameInput.getText().toString();
         usernameToCheck = usernameToCheck.toUpperCase();
         String passwordToCheck = passwordInput.getText().toString();
@@ -86,13 +94,15 @@ public class LoginInfoActivity extends AppCompatActivity {
             if (usernameToCheck.isEmpty()) {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.error_no_username), Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
             if (passwordToCheck.isEmpty()) {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.error_no_password), Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
         } else {
-            Intent toUserInfo = new Intent(this, UserInfoActivity.class);
+            final Intent toUserInfo = new Intent(this, UserInfoActivity.class);
 //            Intent siteInfoIntent = SiteInfoActivity.launchSiteInfoIntent(LoginInfoActivity.this);
 
 
@@ -115,13 +125,21 @@ public class LoginInfoActivity extends AppCompatActivity {
 
                         manager.setCurrentUser(new Supervisor(user.getString(CONSTANTS.ID_KEY), user.getString(CONSTANTS.FIRST_NAME_KEY)
                                 , user.getString(CONSTANTS.LAST_NAME_KEY), user.getString(CONSTANTS.COMPANY_ID_KEY)));
-                        CONSTANTS.USER_COMPANY = user.getString(CONSTANTS.COMPANY_ID_KEY);
-                        CONSTANTS.USER_ID = user.getString(CONSTANTS.ID_KEY);
 
-                        System.out.println("TEST3> New user id: " + manager.getCurrentUser().getFirstName());
+                        manager.retrieveAllData(new DocumentManager.RetrieveCallback() {
+                            @Override
+                            public void onCallback(Boolean result) {
+                                if(result) {
+                                    System.out.println("TEST3> RESULT = " + result);
+                                    System.out.println("TEST3> NEW user id: " + manager.getCurrentUser().getId());
 
-                        startActivity(toUserInfo);
-                        break;
+                                    System.out.println("TEST3> UserInfo Activity started");
+                                    progressDialog.dismiss();
+                                    startActivity(toUserInfo);
+                                    finish();
+                                }
+                            }
+                        });
                     }
                 }
 
@@ -133,6 +151,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                 if (savedUsername.equals(usernameToCheck) && !savedpassword.equals(passwordToCheck)){
                     Toast.makeText(getApplicationContext(),
                             getString(R.string.error_wrong_password), Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 } else if (savedUsername.equals(usernameToCheck) && savedpassword.equals(passwordToCheck)) {
                     DocumentSnapshot user = null;
                     for(DocumentSnapshot doc: allSupervisors) {
@@ -141,13 +160,21 @@ public class LoginInfoActivity extends AppCompatActivity {
 
                             manager.setCurrentUser(new Supervisor(user.getString(CONSTANTS.ID_KEY), user.getString(CONSTANTS.FIRST_NAME_KEY)
                                     , user.getString(CONSTANTS.LAST_NAME_KEY), user.getString(CONSTANTS.COMPANY_ID_KEY)));
-                            CONSTANTS.USER_COMPANY = user.getString(CONSTANTS.COMPANY_ID_KEY);
-                            CONSTANTS.USER_ID = user.getString(CONSTANTS.ID_KEY);
 
-                            System.out.println("TEST3> curr user id: " + manager.getCurrentUser().getId());
+                            manager.retrieveAllData(new DocumentManager.RetrieveCallback() {
+                                @Override
+                                public void onCallback(Boolean result) {
+                                    if(result) {
+                                        System.out.println("TEST3> RESULT = " + result);
+                                        System.out.println("TEST3> curr user id: " + manager.getCurrentUser().getId());
 
-                            startActivity(toUserInfo);
-                            break;
+                                        System.out.println("TEST3> UserInfo Activity started");
+                                        progressDialog.dismiss();
+                                        startActivity(toUserInfo);
+                                        finish();
+                                    }
+                                }
+                            });
                         }
                     }
                 }
