@@ -44,16 +44,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class WorkerInfoActivity extends AppCompatActivity {
 
-    private DocumentManager documentManager = DocumentManager.getInstance();
+    private DocumentManager documentManager;
 
     private WorkerAdapter mAdapter;
     private RecyclerView mRecycler;
     private DrawerLayout drawer;
 
-    private List<Worker> mList = new ArrayList<>();
     private List<DocumentSnapshot> mAllDocs = new ArrayList<>();
     private List<DocumentSnapshot> mUserDocs = new ArrayList<>();
     private List<DocumentSnapshot> mShowDocs = new ArrayList<>();
+    private List<DocumentSnapshot> mOnlineDocs = new ArrayList<>();
+    private List<DocumentSnapshot> mOfflineDocs = new ArrayList<>();
 
     private Boolean showAllWorkers = false;
     private Boolean showOfflineWorkers = false;
@@ -67,12 +68,12 @@ public class WorkerInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_worker_info);
+
+        documentManager = DocumentManager.getInstance();
 
         setupNavigationBar();
         setupSidebarNavigationDrawer();
-        mRecycler = findViewById(R.id.workerInfoRecycler);
 
         displayData();
 
@@ -121,7 +122,64 @@ public class WorkerInfoActivity extends AppCompatActivity {
 
 }
 
+    private String checkNull(String data) {
+        if(data == null || data.isEmpty()) {
+            return " - ";
+        } else {
+            return data;
+        }
+    }
+
     private void updateDisplayWorkers() {
+        checkDisplayingWorkersHeader();
+
+        if(showAllWorkers) {
+            mShowDocs.clear();
+            mShowDocs.addAll(mAllDocs);
+        } else {
+            mShowDocs.clear();
+            mShowDocs.addAll(mUserDocs);
+        }
+
+        mOnlineDocs.clear();
+        mOfflineDocs.clear();
+
+        // Check for "TODAY's" available workers who are online
+        // A worker with no availability data will not be shown on the list
+        for(DocumentSnapshot availability: documentManager.getAvailabilities()) {
+            for(DocumentSnapshot worker: mShowDocs) {
+                if (availability.getString(CONSTANTS.ID_KEY).equals(worker.getString(CONSTANTS.ID_KEY))) {
+                    try {
+                        Boolean withinOpHours = timeParser(checkNull(availability.getString(dayKey)));
+                        if(withinOpHours) {
+                            mOnlineDocs.add(worker);
+                        } else {
+                            mOfflineDocs.add(worker);
+                        }
+                    } catch (ParseException e) {
+                        Log.d("WORKERINFO", e.toString());
+                        mOfflineDocs.add(worker); // Consider a worker without availability to be offline
+                    }
+                }
+            }
+        }
+
+        mShowDocs.clear();
+        if(showOfflineWorkers) {
+            mShowDocs.addAll(mOfflineDocs);
+            if(mOfflineDocs.isEmpty()) {
+                Toast.makeText(this, "No Offline Workers!", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            mShowDocs.addAll(mOnlineDocs);
+            if(mOnlineDocs.isEmpty()) {
+                Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+
+    public void displayData() {
         mAllDocs.clear();
         mAllDocs.addAll(documentManager.getWorkers());
 
@@ -131,30 +189,11 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 mUserDocs.add(doc);
             }
         }
-
-        TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
-
-        if(showAllWorkers) {
-            currentlyDisplaying.setText("All Company Workers");
-            mShowDocs.clear();
-            mShowDocs.addAll(mAllDocs);
-        } else {
-            currentlyDisplaying.setText("Assigned Workers");
-            mShowDocs.clear();
-            mShowDocs.addAll(mUserDocs);
-        }
-    }
-
-    public void displayData() {
         updateDisplayWorkers();
 
+        mRecycler = findViewById(R.id.workerInfoRecycler);
         mAdapter = new WorkerAdapter(mShowDocs);
-
-        if (mAdapter == null) {
-            System.out.println("TEST1> Adapter null");
-        } else {
-            mRecycler.setAdapter(mAdapter);
-        }
+        mRecycler.setAdapter(mAdapter);
     }
 
     @Override
@@ -230,6 +269,16 @@ public class WorkerInfoActivity extends AppCompatActivity {
                     @Override
                     public void onCallback(Boolean result) {
                         if(result) {
+                            mAllDocs.clear();
+                            mAllDocs.addAll(documentManager.getWorkers());
+
+                            mUserDocs.clear();
+                            for (DocumentSnapshot doc: documentManager.getWorkers()) {
+                                if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
+                                    mUserDocs.add(doc);
+                                }
+                            }
+
                             updateDisplayWorkers();
                             progressDialog.dismiss();
                             mAdapter.notifyDataSetChanged();
@@ -246,6 +295,19 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 } else {
                     showAllWorkers = true;
                     item.setTitle("Display My Workers");
+                }
+
+                updateDisplayWorkers();
+                mAdapter.notifyDataSetChanged();
+                return true;
+
+            case (R.id.menu_worker_offline):
+                if (showOfflineWorkers) {
+                    showOfflineWorkers = false;
+                    item.setTitle("Display Offline Workers");
+                } else {
+                    showOfflineWorkers = true;
+                    item.setTitle("Display Online Workers");
                 }
 
                 updateDisplayWorkers();
@@ -309,14 +371,6 @@ public class WorkerInfoActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
     }
 
-    private String checkNull(String data) {
-        if(data == null || data.isEmpty()) {
-            return " - ";
-        } else {
-            return data;
-        }
-    }
-
     /**
      * HH:mm = 24hr format
      * hh:mm = 12 hr format
@@ -351,7 +405,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
         return withinOpHrs;
     }
 
-    private void checkDisplayingSitesHeader() {
+    private void checkDisplayingWorkersHeader() {
         TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
 
         if(showOfflineWorkers && showAllWorkers) {
