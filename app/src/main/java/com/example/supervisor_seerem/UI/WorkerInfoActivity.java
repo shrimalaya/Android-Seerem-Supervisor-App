@@ -77,6 +77,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
         setupNavigationBar();
         setupSidebarNavigationDrawer();
 
+        updateDayOfWeek();
         displayData();
 
         /**
@@ -148,10 +149,12 @@ public class WorkerInfoActivity extends AppCompatActivity {
         mOfflineDocs.clear();
 
         // Check for "TODAY's" available workers who are online
-        // A worker with no availability data will not be shown on the list
-        for(DocumentSnapshot availability: documentManager.getAvailabilities()) {
-            for(DocumentSnapshot worker: mShowDocs) {
+        // A worker with no availability data will be shown as offline
+        for(DocumentSnapshot worker: mShowDocs) {
+            DocumentSnapshot avail = null;
+            for(DocumentSnapshot availability: documentManager.getAvailabilities()) {
                 if (availability.getString(CONSTANTS.ID_KEY).equals(worker.getString(CONSTANTS.ID_KEY))) {
+                    avail = availability;
                     try {
                         Boolean withinOpHours = timeParser(checkNull(availability.getString(dayKey)));
                         if(withinOpHours) {
@@ -164,6 +167,10 @@ public class WorkerInfoActivity extends AppCompatActivity {
                         mOfflineDocs.add(worker); // Consider a worker without availability to be offline
                     }
                 }
+            }
+
+            if (avail == null) { // No availability data found
+                mOfflineDocs.add(worker);
             }
         }
 
@@ -563,6 +570,8 @@ public class WorkerInfoActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        updateDayOfWeek();
+        updateDisplayWorkers();
         handler.postDelayed(runnable,60000);
     }
 

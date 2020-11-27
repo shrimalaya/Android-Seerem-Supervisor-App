@@ -529,6 +529,7 @@ public class SiteInfoActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        updateDisplaySites();
         handler.postDelayed(runnable,60000);
     }
 
