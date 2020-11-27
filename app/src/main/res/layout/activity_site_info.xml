@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
-            android:text="Your Worksites"
+            android:text="Online Assigned Worksites"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold|italic"

@@ -3,8 +3,10 @@ package com.example.supervisor_seerem.UI;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -17,8 +19,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.model.Document;
 
 import java.net.IDN;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class AdditionalInfoActivity extends AppCompatActivity {
 
@@ -40,9 +48,39 @@ public class AdditionalInfoActivity extends AppCompatActivity {
         populateData();
     }
 
+    /**
+     * HH:mm = 24hr format
+     * hh:mm = 12 hr format
+     */
+    private double timeParser(String time) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+        if(time.equals(" - ") || time.equals("-")) {
+            return 0;
+        }
+
+        String arr[] = null;
+        if(time != null) {
+           if(time.split("-") != null) {
+               arr = time.split("-");
+           }
+        }
+
+        Date d1 = dateFormat.parse(arr[0]);
+        Date d2 = dateFormat.parse(arr[1]);
+        double difference = (d2.getTime() - d1.getTime())/(1000*60*60.0);
+
+        return difference;
+    }
+
+    /**
+     * Overtime = more than 8 hours of shift in a day
+     */
     private void populateData() {
         DocumentSnapshot emergencyInfo = null;
         DocumentSnapshot availablity = null;
+        double total = 0;
+        double overtime = 0;
 
         for(DocumentSnapshot doc: manager.getEmergencyInfo()) {
             if(doc.getString(CONSTANTS.ID_KEY).equals(workerID)) {
@@ -63,32 +101,104 @@ public class AdditionalInfoActivity extends AppCompatActivity {
         workerName.setText(name.toUpperCase());
 
         if(availablity != null) {
+            double hrs = 0;
+
             monday = findViewById(R.id.txt_monday);
             monday.setText(checkNull(availablity.getString(CONSTANTS.MONDAY_KEY)));
+            try {
+                hrs = timeParser(availablity.getString(CONSTANTS.MONDAY_KEY));
+                total += hrs;
+                System.out.println("TEST4> Time difference M: " + hrs);
+                if(hrs > 8) {
+                    overtime+=(hrs-8);
+                }
+            } catch (ParseException e) {
+                System.out.println("TEST4> Parse Exception: " + e.toString());
+            }
 
             tuesday = findViewById(R.id.txt_tuesday);
             tuesday.setText(checkNull(availablity.getString(CONSTANTS.TUESDAY_KEY)));
+            try {
+                hrs = timeParser(availablity.getString(CONSTANTS.TUESDAY_KEY));
+                total += hrs;
+                System.out.println("TEST4> Time difference T: " + hrs);
+                if(hrs > 8) {
+                    overtime+=(hrs-8);
+                }
+            } catch (ParseException e) {
+                System.out.println("TEST4> Parse Exception: " + e.toString());
+            }
 
             wednesday = findViewById(R.id.txt_wednesday);
             wednesday.setText(checkNull(availablity.getString(CONSTANTS.WEDNESDAY_KEY)));
+            try {
+                hrs = timeParser(availablity.getString(CONSTANTS.WEDNESDAY_KEY));
+                total += hrs;
+                System.out.println("TEST4> Time difference W: " + hrs);
+                if(hrs > 8) {
+                    overtime+=(hrs-8);
+                }
+            } catch (ParseException e) {
+                System.out.println("TEST4> Parse Exception: " + e.toString());
+            }
 
             thursday = findViewById(R.id.txt_thursday);
             thursday.setText(checkNull(availablity.getString(CONSTANTS.THURSDAY_KEY)));
+            try {
+                hrs = timeParser(availablity.getString(CONSTANTS.THURSDAY_KEY));
+                total += hrs;
+                System.out.println("TEST4> Time difference T: " + hrs);
+                if(hrs > 8) {
+                    overtime+=(hrs-8);
+                }
+            } catch (ParseException e) {
+                System.out.println("TEST4> Parse Exception: " + e.toString());
+            }
 
             friday = findViewById(R.id.txt_friday);
             friday.setText(checkNull(availablity.getString(CONSTANTS.FRIDAY_KEY)));
+            try {
+                hrs = timeParser(availablity.getString(CONSTANTS.FRIDAY_KEY));
+                total += hrs;
+                System.out.println("TEST4> Time difference F: " + hrs);
+                if(hrs > 8) {
+                    overtime+=(hrs-8);
+                }
+            } catch (ParseException e) {
+                System.out.println("TEST4> Parse Exception: " + e.toString());
+            }
 
             saturday = findViewById(R.id.txt_saturday);
             saturday.setText(checkNull(availablity.getString(CONSTANTS.SATURDAY_KEY)));
+            try {
+                hrs = timeParser(availablity.getString(CONSTANTS.SATURDAY_KEY));
+                total += hrs;
+                System.out.println("TEST4> Time difference in hours: " + hrs);
+                if(hrs > 8) {
+                    overtime+=(hrs-8);
+                }
+            } catch (ParseException e) {
+                System.out.println("TEST4> Parse Exception Saturday: " + e.toString());
+            }
 
             sunday = findViewById(R.id.txt_sunday);
             sunday.setText(checkNull(availablity.getString(CONSTANTS.SUNDAY_KEY)));
+            try {
+                hrs = timeParser(availablity.getString(CONSTANTS.SUNDAY_KEY));
+                total += hrs;
+                System.out.println("TEST4> Time difference in hours: " + hrs);
+                if(hrs > 8) {
+                    overtime+=(hrs-8);
+                }
+            } catch (ParseException e) {
+                System.out.println("TEST4> Parse Exception Sunday: " + e.toString());
+            }
 
             totalHrs = findViewById(R.id.txt_additional_totalHrs);
-            totalHrs.setText("Not calculated!");
+            totalHrs.setText("" + total);
 
             overtimeHrs = findViewById(R.id.txt_additional_overtimeHrs);
-            overtimeHrs.setText("Not calculated!");
+            overtimeHrs.setText("" + overtime);
         }
 
         if(emergencyInfo != null) {
@@ -193,20 +303,35 @@ public class AdditionalInfoActivity extends AppCompatActivity {
                 return true;
 
             case (R.id.menu_additional_refresh):
-                manager.retrieveAllData();
-                DocumentSnapshot tempCurrWorker = null;
-                for(DocumentSnapshot doc: manager.getWorkers()) {
-                    if(workerID.equals(doc.getString(CONSTANTS.ID_KEY))) {
-                        tempCurrWorker = doc;
-                        break;
+                final ProgressDialog progressDialog = new ProgressDialog(AdditionalInfoActivity.this);
+                progressDialog.setMessage("Refreshing All Data!");
+                progressDialog.setTitle("Please wait");
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
+
+                manager.retrieveAllData(new DocumentManager.RetrieveCallback() {
+                    @Override
+                    public void onCallback(Boolean result) {
+                        if(result) {
+                            DocumentSnapshot tempCurrWorker = null;
+                            for (DocumentSnapshot doc : manager.getWorkers()) {
+                                if (workerID.equals(doc.getString(CONSTANTS.ID_KEY))) {
+                                    tempCurrWorker = doc;
+                                    break;
+                                }
+                            }
+
+                            if (tempCurrWorker == null) {
+                                finish();
+                            }
+
+                            progressDialog.dismiss();
+                            populateData();
+                            Log.d("ADDITIONALINFO", "All data refreshed");
+                        }
                     }
-                }
-
-                if(tempCurrWorker == null) {
-                    this.finish();
-                }
-
-                populateData();
+                });
                 return true;
 
             default:
