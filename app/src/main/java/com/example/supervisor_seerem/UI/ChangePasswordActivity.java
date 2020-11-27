@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
 
-public class ChangePasswordActivity extends AppCompatActivity implements View.OnClickListener{
+public class ChangePasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText currentPasswordEditText;
     EditText newPasswordEditText;
@@ -50,27 +50,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_save_changes, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.checkmark:
-                // TODO: Do whatever in onCreate() or somewhere else,
-                //       then save changes accordingly (in SharedPrefs or Database)
-                Toast.makeText(this, "Need to save changes", Toast.LENGTH_SHORT).show();
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
@@ -81,7 +60,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
 
     }
 
-    private void setupViews(){
+    private void setupViews() {
         currentPasswordEditText = findViewById(R.id.currentPassword);
         newPasswordEditText = findViewById(R.id.newPassword);
         updatePassword = findViewById(R.id.buttonUpdatePassowrd);
@@ -94,15 +73,15 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
         String newPasswordToCheck = newPasswordEditText.getText().toString();
 
         //If the user input a current and new password
-        if(!currentPasswordToCheck.isEmpty() && !newPasswordToCheck.isEmpty()) {
-            /*
-            Now check if the user's inputted current and new are the same
-            This is checked first instead of the else if statement. This makes it so
-            the user will now be stopped if they input the same
-            hings before they are told if their inputted current password is right or not.
-            (If it was the other way around, the user can tell if they guessed the right password
-            if the "current and new password are the same prompt" because the message to say their
-            */
+        if (!currentPasswordToCheck.isEmpty() && !newPasswordToCheck.isEmpty()) {
+            /**
+             Now check if the user's inputted current and new are the same
+             This is checked first instead of the else if statement. This makes it so
+             the user will now be stopped if they input the same
+             hings before they are told if their inputted current password is right or not.
+             (If it was the other way around, the user can tell if they guessed the right password
+             if the "current and new password are the same prompt" because the message to say their
+             */
             // For current and new password.
             if (currentPasswordToCheck.equals(newPasswordToCheck)) {
                 Toast.makeText(getApplicationContext(),
@@ -113,15 +92,19 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                         getString(R.string.change_password_wrong_current_password),
                         Toast.LENGTH_LONG).show();
             } else {
-              //Success. Store password now.
+                //Success. Store password now.
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.change_password_successful_change),
                         Toast.LENGTH_LONG).show();
-              SharedPreferences.Editor editor = loginSharedPreferences.edit();
-              editor.putString("password", newPasswordToCheck);
-              editor.apply();
-              savedPassword = loginSharedPreferences.getString("password", null);
-          }
+                SharedPreferences.Editor editor = loginSharedPreferences.edit();
+                editor.putString("password", newPasswordToCheck);
+                editor.apply();
+                savedPassword = loginSharedPreferences.getString("password", null);
+
+                finish();
+                Intent intent = UserInfoActivity.launchUserInfoIntent(ChangePasswordActivity.this);
+                startActivity(intent);
+            }
         } else {//The user did not input something for the current and/or new password
             if (currentPasswordToCheck.isEmpty()) {
                 Toast.makeText(getApplicationContext(),
