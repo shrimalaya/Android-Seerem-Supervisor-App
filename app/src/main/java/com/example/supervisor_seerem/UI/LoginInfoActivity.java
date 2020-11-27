@@ -82,7 +82,7 @@ public class LoginInfoActivity extends AppCompatActivity {
     private void checkInputs() {
         final ProgressDialog progressDialog = new ProgressDialog(LoginInfoActivity.this);
         progressDialog.setMessage("Fetching data relevant to you!");
-        progressDialog.setTitle("Please wait");
+        progressDialog.setTitle("Logging In");
         progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(true);
         progressDialog.show();
