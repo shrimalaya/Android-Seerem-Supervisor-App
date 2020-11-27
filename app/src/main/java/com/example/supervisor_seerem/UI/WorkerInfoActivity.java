@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -218,10 +219,24 @@ public class WorkerInfoActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case (R.id.menu_worker_refresh):
-                documentManager.retrieveAllData();
+                final ProgressDialog progressDialog = new ProgressDialog(WorkerInfoActivity.this);
+                progressDialog.setMessage("Refreshing All Data!");
+                progressDialog.setTitle("Please wait");
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
 
-                updateDisplayWorkers();
-                mAdapter.notifyDataSetChanged();
+                documentManager.retrieveAllData(new DocumentManager.RetrieveCallback() {
+                    @Override
+                    public void onCallback(Boolean result) {
+                        if(result) {
+                            updateDisplayWorkers();
+                            progressDialog.dismiss();
+                            mAdapter.notifyDataSetChanged();
+                            Log.d("WORKERINFO", "All data refreshed");
+                        }
+                    }
+                });
                 return true;
 
             case (R.id.menu_worker_display_filter):

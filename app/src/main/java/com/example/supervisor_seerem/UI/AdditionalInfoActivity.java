@@ -3,8 +3,10 @@ package com.example.supervisor_seerem.UI;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -299,20 +301,35 @@ public class AdditionalInfoActivity extends AppCompatActivity {
                 return true;
 
             case (R.id.menu_additional_refresh):
-                manager.retrieveAllData();
-                DocumentSnapshot tempCurrWorker = null;
-                for(DocumentSnapshot doc: manager.getWorkers()) {
-                    if(workerID.equals(doc.getString(CONSTANTS.ID_KEY))) {
-                        tempCurrWorker = doc;
-                        break;
+                final ProgressDialog progressDialog = new ProgressDialog(AdditionalInfoActivity.this);
+                progressDialog.setMessage("Refreshing All Data!");
+                progressDialog.setTitle("Please wait");
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
+
+                manager.retrieveAllData(new DocumentManager.RetrieveCallback() {
+                    @Override
+                    public void onCallback(Boolean result) {
+                        if(result) {
+                            DocumentSnapshot tempCurrWorker = null;
+                            for (DocumentSnapshot doc : manager.getWorkers()) {
+                                if (workerID.equals(doc.getString(CONSTANTS.ID_KEY))) {
+                                    tempCurrWorker = doc;
+                                    break;
+                                }
+                            }
+
+                            if (tempCurrWorker == null) {
+                                finish();
+                            }
+
+                            progressDialog.dismiss();
+                            populateData();
+                            Log.d("ADDITIONALINFO", "All data refreshed");
+                        }
                     }
-                }
-
-                if(tempCurrWorker == null) {
-                    this.finish();
-                }
-
-                populateData();
+                });
                 return true;
 
             default:

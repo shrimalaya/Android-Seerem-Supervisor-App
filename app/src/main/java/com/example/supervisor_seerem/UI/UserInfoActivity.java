@@ -47,7 +47,7 @@ import java.util.Map;
  */
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
     FirebaseFirestore mRef = FirebaseFirestore.getInstance();
-    private DocumentManager documentManager = DocumentManager.getInstance();
+    private DocumentManager documentManager;
 
     // Storing of data in Cloud Firebase guided by SmallAcademy @https://www.youtube.com/watch?v=RiHGwJ_u27k
 
@@ -78,6 +78,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
+        documentManager = DocumentManager.getInstance();
         setupInterface();
 
         if(documentManager == null) {
@@ -320,7 +321,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
-                            System.out.println("TEST3> Size of workers = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -329,13 +329,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void getSitesData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, CONSTANTS.USER_COMPANY)
+                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, documentManager.getCurrentUser().getCompany_id())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
-                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -349,7 +348,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
-                            System.out.println("TEST3> Size of availability = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -363,7 +361,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
-                            System.out.println("TEST3> Size of contacts = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -377,7 +374,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
-                            System.out.println("TEST3> Size of emergency = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -392,7 +388,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
-                            System.out.println("TEST3> Size of supervisors = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }

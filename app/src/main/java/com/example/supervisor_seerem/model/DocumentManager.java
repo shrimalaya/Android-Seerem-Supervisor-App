@@ -42,7 +42,7 @@ public class DocumentManager {
     public static DocumentManager getInstance() {
         if(instance == null) {
             instance = new DocumentManager();
-            instance.retrieveAllData();
+//            instance.retrieveAllData();
         }
         return instance;
     }
@@ -108,7 +108,11 @@ public class DocumentManager {
         void onCallback(List<DocumentSnapshot> docs);
     }
 
-    public void retrieveAllData() {
+    public interface RetrieveCallback {
+        void onCallback(Boolean result);
+    }
+
+    public void retrieveAllData(final RetrieveCallback callback) {
         getSupervisorData(new DocListCallback() {
             @Override
             public void onCallback(List<DocumentSnapshot> docs) {
@@ -142,6 +146,7 @@ public class DocumentManager {
                                     @Override
                                     public void onCallback(List<DocumentSnapshot> docs) {
                                         setSites(docs);
+                                        callback.onCallback(true);
                                     }
                                 });
                             }
@@ -154,12 +159,13 @@ public class DocumentManager {
 
     private void getSupervisorData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.SUPERVISORS_COLLECTION)
-                .whereEqualTo(CONSTANTS.ID_KEY, CONSTANTS.USER_ID)
+                .whereEqualTo(CONSTANTS.ID_KEY, currentUser.getId())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of supervisors = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -168,12 +174,13 @@ public class DocumentManager {
 
     private void getWorkersData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.WORKERS_COLLECTION)
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, CONSTANTS.USER_COMPANY)
+                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, currentUser.getCompany_id())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of workers = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -182,12 +189,13 @@ public class DocumentManager {
 
     private void getSitesData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, CONSTANTS.USER_COMPANY)
+                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, currentUser.getCompany_id())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -201,6 +209,7 @@ public class DocumentManager {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of availability = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -214,6 +223,7 @@ public class DocumentManager {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of contacts = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -227,6 +237,7 @@ public class DocumentManager {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
+                            System.out.println("TEST3> Size of emergency = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }

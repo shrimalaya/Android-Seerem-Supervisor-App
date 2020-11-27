@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -290,21 +291,37 @@ public class SiteInfoActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case (R.id.refresh_site_info):
-                documentManager.retrieveAllData();
-                mAllDocs.clear();
-                mAllDocs.addAll(documentManager.getSites());
+                final ProgressDialog progressDialog = new ProgressDialog(SiteInfoActivity.this);
+                progressDialog.setMessage("Refreshing All Data!");
+                progressDialog.setTitle("Please wait");
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
 
-                mUserDocs.clear();
-                for (DocumentSnapshot site: mAllDocs) {
-                    for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
-                        if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
-                            mUserDocs.add(site);
+                documentManager.retrieveAllData(new DocumentManager.RetrieveCallback() {
+                    @Override
+                    public void onCallback(Boolean result) {
+                        if(result) {
+                            mAllDocs.clear();
+                            mAllDocs.addAll(documentManager.getSites());
+
+                            mUserDocs.clear();
+                            for (DocumentSnapshot site: mAllDocs) {
+                                for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
+                                    if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
+                                        mUserDocs.add(site);
+                                    }
+                                }
+                            }
+
+                            updateDisplaySites();
+                            progressDialog.dismiss();
+                            mAdapter.notifyDataSetChanged();
+                            Log.d("SITEINFO", "All data refreshed");
                         }
                     }
-                }
+                });
 
-                updateDisplaySites();
-                mAdapter.notifyDataSetChanged();
                 return true;
 
             case (R.id.menu_display_all_user):
