@@ -100,7 +100,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="Thursday"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView14"
                     app:layout_constraintTop_toTopOf="@+id/textView14" />
@@ -195,7 +195,7 @@
         android:layout_marginTop="20dp"
         android:text="Availability"
         android:textColor="#000000"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fix_txt_additionInfo" />
@@ -220,7 +220,7 @@
         android:layout_marginLeft="8dp"
         android:text="Your name"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/fix_txt_additionInfo"
         app:layout_constraintTop_toTopOf="@+id/fix_txt_additionInfo" />
@@ -234,7 +234,7 @@
         android:layout_marginTop="45dp"
         android:text="Emergency Info"
         android:textColor="#000000"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView29" />
@@ -248,6 +248,7 @@
         android:layout_marginTop="8dp"
         android:text="Total Hours:"
         android:textColor="#000000"
+        android:textSize="16sp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2" />
@@ -259,6 +260,7 @@
         android:layout_marginTop="4dp"
         android:text="Overtime Hours:"
         android:textColor="#000000"
+        android:textSize="16sp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="@+id/textView28"
         app:layout_constraintTop_toBottomOf="@+id/textView28" />
@@ -271,7 +273,7 @@
         android:layout_marginLeft="8dp"
         android:text=" - "
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/textView28"
         app:layout_constraintTop_toTopOf="@+id/textView28" />
 
@@ -283,7 +285,7 @@
         android:layout_marginLeft="8dp"
         android:text=" - "
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/textView29"
         app:layout_constraintTop_toTopOf="@+id/textView29" />
 
@@ -294,6 +296,7 @@
         android:layout_marginTop="8dp"
         android:text="Blood Group:"
         android:textColor="#000000"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textView27"
         app:layout_constraintTop_toBottomOf="@+id/textView27" />
@@ -317,6 +320,7 @@
         android:layout_marginTop="8dp"
         android:text="Medical Conditions:"
         android:textColor="#000000"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textView32"
         app:layout_constraintTop_toBottomOf="@+id/textView32" />
@@ -340,6 +344,7 @@
         android:layout_marginTop="8dp"
         android:text="Contact:"
         android:textColor="#000000"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textView32"
         app:layout_constraintTop_toBottomOf="@+id/textView34" />
@@ -363,6 +368,7 @@
         android:layout_marginTop="8dp"
         android:text="Number:"
         android:textColor="#000000"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textView32"
         app:layout_constraintTop_toBottomOf="@+id/textView36" />
@@ -386,6 +392,7 @@
         android:layout_marginTop="8dp"
         android:text="Relationship"
         android:textColor="#000000"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textView32"
         app:layout_constraintTop_toBottomOf="@+id/textView38" />

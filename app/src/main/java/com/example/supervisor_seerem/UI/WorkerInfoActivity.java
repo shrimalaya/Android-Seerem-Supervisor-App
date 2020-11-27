@@ -378,12 +378,10 @@ public class WorkerInfoActivity extends AppCompatActivity {
      */
     private boolean timeParser(String availability) throws ParseException {
         String arr[] = null;
-        if(availability == " - ") {
+        if(availability.equals(" - ") || availability.equals("-") || availability == null ) {
             return false;
         } else if(availability != null) {
-            if(availability.split(" - ") != null) {
-                arr = availability.split(" - ");
-            } else {
+            if(availability.split("-") != null) {
                 arr = availability.split("-");
             }
         }

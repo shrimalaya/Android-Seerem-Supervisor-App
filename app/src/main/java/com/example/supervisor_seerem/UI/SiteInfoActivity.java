@@ -362,9 +362,7 @@ public class SiteInfoActivity extends AppCompatActivity {
     private boolean timeParser(String operation) throws ParseException {
         String arr[] = null;
         if(operation != null) {
-            if(operation.split(" - ") != null) {
-                arr = operation.split(" - ");
-            } else {
+            if(operation.split("-") != null) {
                 arr = operation.split("-");
             }
         }

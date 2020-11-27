@@ -55,11 +55,13 @@ public class AdditionalInfoActivity extends AppCompatActivity {
     private double timeParser(String time) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
+        if(time.equals(" - ") || time.equals("-")) {
+            return 0;
+        }
+
         String arr[] = null;
         if(time != null) {
-           if(time.split(" - ") != null) {
-               arr = time.split(" - ");
-           } else {
+           if(time.split("-") != null) {
                arr = time.split("-");
            }
         }
