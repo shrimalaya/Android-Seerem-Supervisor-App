@@ -59,6 +59,8 @@ public class WorkerInfoActivity extends AppCompatActivity {
     private Boolean showAllWorkers = false;
     private Boolean showOfflineWorkers = false;
     private String dayKey = CONSTANTS.SUNDAY_KEY;
+    private Handler handler;
+    private Runnable runnable;
 
     public static Intent launchWorkerInfoIntent(Context context) {
         Intent workerInfoIntent = new Intent(context, WorkerInfoActivity.class);
@@ -81,8 +83,8 @@ public class WorkerInfoActivity extends AppCompatActivity {
          * Update list of workers every 1 minute to check for hours of operation
          * Learned from https://stackoverflow.com/a/21554060
          */
-        final Handler handler =new Handler();
-        handler.postDelayed(new Runnable() {
+        handler = new Handler();
+        runnable = new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(WorkerInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
@@ -91,7 +93,8 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
                 handler.postDelayed(this, 60000);
             }
-        }, 60000);
+        };
+        handler.postDelayed(runnable, 60000);
     }
 
     private void updateDayOfWeek() {
@@ -555,5 +558,17 @@ public class WorkerInfoActivity extends AppCompatActivity {
             Intent intent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.postDelayed(runnable,60000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
     }
 }
