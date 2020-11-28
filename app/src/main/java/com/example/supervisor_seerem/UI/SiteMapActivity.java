@@ -1,7 +1,6 @@
 package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -15,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -45,6 +46,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -110,7 +112,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
             }
 
             // otherwise, if everything's okay...
-            setupMap();
+            setupMapComponents();
             siteMap.setMyLocationEnabled(true);
             siteMap.getUiSettings().setMyLocationButtonEnabled(false);
 
@@ -120,8 +122,10 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
             } else if (previousActivity != null && previousActivity.equals("WorkerInfo")) { // if the user clicks on a worker from the list of workers
                zoomToWorkerPosition();
             } else {
-                // otherwise, just show my current location
+                // otherwise, just show my current location and all workers' and worksites' locations
                 getDeviceLocation();
+                showAllWorkersPositions();
+                showAllWorksitesLocations();
             }
         }
     }
@@ -317,29 +321,6 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    private void setupMap() {
-        searchInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionID, KeyEvent keyEvent) {
-                if (actionID == EditorInfo.IME_ACTION_SEARCH ||
-                        actionID == EditorInfo.IME_ACTION_DONE ||
-                        actionID == KeyEvent.ACTION_DOWN ||
-                        actionID == KeyEvent.KEYCODE_ENTER) {
-                    goToLocation();
-                }
-                return false;
-            }
-        });
-
-        myLocationImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDeviceLocation();
-            }
-        });
-        hideSoftKeyboard();
-    }
-
     private void initializeMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(SiteMapActivity.this);
@@ -367,7 +348,35 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    private void goToLocation() {
+    private void setupMapComponents() {
+        searchInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionID, KeyEvent keyEvent) {
+                if (actionID == EditorInfo.IME_ACTION_SEARCH ||
+                        actionID == EditorInfo.IME_ACTION_DONE ||
+                        actionID == KeyEvent.ACTION_DOWN ||
+                        actionID == KeyEvent.KEYCODE_ENTER) {
+                    goToSearchedLocation();
+                }
+                return false;
+            }
+        });
+
+        myLocationImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                previousActivity = "SiteMap";
+                siteMap.clear();
+                Log.d("FROM MAP", "Clear map and go to my location!");
+                getDeviceLocation();
+                showAllWorkersPositions();
+                showAllWorksitesLocations();
+            }
+        });
+        hideSoftKeyboard();
+    }
+
+    private void goToSearchedLocation() {
         String searchInput = searchInputEditText.getText().toString();
         Geocoder geocoder = new Geocoder(SiteMapActivity.this);
 
@@ -375,14 +384,16 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         try {
             addresses = geocoder.getFromLocationName(searchInput, 1);
         } catch (IOException e) {
-            Log.e("SiteMapActivity", "goToLocation(): IOException" + e.getMessage());
+            Log.e("SiteMapActivity", "goToSearchedLocation(): IOException" + e.getMessage());
         }
 
         if (addresses.size() > 0) {
             Address address = addresses.get(0);
-            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()),
-                        DEFAULT_ZOOM,
-                        address.getAddressLine(0));
+//            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()),
+//                    DEFAULT_ZOOM,
+//                    address.getAddressLine(0));
+            zoomCamera(new LatLng(address.getLatitude(), address.getLongitude()),
+                    DEFAULT_ZOOM);
         }
     }
 
@@ -397,8 +408,9 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                        DEFAULT_ZOOM, "My Location");
+                            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            zoomCamera(latLng, DEFAULT_ZOOM);
+                            displayUserMarker(latLng);
                         } else {
                             Toast.makeText(SiteMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
                         }
@@ -410,31 +422,33 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom, String title) {
+    private void showAllWorksitesLocations() {
+        for (DocumentSnapshot site : sitesList) {
+            Site newSite = createSite(site);
+            LatLng latLng = new LatLng(newSite.getLocation().getLatitude(),
+                                        newSite.getLocation().getLongitude());
+            String title = getResources().getString(R.string.map_info_window_site_location_title);
+            displayWorksiteMarker(newSite);
+            displayMasterpointMarker(new LatLng(newSite.getMasterpoint().getLatitude(),
+                                                newSite.getMasterpoint().getLongitude()));
+        }
+    }
+
+    private void showAllWorkersPositions() {
+        for (DocumentSnapshot worker : workersList) {
+            Worker newWorker = createWorker(worker);
+            LatLng latLng = new LatLng(newWorker.getLocation().getLatitude(),
+                                        newWorker.getLocation().getLongitude());
+            String title = getResources().getString(R.string.map_info_window_worker_location_title);
+            displayWorkerMarker(newWorker);
+        }
+    }
+
+    private void zoomCamera(LatLng latLng, float zoom) {
+        // zoom to the specific latLng
         siteMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
         siteMap.setInfoWindowAdapter(new MapInfoWindowAdapter(SiteMapActivity.this));
 
-        String info = "";
-        if (previousActivity != null && previousActivity.equals("SiteInfo")) {
-//            String hseLink = "<a href=\"" + clickedSite.getHseLink() + "\"> HSE Link </a>";
-            info = "Site;" + clickedSite.getID() +
-                    ";" + clickedSite.getProjectID() +
-                    ";" + clickedSite.getOperationHour() +
-                    ";" + clickedSite.getHseLink();
-        } else if (previousActivity != null && previousActivity.equals("WorkerInfo")) {
-            info = "Worker;" + clickedWorker.getEmployeeID() +
-                    ";" + clickedWorker.getFirstName() + " " + clickedWorker.getLastName() +
-                    ";" + clickedWorker.getCompanyID() +
-                    ";" + clickedWorker.getSupervisorID();
-        } else {
-            info = "User; This is my current location!";
-        }
-        Log.d("FROM MAP", "info = " + info);
-        MarkerOptions options = new MarkerOptions()
-                                .position(latLng)
-                                .title(title)
-                                .snippet(info);
-        siteMap.addMarker(options);
         hideSoftKeyboard();
     }
 
@@ -454,19 +468,17 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
             }
         }
 
-        ModelLocation siteLocation = new ModelLocation(currentSite.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
-                currentSite.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
-        String projectID = currentSite.getString(CONSTANTS.PROJECT_ID_KEY);
-        ModelLocation masterpointLocation = new ModelLocation(currentSite.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
-                currentSite.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
-        String hseLink = currentSite.getString(CONSTANTS.HSE_LINK_KEY);
-        String operationHour = currentSite.getString(CONSTANTS.OPERATION_HRS_KEY);
+        if (currentSite != null) {
+            clickedSite = createSite(currentSite);
+            System.out.println(clickedSite.toString());
+            zoomCamera(new LatLng(clickedSite.getLocation().getLatitude(),
+                                clickedSite.getLocation().getLongitude()),
+                        DEFAULT_ZOOM);
 
-        clickedSite = new Site(clickedSiteID, projectID, siteLocation,
-                                masterpointLocation,hseLink, operationHour);
-        System.out.println(clickedSite.toString());
-        moveCamera(new LatLng(siteLocation.getLatitude(), siteLocation.getLongitude()),
-                        DEFAULT_ZOOM, "Site Location");
+            // zoom to clicked site, but also display all worksites and workers around
+            showAllWorksitesLocations();
+            showAllWorkersPositions();
+        }
     }
 
     private void zoomToWorkerPosition() {
@@ -486,25 +498,143 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         }
 
         if (currentWorker != null) {
-            String firstName = currentWorker.getString(CONSTANTS.FIRST_NAME_KEY);
-            String lastName = currentWorker.getString(CONSTANTS.LAST_NAME_KEY);
-            String supervisorID = currentWorker.getString(CONSTANTS.SUPERVISOR_ID_KEY);
-            String siteID = currentWorker.getString(CONSTANTS.WORKSITE_ID_KEY);
-            String companyID = currentWorker.getString(CONSTANTS.COMPANY_ID_KEY);
-            ModelLocation workerPosition = new ModelLocation(currentWorker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
-                    currentWorker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
-            List<String> skills = new ArrayList<String>();
-            String[] workerSkills = currentWorker.getString(CONSTANTS.SKILLS_KEY).split(",");
-            for (String skill : workerSkills) {
-                skills.add(skill);
-            }
-
-            clickedWorker = new Worker(clickedWorkerID, firstName, lastName, supervisorID,
-                                    siteID, companyID, workerPosition, skills);
+            clickedWorker = createWorker(currentWorker);
             System.out.println(clickedWorker.toString());
-            moveCamera(new LatLng(workerPosition.getLatitude(), workerPosition.getLongitude()),
-                    DEFAULT_ZOOM, "Worker Position");
+            zoomCamera(new LatLng(clickedWorker.getLocation().getLatitude(),
+                                clickedWorker.getLocation().getLongitude()),
+                        DEFAULT_ZOOM);
+
+            // zoom to clicked worker, but also display all worksites and workers around
+            showAllWorksitesLocations();
+            showAllWorkersPositions();
         }
+    }
+
+    private void displayWorksiteMarker(Site site) {
+        String info = "Site;" + site.getID() +
+                ";" + site.getSiteName() +
+                ";" + site.getProjectID() +
+                ";" + site.getOperationHour();
+
+        LatLng latLng = new LatLng(site.getLocation().getLatitude(),
+                                    site.getLocation().getLongitude());
+
+        // set worksite's marker's color to green
+        MarkerOptions options = new MarkerOptions()
+                .position(latLng)
+                .title(getResources().getString(R.string.map_info_window_site_location_title))
+                .snippet(info)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        siteMap.addMarker(options);
+        Log.d("FROM MAP", "Marker's color is green");
+    }
+
+    private void displayWorkerMarker(Worker worker) {
+        String info = "Worker;" + worker.getEmployeeID() +
+                ";" + worker.getFirstName() + " " + worker.getLastName() +
+                ";" + worker.getCompanyID() +
+                ";" + worker.getSupervisorID();
+
+        LatLng latLng = new LatLng(worker.getLocation().getLatitude(),
+                                    worker.getLocation().getLongitude());
+
+        // set worker's marker's color to blue
+        MarkerOptions options = new MarkerOptions()
+                .position(latLng)
+                .title(getResources().getString(R.string.map_info_window_worker_location_title))
+                .snippet(info)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+        siteMap.addMarker(options);
+        Log.d("FROM MAP", "Marker's color is violet");
+    }
+
+    private void displayUserMarker(LatLng latLng) {
+        String info = "User; " + getResources().getString(R.string.map_info_window_user_location_snippet);
+
+        // set user's marker's color to red
+        MarkerOptions options = new MarkerOptions()
+                .position(latLng)
+                .title(getResources().getString(R.string.map_info_window_user_location_title))
+                .snippet(info)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        siteMap.addMarker(options);
+        Log.d("FROM MAP", "Marker's color is red");
+    }
+
+    private void displayMasterpointMarker(LatLng latLng) {
+        // set customized peg for marker
+        MarkerOptions options = new MarkerOptions()
+                .position(latLng)
+                .title(getResources().getString(R.string.map_info_window_masterpoint_title))
+                .snippet(getResources().getString(R.string.map_info_window_masterpoint_snippet))
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("alert_emergency_light")));
+        siteMap.addMarker(options);
+        Log.d("FROM MAP", "Masterpoint custom peg");
+    }
+
+    private Site createSite(DocumentSnapshot site) {
+        String siteID = site.getString(CONSTANTS.ID_KEY);
+        String siteName = site.getString(CONSTANTS.WORKSITE_NAME_KEY);
+        ModelLocation siteLocation = new ModelLocation(site.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
+                site.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+        String projectID = site.getString(CONSTANTS.PROJECT_ID_KEY);
+        ModelLocation masterpointLocation = new ModelLocation(site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
+                                                            site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
+        String hseLink = site.getString(CONSTANTS.HSE_LINK_KEY);
+        String operationHour = site.getString(CONSTANTS.OPERATION_HRS_KEY);
+
+        Site newSite = new Site(siteID, projectID, siteName, siteLocation,
+                masterpointLocation,hseLink, operationHour);
+
+        return newSite;
+    }
+
+    private Worker createWorker(DocumentSnapshot worker) {
+        String workerID = worker.getString(CONSTANTS.ID_KEY);
+        String firstName = worker.getString(CONSTANTS.FIRST_NAME_KEY);
+        String lastName = worker.getString(CONSTANTS.LAST_NAME_KEY);
+        String supervisorID = worker.getString(CONSTANTS.SUPERVISOR_ID_KEY);
+        String siteID = worker.getString(CONSTANTS.WORKSITE_ID_KEY);
+        String companyID = worker.getString(CONSTANTS.COMPANY_ID_KEY);
+        ModelLocation workerPosition = new ModelLocation(worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
+                                                         worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+        List<String> skills = new ArrayList<String>();
+        String[] workerSkills = worker.getString(CONSTANTS.SKILLS_KEY).split(",");
+        for (String skill : workerSkills) {
+            skills.add(skill);
+        }
+
+        Worker newWorker = new Worker(workerID, firstName, lastName, supervisorID,
+                siteID, companyID, workerPosition, skills);
+
+        return newWorker;
+    }
+
+    public Bitmap resizeBitmap(String imageName) {
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
+                    getResources().getIdentifier(imageName, "drawable", getPackageName()));
+        int imageWidth = imageBitmap.getWidth();
+        int imageHeight = imageBitmap.getHeight();
+        Log.d("FROM MAP", "imageWidth = " + imageWidth + " and imageHeight = " + imageHeight);
+
+        // Google map default marker is of size 20x32 (width x height) pixels
+        // 1 pixel = 24 bits for R, G, B --> each is 8 bits
+        float scaleX = (float) 20*8/imageWidth;
+        float scaleY = (float) 32*8/imageHeight;
+        Log.d("FROM MAP", "scaleX = " + scaleX + " and scaleY = " + scaleY);
+        float scaleFactor = 0;
+        if (scaleX <= scaleY) {
+            scaleFactor = scaleX;
+        } else {
+            scaleFactor = scaleY;
+        }
+        Log.d("FROM MAP", "scaleFactor = " + scaleFactor);
+
+        int newWidth = (int) Math.round(imageWidth*scaleFactor);
+        int newHeight = (int) Math.round(imageHeight*scaleFactor);
+        Log.d("FROM MAP", "newWidth = " + newWidth + " and newHeight = " + newHeight);
+
+        return Bitmap.createScaledBitmap(imageBitmap, newWidth, newHeight, false);
     }
 
     private void hideSoftKeyboard() {

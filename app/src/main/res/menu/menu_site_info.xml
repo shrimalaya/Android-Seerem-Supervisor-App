@@ -21,6 +21,9 @@
         android:visible="true"
         app:showAsAction="never" />
     <item
+        android:id="@+id/menu_site_offline"
+        android:title="Display Offline Sites" />
+    <item
         android:id="@+id/menu_site_clear"
         android:title="Clear Search"
         android:visible="false"

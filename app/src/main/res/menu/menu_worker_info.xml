@@ -19,6 +19,9 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/menu_worker_offline"
+        android:title="Display Offline Workers" />
+    <item
         android:id="@+id/menu_worker_clear"
         android:title="Clear Search"
         android:visible="false"
