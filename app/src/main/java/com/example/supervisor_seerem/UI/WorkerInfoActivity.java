@@ -332,7 +332,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
     // Search function
     private void search(String expr) {
         List<DocumentSnapshot> results = new ArrayList<>();
-        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
         for(DocumentSnapshot doc: documentManager.getWorkers()) {
             if(results.contains(doc)) {

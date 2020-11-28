@@ -20,15 +20,12 @@ import android.widget.Toast;
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
-import com.example.supervisor_seerem.model.Worker;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Displays different ways through which the user can talk to company employee,
@@ -39,14 +36,9 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
     TextView communicationRecipient;
     TextView displayedPhoneNumber;
     TextView displayedEmail;
-    TextView displayedMeets;
-    TextView displayedTeams;
-    TextView displayedSkype;
-    TextView displayedZoom;
-    Button goToMeets;
-    Button goToTeams;
-    Button goToSkype;
-    Button goToZoom;
+    TextView displayedLink;
+
+    Button goToLink;
 
     String employeeID;
     DocumentSnapshot employee;
@@ -57,10 +49,9 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
     String employeeFullName;
     String employeePhoneNumber;
     String employeeEmail;
-    String employeeMEETS;
-    String employeeTEAMS;
-    String employeeSkype;
-    String employeeZoom;
+    String employeeLink;
+
+    String linkType;
 
     int employeeClickablePhoneNumber;
 
@@ -82,8 +73,52 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
 //        void onCallback(List<DocumentSnapshot> docs);
 //    }
 
+    private void parseEmployeeLinkType(String employeeLink) {
+        if(employeeLink.equals(" - ")) {
+            // No link provided
+            linkType = "none";
+            return;
+        }
+
+        Pattern zoom = Pattern.compile("zoom\\.us", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+        Pattern teams = Pattern.compile("teams\\.microsoft", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+        Pattern skype = Pattern.compile("join\\.skype", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+        Pattern meet = Pattern.compile("meet\\.google", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+
+        Matcher matcher = zoom.matcher(employeeLink);
+        if (matcher.find()) {
+            // zoom
+            linkType = "zoom";
+            return;
+        }
+
+        matcher = teams.matcher(employeeLink);
+        if (matcher.find()) {
+            // teams
+            linkType = "teams";
+            return;
+        }
+
+        matcher = skype.matcher(employeeLink);
+        if (matcher.find()) {
+            // skype
+            linkType = "skype";
+            return;
+        }
+
+        matcher = meet.matcher(employeeLink);
+        if (matcher.find()) {
+            // meet
+            linkType = "meet";
+            return;
+        }
+
+//        https://join.skype.com/XU4heiXvGWq8 = meeting link
+//        https://join.skype.com/invite/VX3ey1mN0ODZ = username
+    }
+
     // Intent should include fields in Contact which the user was able to pass.
-    private void retrieveIntent(){
+    private void retrieveIntent() {
 
         employeeID = getIntent().getStringExtra("ID");
 
@@ -106,34 +141,36 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         employeeLastName = employee.getString(CONSTANTS.LAST_NAME_KEY);
 
         if(contactInfo != null) {
-            employeePhoneNumber = contactInfo.getString(CONSTANTS.PHONE_CONTACT_KEY);
-            employeeEmail = contactInfo.getString(CONSTANTS.EMAIL_CONTACT_KEY);
+            employeePhoneNumber = checkNull(contactInfo.getString(CONSTANTS.PHONE_CONTACT_KEY));
+            employeeEmail = checkNull(contactInfo.getString(CONSTANTS.EMAIL_CONTACT_KEY));
 
             //These should be passed as with implicit intents somehow to use with the appropriate app.
-            employeeMEETS = "";
-            employeeTEAMS = "";
-            employeeZoom = contactInfo.getString(CONSTANTS.LINK_CONTACT_KEY);
+            employeeLink = checkNull((contactInfo.getString(CONSTANTS.LINK_CONTACT_KEY)));
+            parseEmployeeLinkType(employeeLink);
+            Log.d("COMMUNICATION", "Link type: " + linkType);
+        } else {
+            linkType = "none";
         }
 
     }
 
+    private String checkNull(String string) {
+        if(string == null || string.isEmpty()) {
+            return " - ";
+        } else {
+            return string;
+        }
+    }
+
     // Some sort of identification to tell which employee the user wants to contact
-    private void setUpTextViews(){
+    private void setUpTextViews() {
         communicationRecipient = findViewById(R.id.displayCommunicationRecipient);
         displayedPhoneNumber = findViewById(R.id.linkedPhoneNumber);
         displayedEmail = findViewById(R.id.linkedEmail);
-        displayedMeets = findViewById(R.id.linkedGoogleMeet);
-        displayedTeams = findViewById(R.id.linkedTeams);
-        displayedSkype = findViewById(R.id.linkedSkype);
-        displayedZoom = findViewById(R.id.linkedZoom);
+        displayedLink = findViewById(R.id.linkedInternetCommunication);
 
-        goToMeets = findViewById(R.id.buttonGoogleMeet);
-        goToTeams = findViewById(R.id.buttonMicrosoftTeams);
-        goToSkype = findViewById(R.id.buttonSkype);
-
-        goToMeets.setOnClickListener(this);
-        goToTeams.setOnClickListener(this);
-        goToSkype.setOnClickListener(this);
+        goToLink = findViewById(R.id.buttonInternetLink);
+        goToLink.setOnClickListener(this);
 
         if(employeeLastName == null || employeeFirstName == null){
             employeeFullName = getString(R.string.communication_no_employee);
@@ -148,27 +185,17 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         if(employeeEmail == null){
             employeeEmail = getString(R.string.communication_no_email);
         }
-        if(employeeZoom == null){
-            employeeZoom = getString(R.string.communication_no_zoom);
-        }
 
-        if(employeeMEETS == null){
-            employeeMEETS = getString(R.string.communication_no_google_meet);
-            goToMeets.setEnabled(false);
-            goToMeets.setBackgroundColor(ContextCompat.getColor(this, R.color.grey));
-        }else{
-            employeeMEETS = getString(R.string.communication_google_meet_exists);
-            goToMeets.setEnabled(true);
+        if(employeeLink == null){
+            employeeLink = getString(R.string.communication_no_zoom);
+            goToLink.setBackgroundColor(ContextCompat.getColor(this, R.color.grey));
         }
 
         communicationRecipient.setText(employeeFullName);
         displayedPhoneNumber.setText(employeePhoneNumber);
         displayedEmail.setText(employeeEmail);
-        displayedZoom.setText(employeeZoom);
         displayedPhoneNumber.setAutoLinkMask(Linkify.PHONE_NUMBERS);
-        displayedMeets.setText(employeeMEETS);
-        displayedTeams.setText(employeeTEAMS);
-        displayedSkype.setText(employeeSkype);
+        displayedLink.setText(employeeMEETS);
     }
 
     private void setupNavigationBar() {
@@ -229,7 +256,7 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
 
     // Return true if the app is installed
     // False if not
-    private boolean checkForCommunicatioNAppPackages(String packageName, PackageManager packageManager){
+    private boolean checkForCommunicationAppPackages(String packageName, PackageManager packageManager){
         try{
             packageManager.getPackageInfo(packageName, 0);
             return true;
@@ -253,10 +280,10 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         String microsoftTeamsPackage = "com.microsoft.teams";
         String skypePackage = "com.skype.raider";
 
-        if (view.getId() == R.id.buttonGoogleMeet) {
+        if (view.getId() == R.id.buttonInternetLink) {
             // Code for checking for installed Apps and launching the Play Store adapted from different answers in:
             // https://stackoverflow.com/questions/11753000/how-to-open-the-google-play-store-directly-from-my-android-application
-            if (checkForCommunicatioNAppPackages(googleMeetsPackage,
+            if (checkForCommunicationAppPackages(googleMeetsPackage,
                     pm)) {
 
                 Intent googleMeetIntent = getPackageManager()
