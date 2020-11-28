@@ -115,4 +115,14 @@
     <string name="add_overtime_title_toolbar">Add overtime</string>
     <string name="add_day_leave_title_toolbar">Add Day Leave</string>
 
+    <string name="change_password_header">Change Password</string>
+    <string name="change_password_hint">Change your locally-stored password.</string>
+    <string name="change_password_enter_current_password">Current Password</string>
+    <string name="change_password_enter_new_password">New Password</string>
+    <string name="change_password_update_password">Update Password</string>
+    <string name="change_password_current_empty">Please enter your current password.</string>
+    <string name="change_password_new_empty">Please enter your new password.</string>
+    <string name="change_password_current_and_new_are_same">Your selected new password is the same as your old password. Please enter a different new password.</string>
+    <string name="change_password_wrong_current_password">Your input for your current password is incorrect. Please enter your correct current password.</string>
+    <string name="change_password_successful_change">Your password has been successfully changed.</string>
 </resources>
