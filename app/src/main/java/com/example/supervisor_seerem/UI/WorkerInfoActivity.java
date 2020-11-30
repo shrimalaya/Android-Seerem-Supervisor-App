@@ -123,7 +123,6 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 dayKey = CONSTANTS.SUNDAY_KEY;
                 break;
         }
-
     }
 
     private String checkNull(String data) {
@@ -186,7 +185,6 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
             }
         }
-
     }
 
     public void displayData() {

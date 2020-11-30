@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,6 +30,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +67,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -96,8 +98,9 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     private Boolean showOfflineWorkers = false;
     private String dayKey = CONSTANTS.SUNDAY_KEY;
 
-    private EditText searchInputEditText;
+    private SearchView mapSearchView;
     private FloatingActionButton myLocationFAB;
+    private ImageView moreOptions;
     private DrawerLayout drawer;
     private Handler handler;
     private Runnable runnable;
@@ -127,12 +130,11 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         if (isLocationPermissionsGranted) {
             if (ActivityCompat.checkSelfPermission(this, FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(this, COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // if somehow the permissions are still not granted...
+                // if somehow the permissions are still not granted, exit the method
                 return;
             }
 
-            // otherwise, if everything's okay...
-            setupMapComponents();
+            // otherwise, if everything's okay, then set up the map properly
             siteMap.setMyLocationEnabled(true);
             siteMap.getUiSettings().setMyLocationButtonEnabled(false);
 
@@ -145,10 +147,669 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 // otherwise, just show my current location and all workers' and worksites' locations
                 Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
                 getDeviceLocation();
-                showAllWorkersPositions();
-                showAllWorksitesLocations();
+                showWorkersPositions();
+                showWorksitesLocations();
             }
         }
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_site_map);
+        setupNavigationBar();
+        setupSidebarNavigationDrawer();
+        getPreviousActivityName();
+
+        checkGooglePlayServicesAvailable();
+        getLocationPermission();
+
+        sitesDocs.clear();
+        sitesDocs.addAll(documentManager.getSites());
+        Log.d("FROM MAP", "onCreate(): sitesList.size() = " + sitesDocs.size());
+        allWorkersDocs.clear();
+        allWorkersDocs.addAll(documentManager.getWorkers());
+        Log.d("FROM MAP", "onCreate(): workersList.size() = " + allWorkersDocs.size());
+
+        setupDisplayOptionsView();
+
+        myLocationFAB = (FloatingActionButton) findViewById(R.id.my_location_floating_button);
+        setupMyLocationFloatingButton();
+
+        mapSearchView = (SearchView) findViewById(R.id.sitemap_search_view);
+        setupSearchView();
+
+        handler = new Handler();
+        updateDayOfWeek();
+        updateDisplayWorkers();
+    }
+
+    private void checkGooglePlayServicesAvailable() {
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(SiteMapActivity.this);
+
+        if (available != ConnectionResult.SUCCESS) {
+            if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+                // no services, but can deal with it
+                Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(SiteMapActivity.this, available, ERROR_DIALOG_REQUEST);
+                dialog.show();
+            } else {
+                Toast.makeText(SiteMapActivity.this,
+                        R.string.map_noServices_error_message,
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getLocationPermission() {
+        String[] permissions = {FINE_LOCATION, COARSE_LOCATION};
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), COARSE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                isLocationPermissionsGranted = true;
+                initializeMap();
+            } else {
+                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        } else {
+            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void initializeMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(SiteMapActivity.this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        isLocationPermissionsGranted = false;
+
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0) {
+                    for (int result : grantResults) {
+                        if (result == PackageManager.PERMISSION_GRANTED) {
+                            isLocationPermissionsGranted = true;
+                            break;
+                        } else {
+                            isLocationPermissionsGranted = false;
+                        }
+                    }
+                    if (isLocationPermissionsGranted) {
+                        initializeMap();
+                    }
+                }
+        }
+    }
+
+//    private void goToSearchedLocation() {
+//        String searchInput = searchInputEditText.getText().toString();
+//        Geocoder geocoder = new Geocoder(SiteMapActivity.this);
+//
+//        List<Address> addresses = new ArrayList<>();
+//        try {
+//            addresses = geocoder.getFromLocationName(searchInput, 1);
+//        } catch (IOException e) {
+//            Log.e("SiteMapActivity", "goToSearchedLocation(): IOException" + e.getMessage());
+//        }
+//
+//        if (addresses.size() > 0) {
+//            Address address = addresses.get(0);
+////            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()),
+////                    DEFAULT_ZOOM,
+////                    address.getAddressLine(0));
+//            zoomCamera(new LatLng(address.getLatitude(), address.getLongitude()),
+//                    DEFAULT_ZOOM);
+//        }
+//    }
+
+    private void getDeviceLocation() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        try {
+            if (isLocationPermissionsGranted) {
+                Task location = fusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            Location currentLocation = (Location) task.getResult();
+                            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            zoomCamera(latLng, DEFAULT_ZOOM);
+                            displayUserMarker(latLng);
+                        } else {
+                            Toast.makeText(SiteMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e) {
+            Log.e("SiteMapActivity error", "getDeviceLocation: SecurityException: " + e.getMessage());
+        }
+    }
+
+    private void showWorksitesLocations() {
+        for (DocumentSnapshot site : sitesDocs) {
+            Site newSite = createSite(site);
+            displayWorksiteMarker(newSite);
+            displayMasterpointMarker(new LatLng(newSite.getMasterpoint().getLatitude(),
+                    newSite.getMasterpoint().getLongitude()));
+        }
+    }
+
+    private void showWorkersPositions() {
+        if (showAllWorkers) {
+            for (DocumentSnapshot worker : showWorkersDocs) {
+                Worker newWorker = createWorker(worker);
+                displayWorkerMarker(newWorker);
+            }
+            handler = new Handler();
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                    updateDayOfWeek();
+                    updateDisplayWorkers();
+                    for (DocumentSnapshot worker : showWorkersDocs) {
+                        Worker newWorker = createWorker(worker);
+                        displayWorkerMarker(newWorker);
+                    }
+                    handler.postDelayed(this, 5000);
+                }
+            };
+            handler.postDelayed(runnable, 5000);
+        } else {
+            for (DocumentSnapshot worker : userWorkersDocs) {
+                Worker newWorker = createWorker(worker);
+                displayWorkerMarker(newWorker);
+            }
+            handler = new Handler();
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                    updateDayOfWeek();
+                    updateDisplayWorkers();
+                    for (DocumentSnapshot worker : userWorkersDocs) {
+                        Worker newWorker = createWorker(worker);
+                        displayWorkerMarker(newWorker);
+                    }
+                    handler.postDelayed(this, 5000);
+                }
+            };
+            handler.postDelayed(runnable, 5000);
+        }
+    }
+
+    private void zoomCamera(LatLng latLng, float zoom) {
+        // zoom to the specific latLng
+        siteMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        siteMap.setInfoWindowAdapter(new MapInfoWindowAdapter(SiteMapActivity.this));
+
+        hideSoftKeyboard();
+    }
+
+    private void zoomToSiteLocation() {
+        Intent intent = getIntent();
+        String clickedSiteID = intent.getStringExtra("SITE ID FROM SiteInfoActivity");
+        Log.d("FROM MAP", "clickedSiteID = " + clickedSiteID);
+
+        DocumentSnapshot currentSite = null;
+        Log.d("FROM MAP", "zoomToSiteLocation(): sitesList.size() = " + sitesDocs.size());
+        for (DocumentSnapshot site : sitesDocs) {
+            Log.d("FROM MAP", site.toString());
+            Log.d("FROM MAP", "siteID = " + site.getString(CONSTANTS.ID_KEY));
+            if (site.getString(CONSTANTS.ID_KEY).equals(clickedSiteID)) {
+                currentSite = site;
+                break;
+            }
+        }
+
+        if (currentSite != null) {
+            clickedSite = createSite(currentSite);
+            System.out.println(clickedSite.toString());
+            zoomCamera(new LatLng(clickedSite.getLocation().getLatitude(),
+                            clickedSite.getLocation().getLongitude()),
+                    DEFAULT_ZOOM);
+
+            // zoom to clicked site, but also display all worksites and workers around
+            showWorksitesLocations();
+            showWorkersPositions();
+        }
+    }
+
+    private void zoomToWorkerPosition() {
+        Intent intent = getIntent();
+        String clickedWorkerID = intent.getStringExtra("WorkerID FROM WorkerInfoActivity");
+        Log.d("FROM MAP", "clickedWorkerID = " + clickedWorkerID);
+
+        DocumentSnapshot currentWorker = null;
+        Log.d("FROM MAP", "zoomToSiteLocation(): workersList.size() = " + allWorkersDocs.size());
+        for (DocumentSnapshot worker : allWorkersDocs) {
+            Log.d("FROM MAP", worker.toString());
+            Log.d("FROM MAP", "workerID = " + worker.getString(CONSTANTS.ID_KEY));
+            if (worker.getString(CONSTANTS.ID_KEY).equals(clickedWorkerID)) {
+                currentWorker = worker;
+                break;
+            }
+        }
+
+        if (currentWorker != null) {
+            clickedWorker = createWorker(currentWorker);
+            System.out.println(clickedWorker.toString());
+            zoomCamera(new LatLng(clickedWorker.getLocation().getLatitude(),
+                            clickedWorker.getLocation().getLongitude()),
+                    DEFAULT_ZOOM);
+
+            // zoom to clicked worker, but also display all worksites and workers around
+            showWorksitesLocations();
+            showWorkersPositions();
+        }
+    }
+
+    private void displayWorksiteMarker(Site site) {
+        String info = "Site;" + site.getID() +
+                ";" + site.getSiteName() +
+                ";" + site.getProjectID() +
+                ";" + site.getOperationHour();
+
+        LatLng latLng = new LatLng(site.getLocation().getLatitude(),
+                site.getLocation().getLongitude());
+
+        // set worksite's marker's color to green
+        MarkerOptions options = new MarkerOptions()
+                .position(latLng)
+                .title(getResources().getString(R.string.map_info_window_site_location_title))
+                .snippet(info)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        siteMap.addMarker(options);
+        Log.d("FROM MAP", "Marker's color is green");
+    }
+
+    private void displayWorkerMarker(Worker worker) {
+        String info = "Worker;" + worker.getEmployeeID() +
+                ";" + worker.getFirstName() + " " + worker.getLastName() +
+                ";" + worker.getCompanyID() +
+                ";" + worker.getSupervisorID();
+
+        LatLng latLng = new LatLng(worker.getLocation().getLatitude(),
+                worker.getLocation().getLongitude());
+
+        // set worker's marker's color to blue
+        MarkerOptions options = new MarkerOptions()
+                .position(latLng)
+                .title(getResources().getString(R.string.map_info_window_worker_location_title))
+                .snippet(info)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+        siteMap.addMarker(options);
+        Log.d("FROM MAP", "Marker's color is violet");
+    }
+
+    private void displayUserMarker(LatLng latLng) {
+        String info = "User; " + getResources().getString(R.string.map_info_window_user_location_snippet);
+
+        // set user's marker's color to red
+        MarkerOptions options = new MarkerOptions()
+                .position(latLng)
+                .title(getResources().getString(R.string.map_info_window_user_location_title))
+                .snippet(info)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        siteMap.addMarker(options);
+        Log.d("FROM MAP", "Marker's color is red");
+    }
+
+    private void displayMasterpointMarker(LatLng latLng) {
+        // set customized peg for marker
+        MarkerOptions options = new MarkerOptions()
+                .position(latLng)
+                .title(getResources().getString(R.string.map_info_window_masterpoint_title))
+                .snippet(getResources().getString(R.string.map_info_window_masterpoint_snippet))
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("alert_emergency_light")));
+        siteMap.addMarker(options);
+        Log.d("FROM MAP", "Masterpoint custom peg");
+    }
+
+    private Site createSite(DocumentSnapshot site) {
+        String siteID = site.getString(CONSTANTS.ID_KEY);
+        String siteName = site.getString(CONSTANTS.WORKSITE_NAME_KEY);
+        ModelLocation siteLocation = new ModelLocation(site.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
+                site.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+        String projectID = site.getString(CONSTANTS.PROJECT_ID_KEY);
+        ModelLocation masterpointLocation = new ModelLocation(site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
+                site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
+        String hseLink = site.getString(CONSTANTS.HSE_LINK_KEY);
+        String operationHour = site.getString(CONSTANTS.OPERATION_HRS_KEY);
+
+        Site newSite = new Site(siteID, projectID, siteName, siteLocation,
+                masterpointLocation, hseLink, operationHour);
+
+        return newSite;
+    }
+
+    private Worker createWorker(DocumentSnapshot worker) {
+        String workerID = worker.getString(CONSTANTS.ID_KEY);
+        String firstName = worker.getString(CONSTANTS.FIRST_NAME_KEY);
+        String lastName = worker.getString(CONSTANTS.LAST_NAME_KEY);
+        String supervisorID = worker.getString(CONSTANTS.SUPERVISOR_ID_KEY);
+        String siteID = worker.getString(CONSTANTS.WORKSITE_ID_KEY);
+        String companyID = worker.getString(CONSTANTS.COMPANY_ID_KEY);
+        ModelLocation workerPosition = new ModelLocation(worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
+                worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+        List<String> skills = new ArrayList<String>();
+        String[] workerSkills = worker.getString(CONSTANTS.SKILLS_KEY).split(",");
+        for (String skill : workerSkills) {
+            skills.add(skill);
+        }
+
+        Worker newWorker = new Worker(workerID, firstName, lastName, supervisorID,
+                siteID, companyID, workerPosition, skills);
+
+        return newWorker;
+    }
+
+    private void updateDisplayWorkers() {
+        checkDisplayingWorkersMode();
+
+        if (showAllWorkers) {
+            showWorkersDocs.clear();
+            showWorkersDocs.addAll(allWorkersDocs);
+        } else {
+            showWorkersDocs.clear();
+            showWorkersDocs.addAll(userWorkersDocs);
+        }
+
+        onlineWorkersDocs.clear();
+        offlineWorkersDocs.clear();
+
+        // Check for "TODAY's" available workers who are online
+        // A worker with no availability data will be shown as offline
+        for (DocumentSnapshot worker : showWorkersDocs) {
+            DocumentSnapshot avail = null;
+            for (DocumentSnapshot availability : documentManager.getAvailabilities()) {
+                if (availability.getString(CONSTANTS.ID_KEY).equals(worker.getString(CONSTANTS.ID_KEY))) {
+                    avail = availability;
+                    try {
+                        if (isWithinOperationHours(checkNull(availability.getString(dayKey)))) {
+                            onlineWorkersDocs.add(worker);
+                        } else {
+                            offlineWorkersDocs.add(worker);
+                        }
+                    } catch (ParseException e) {
+                        Log.d("FROM MAP", e.toString());
+                        offlineWorkersDocs.add(worker); // Consider a worker without availability to be offline
+                    }
+                }
+            }
+
+            if (avail == null) { // No availability data found
+                offlineWorkersDocs.add(worker);
+            }
+        }
+
+        showWorkersDocs.clear();
+        if (showOfflineWorkers) {
+            showWorkersDocs.addAll(offlineWorkersDocs);
+            if (offlineWorkersDocs.isEmpty()) {
+                Toast.makeText(this, "No Offline Workers!", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            showWorkersDocs.addAll(onlineWorkersDocs);
+            if (onlineWorkersDocs.isEmpty()) {
+                Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void checkDisplayingWorkersMode() {
+        if (showOfflineWorkers && showAllWorkers) {
+            Toast.makeText(this, "Displaying Offline Company Workers", Toast.LENGTH_SHORT).show();
+        } else if (showOfflineWorkers && !showAllWorkers) {
+            Toast.makeText(this, "Displaying Offline Assigned Workers", Toast.LENGTH_SHORT).show();
+        } else if (!showOfflineWorkers && showAllWorkers) {
+            Toast.makeText(this, "Displaying Online Company Workers", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Displaying Online Assigned Workers", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isWithinOperationHours(String availability) throws ParseException {
+        String arr[] = null;
+        if (availability.equals(" - ") || availability.equals("-") || availability == null) {
+            return false;
+        } else if (availability != null) {
+            if (availability.split("-") != null) {
+                arr = availability.split("-");
+            }
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date d1 = dateFormat.parse(arr[0]);
+        Date d2 = dateFormat.parse(arr[1]);
+        String currTime = dateFormat.format(Calendar.getInstance().getTime());
+        Date current = dateFormat.parse(currTime);
+
+        Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
+
+        return withinOpHrs;
+    }
+
+    private String checkNull(String data) {
+        if (data == null || data.isEmpty()) {
+            return " - ";
+        } else {
+            return data;
+        }
+    }
+
+    private void updateDayOfWeek() {
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        switch (day) {
+            case Calendar.MONDAY:
+                dayKey = CONSTANTS.MONDAY_KEY;
+                break;
+            case Calendar.TUESDAY:
+                dayKey = CONSTANTS.TUESDAY_KEY;
+                break;
+            case Calendar.WEDNESDAY:
+                dayKey = CONSTANTS.WEDNESDAY_KEY;
+                break;
+            case Calendar.THURSDAY:
+                dayKey = CONSTANTS.THURSDAY_KEY;
+                break;
+            case Calendar.FRIDAY:
+                dayKey = CONSTANTS.FRIDAY_KEY;
+                break;
+            case Calendar.SATURDAY:
+                dayKey = CONSTANTS.SATURDAY_KEY;
+                break;
+            case Calendar.SUNDAY:
+                dayKey = CONSTANTS.SUNDAY_KEY;
+                break;
+        }
+    }
+
+    public Bitmap resizeBitmap(String imageName) {
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
+                getResources().getIdentifier(imageName, "drawable", getPackageName()));
+        int imageWidth = imageBitmap.getWidth();
+        int imageHeight = imageBitmap.getHeight();
+        Log.d("FROM MAP", "imageWidth = " + imageWidth + " and imageHeight = " + imageHeight);
+
+        // Google map default marker is of size 20x32 (width x height) pixels
+        // 1 pixel = 24 bits for R, G, B --> each is 8 bits
+        float scaleX = (float) 20 * 8 / imageWidth;
+        float scaleY = (float) 32 * 8 / imageHeight;
+        Log.d("FROM MAP", "scaleX = " + scaleX + " and scaleY = " + scaleY);
+        float scaleFactor = 0;
+        if (scaleX <= scaleY) {
+            scaleFactor = scaleX;
+        } else {
+            scaleFactor = scaleY;
+        }
+        Log.d("FROM MAP", "scaleFactor = " + scaleFactor);
+
+        int newWidth = (int) Math.round(imageWidth * scaleFactor);
+        int newHeight = (int) Math.round(imageHeight * scaleFactor);
+        Log.d("FROM MAP", "newWidth = " + newWidth + " and newHeight = " + newHeight);
+
+        return Bitmap.createScaledBitmap(imageBitmap, newWidth, newHeight, false);
+    }
+
+    private Site searchForSite(String input) {
+        DocumentSnapshot result = null;
+        Pattern pattern = Pattern.compile(input, Pattern.CASE_INSENSITIVE);
+
+        for (DocumentSnapshot doc : documentManager.getSites()) {
+            Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
+            if (matcher.find() == true) {
+                result = doc;
+                break;
+            }
+        }
+
+        Site newSite = null;
+        if (result != null) {
+            newSite = createSite(result);
+        }
+        return newSite;
+    }
+
+    private Worker searchForWorker(String input) {
+        DocumentSnapshot result = null;
+        Pattern pattern = Pattern.compile(input, Pattern.CASE_INSENSITIVE);
+
+        for (DocumentSnapshot doc : documentManager.getWorkers()) {
+            Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
+            if (matcher.find() == true) {
+                result = doc;
+                break;
+            }
+        }
+        Worker newWorker = null;
+        if (result != null) {
+            newWorker = createWorker(result);
+        }
+        return newWorker;
+    }
+
+    private void setupSearchView() {
+        mapSearchView.setQueryHint(getString(R.string.search_input_hint));
+        mapSearchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapSearchView.setIconified(false);
+            }
+        });
+
+        mapSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String input) {
+                mapSearchView.setQueryHint(getString(R.string.clear_search_input_hint));
+                if (input.contains("WS")) {
+                    Site searchedSite = searchForSite(input);
+                    if (searchedSite != null) {
+                        zoomCamera(new LatLng(searchedSite.getLocation().getLatitude(),
+                                        searchedSite.getLocation().getLongitude()),
+                                DEFAULT_ZOOM);
+                        showWorkersPositions();
+                        showWorksitesLocations();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No work sites found!", Toast.LENGTH_SHORT).show();
+                        mapSearchView.setQuery("", false);
+                        mapSearchView.clearFocus();
+                        mapSearchView.setIconified(true);
+                    }
+                } else if (input.contains("WK")) {
+                    Worker searchedWorker = searchForWorker(input);
+                    if (searchedWorker != null) {
+                        zoomCamera(new LatLng(searchedWorker.getLocation().getLatitude(),
+                                        searchedWorker.getLocation().getLongitude()),
+                                DEFAULT_ZOOM);
+                        showWorkersPositions();
+                        showWorksitesLocations();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No worker found!", Toast.LENGTH_SHORT).show();
+                        mapSearchView.setQuery("", false);
+                        mapSearchView.clearFocus();
+                        mapSearchView.setIconified(true);
+                    }
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String input) {
+                if (input.equals("")) {
+                    mapSearchView.setQueryHint(getString(R.string.search_input_hint));
+                }
+                return false;
+            }
+        });
+
+        hideSoftKeyboard();
+    }
+
+    private void setupMyLocationFloatingButton() {
+        myLocationFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                previousActivity = "SiteMap";
+                siteMap.clear();
+                Log.d("FROM MAP", "Clear map and go to my location!");
+
+                getDeviceLocation();
+                showWorksitesLocations();
+                showWorkersPositions();
+            }
+        });
+    }
+
+    private void setupDisplayOptionsView() {
+        moreOptions = (ImageView) findViewById(R.id.ic_more_options);
+        moreOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu displayPopupMenu = new PopupMenu(SiteMapActivity.this, moreOptions);
+                displayPopupMenu.getMenuInflater().inflate(R.menu.menu_sitemap_display_option, displayPopupMenu.getMenu());
+                displayPopupMenu.show();
+                displayPopupMenu.show();
+                displayPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_display_workers_filter:
+                                if (showAllWorkers) {
+                                    showAllWorkers = false;
+                                    item.setTitle(getString(R.string.display_all_workers));
+                                } else {
+                                    showAllWorkers = true;
+                                    item.setTitle(getString(R.string.display_my_workers));
+                                }
+
+                                updateDisplayWorkers();
+                                return true;
+
+                            case R.id.menu_display_offline_workers:
+                                if (showOfflineWorkers) {
+                                    showOfflineWorkers = false;
+                                    item.setTitle(getString(R.string.display_offline_workers));
+                                } else {
+                                    showOfflineWorkers = true;
+                                    item.setTitle(getString(R.string.display_online_workers));
+                                }
+
+                                updateDisplayWorkers();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+            }
+        });
     }
 
     private void setupSidebarNavigationDrawer() {
@@ -288,569 +949,17 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_site_map);
-        setupNavigationBar();
-        setupSidebarNavigationDrawer();
-        getPreviousActivityName();
-
-        sitesDocs.clear();
-        sitesDocs.addAll(documentManager.getSites());
-        Log.d("FROM MAP", "onCreate(): sitesList.size() = " + sitesDocs.size());
-        allWorkersDocs.clear();
-        allWorkersDocs.addAll(documentManager.getWorkers());
-        Log.d("FROM MAP", "onCreate(): workersList.size() = " + allWorkersDocs.size());
-
-        searchInputEditText = (EditText) findViewById(R.id.searchInputEditText);
-        myLocationFAB = (FloatingActionButton) findViewById(R.id.my_location_floating_button);
-
-        checkGooglePlayServicesAvailable();
-        getLocationPermission();
-    }
-
-    private void checkGooglePlayServicesAvailable() {
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(SiteMapActivity.this);
-
-        if (available != ConnectionResult.SUCCESS) {
-            if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-                // no services, but can deal with it
-                Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(SiteMapActivity.this, available, ERROR_DIALOG_REQUEST);
-                dialog.show();
-            } else {
-                Toast.makeText(SiteMapActivity.this,
-                        R.string.map_noServices_error_message,
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void getLocationPermission() {
-        String[] permissions = {FINE_LOCATION, COARSE_LOCATION};
-
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED) {
-            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), COARSE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                isLocationPermissionsGranted = true;
-                initializeMap();
-            } else {
-                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            }
-        } else {
-            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    private void initializeMap() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(SiteMapActivity.this);
+    protected void onResume() {
+        super.onResume();
+        updateDayOfWeek();
+        updateDisplayWorkers();
+        handler.postDelayed(runnable, 60000);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        isLocationPermissionsGranted = false;
-
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0) {
-                    for (int result : grantResults) {
-                        if (result == PackageManager.PERMISSION_GRANTED) {
-                            isLocationPermissionsGranted = true;
-                            break;
-                        } else {
-                            isLocationPermissionsGranted = false;
-                        }
-                    }
-                    if (isLocationPermissionsGranted) {
-                        initializeMap();
-                    }
-                }
-        }
-    }
-
-    private void setupMapComponents() {
-        searchInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionID, KeyEvent keyEvent) {
-                if (actionID == EditorInfo.IME_ACTION_SEARCH ||
-                        actionID == EditorInfo.IME_ACTION_DONE ||
-                        actionID == KeyEvent.ACTION_DOWN ||
-                        actionID == KeyEvent.KEYCODE_ENTER) {
-                    goToSearchedLocation();
-                }
-                return false;
-            }
-        });
-
-        myLocationFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                previousActivity = "SiteMap";
-                siteMap.clear();
-                Log.d("FROM MAP", "Clear map and go to my location!");
-
-                getDeviceLocation();
-                showAllWorksitesLocations();
-                showAllWorkersPositions();
-            }
-        });
-
-        final ImageView moreOptions = (ImageView) findViewById(R.id.ic_more_options);
-        moreOptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu displayPopupMenu = new PopupMenu(SiteMapActivity.this, moreOptions);
-                displayPopupMenu.getMenuInflater().inflate(R.menu.menu_sitemap_display_option, displayPopupMenu.getMenu());
-                displayPopupMenu.show();
-                displayPopupMenu.show();
-                displayPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
-                            case R.id.menu_display_workers_filter:
-                                if (showAllWorkers) {
-                                    showAllWorkers = false;
-                                    item.setTitle(getString(R.string.display_all_workers));
-                                } else {
-                                    showAllWorkers = true;
-                                    item.setTitle(getString(R.string.display_my_workers));
-                                }
-
-                                updateDisplayWorkers();
-                                return true;
-
-                            case R.id.menu_display_offline_workers:
-                                if (showOfflineWorkers) {
-                                    showOfflineWorkers = false;
-                                    item.setTitle(getString(R.string.display_offline_workers));
-                                } else {
-                                    showOfflineWorkers = true;
-                                    item.setTitle(getString(R.string.display_online_workers));
-                                }
-
-                                updateDisplayWorkers();
-                                return true;
-                        }
-                        return true;
-                    }
-                });
-            }
-
-        });
-
-        hideSoftKeyboard();
-    }
-
-    private void goToSearchedLocation() {
-        String searchInput = searchInputEditText.getText().toString();
-        Geocoder geocoder = new Geocoder(SiteMapActivity.this);
-
-        List<Address> addresses = new ArrayList<>();
-        try {
-            addresses = geocoder.getFromLocationName(searchInput, 1);
-        } catch (IOException e) {
-            Log.e("SiteMapActivity", "goToSearchedLocation(): IOException" + e.getMessage());
-        }
-
-        if (addresses.size() > 0) {
-            Address address = addresses.get(0);
-//            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()),
-//                    DEFAULT_ZOOM,
-//                    address.getAddressLine(0));
-            zoomCamera(new LatLng(address.getLatitude(), address.getLongitude()),
-                    DEFAULT_ZOOM);
-        }
-    }
-
-    private void getDeviceLocation() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        try {
-            if (isLocationPermissionsGranted) {
-                Task location = fusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Location currentLocation = (Location) task.getResult();
-                            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            zoomCamera(latLng, DEFAULT_ZOOM);
-                            displayUserMarker(latLng);
-                        } else {
-                            Toast.makeText(SiteMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        } catch (SecurityException e) {
-            Log.e("SiteMapActivity error", "getDeviceLocation: SecurityException: " + e.getMessage());
-        }
-    }
-
-    private void showAllWorksitesLocations() {
-        for (DocumentSnapshot site : sitesDocs) {
-            Site newSite = createSite(site);
-            displayWorksiteMarker(newSite);
-            displayMasterpointMarker(new LatLng(newSite.getMasterpoint().getLatitude(),
-                    newSite.getMasterpoint().getLongitude()));
-        }
-    }
-
-    private void showAllWorkersPositions() {
-        if (showAllWorkers) {
-            for (DocumentSnapshot worker : showWorkersDocs) {
-                Worker newWorker = createWorker(worker);
-                displayWorkerMarker(newWorker);
-            }
-            handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
-                    for (DocumentSnapshot worker : showWorkersDocs) {
-                        Worker newWorker = createWorker(worker);
-                        displayWorkerMarker(newWorker);
-                    }
-                    handler.postDelayed(this, 5000);
-                }
-            };
-            handler.postDelayed(runnable, 5000);
-        } else {
-            for (DocumentSnapshot worker : userWorkersDocs) {
-                Worker newWorker = createWorker(worker);
-                displayWorkerMarker(newWorker);
-            }
-            handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
-                    for (DocumentSnapshot worker : userWorkersDocs) {
-                        Worker newWorker = createWorker(worker);
-                        displayWorkerMarker(newWorker);
-                    }
-                    handler.postDelayed(this, 5000);
-                }
-            };
-            handler.postDelayed(runnable, 5000);
-        }
-
-    }
-
-
-    private void zoomCamera(LatLng latLng, float zoom) {
-        // zoom to the specific latLng
-        siteMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-        siteMap.setInfoWindowAdapter(new MapInfoWindowAdapter(SiteMapActivity.this));
-
-        hideSoftKeyboard();
-    }
-
-    private void zoomToSiteLocation() {
-        Intent intent = getIntent();
-        String clickedSiteID = intent.getStringExtra("SITE ID FROM SiteInfoActivity");
-        Log.d("FROM MAP", "clickedSiteID = " + clickedSiteID);
-
-        DocumentSnapshot currentSite = null;
-        Log.d("FROM MAP", "zoomToSiteLocation(): sitesList.size() = " + sitesDocs.size());
-        for (DocumentSnapshot site : sitesDocs) {
-            Log.d("FROM MAP", site.toString());
-            Log.d("FROM MAP", "siteID = " + site.getString(CONSTANTS.ID_KEY));
-            if (site.getString(CONSTANTS.ID_KEY).equals(clickedSiteID)) {
-                currentSite = site;
-                break;
-            }
-        }
-
-        if (currentSite != null) {
-            clickedSite = createSite(currentSite);
-            System.out.println(clickedSite.toString());
-            zoomCamera(new LatLng(clickedSite.getLocation().getLatitude(),
-                            clickedSite.getLocation().getLongitude()),
-                    DEFAULT_ZOOM);
-
-            // zoom to clicked site, but also display all worksites and workers around
-            showAllWorksitesLocations();
-            showAllWorkersPositions();
-        }
-    }
-
-    private void zoomToWorkerPosition() {
-        Intent intent = getIntent();
-        String clickedWorkerID = intent.getStringExtra("WorkerID FROM WorkerInfoActivity");
-        Log.d("FROM MAP", "clickedWorkerID = " + clickedWorkerID);
-
-        DocumentSnapshot currentWorker = null;
-        Log.d("FROM MAP", "zoomToSiteLocation(): workersList.size() = " + allWorkersDocs.size());
-        for (DocumentSnapshot worker : allWorkersDocs) {
-            Log.d("FROM MAP", worker.toString());
-            Log.d("FROM MAP", "workerID = " + worker.getString(CONSTANTS.ID_KEY));
-            if (worker.getString(CONSTANTS.ID_KEY).equals(clickedWorkerID)) {
-                currentWorker = worker;
-                break;
-            }
-        }
-
-        if (currentWorker != null) {
-            clickedWorker = createWorker(currentWorker);
-            System.out.println(clickedWorker.toString());
-            zoomCamera(new LatLng(clickedWorker.getLocation().getLatitude(),
-                            clickedWorker.getLocation().getLongitude()),
-                    DEFAULT_ZOOM);
-
-            // zoom to clicked worker, but also display all worksites and workers around
-            showAllWorksitesLocations();
-            showAllWorkersPositions();
-        }
-    }
-
-    private void displayWorksiteMarker(Site site) {
-        String info = "Site;" + site.getID() +
-                ";" + site.getSiteName() +
-                ";" + site.getProjectID() +
-                ";" + site.getOperationHour();
-
-        LatLng latLng = new LatLng(site.getLocation().getLatitude(),
-                site.getLocation().getLongitude());
-
-        // set worksite's marker's color to green
-        MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title(getResources().getString(R.string.map_info_window_site_location_title))
-                .snippet(info)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        siteMap.addMarker(options);
-        Log.d("FROM MAP", "Marker's color is green");
-    }
-
-    private void displayWorkerMarker(Worker worker) {
-        String info = "Worker;" + worker.getEmployeeID() +
-                ";" + worker.getFirstName() + " " + worker.getLastName() +
-                ";" + worker.getCompanyID() +
-                ";" + worker.getSupervisorID();
-
-        LatLng latLng = new LatLng(worker.getLocation().getLatitude(),
-                worker.getLocation().getLongitude());
-
-        // set worker's marker's color to blue
-        MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title(getResources().getString(R.string.map_info_window_worker_location_title))
-                .snippet(info)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-        siteMap.addMarker(options);
-        Log.d("FROM MAP", "Marker's color is violet");
-    }
-
-    private void displayUserMarker(LatLng latLng) {
-        String info = "User; " + getResources().getString(R.string.map_info_window_user_location_snippet);
-
-        // set user's marker's color to red
-        MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title(getResources().getString(R.string.map_info_window_user_location_title))
-                .snippet(info)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        siteMap.addMarker(options);
-        Log.d("FROM MAP", "Marker's color is red");
-    }
-
-    private void displayMasterpointMarker(LatLng latLng) {
-        // set customized peg for marker
-        MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title(getResources().getString(R.string.map_info_window_masterpoint_title))
-                .snippet(getResources().getString(R.string.map_info_window_masterpoint_snippet))
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("alert_emergency_light")));
-        siteMap.addMarker(options);
-        Log.d("FROM MAP", "Masterpoint custom peg");
-    }
-
-    private Site createSite(DocumentSnapshot site) {
-        String siteID = site.getString(CONSTANTS.ID_KEY);
-        String siteName = site.getString(CONSTANTS.WORKSITE_NAME_KEY);
-        ModelLocation siteLocation = new ModelLocation(site.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
-                site.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
-        String projectID = site.getString(CONSTANTS.PROJECT_ID_KEY);
-        ModelLocation masterpointLocation = new ModelLocation(site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
-                site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
-        String hseLink = site.getString(CONSTANTS.HSE_LINK_KEY);
-        String operationHour = site.getString(CONSTANTS.OPERATION_HRS_KEY);
-
-        Site newSite = new Site(siteID, projectID, siteName, siteLocation,
-                masterpointLocation, hseLink, operationHour);
-
-        return newSite;
-    }
-
-    private Worker createWorker(DocumentSnapshot worker) {
-        String workerID = worker.getString(CONSTANTS.ID_KEY);
-        String firstName = worker.getString(CONSTANTS.FIRST_NAME_KEY);
-        String lastName = worker.getString(CONSTANTS.LAST_NAME_KEY);
-        String supervisorID = worker.getString(CONSTANTS.SUPERVISOR_ID_KEY);
-        String siteID = worker.getString(CONSTANTS.WORKSITE_ID_KEY);
-        String companyID = worker.getString(CONSTANTS.COMPANY_ID_KEY);
-        ModelLocation workerPosition = new ModelLocation(worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
-                worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
-        List<String> skills = new ArrayList<String>();
-        String[] workerSkills = worker.getString(CONSTANTS.SKILLS_KEY).split(",");
-        for (String skill : workerSkills) {
-            skills.add(skill);
-        }
-
-        Worker newWorker = new Worker(workerID, firstName, lastName, supervisorID,
-                siteID, companyID, workerPosition, skills);
-
-        return newWorker;
-    }
-
-    private void updateDisplayWorkers() {
-        checkDisplayingWorkersMode();
-
-        if(showAllWorkers) {
-            showWorkersDocs.clear();
-            showWorkersDocs.addAll(allWorkersDocs);
-        } else {
-            showWorkersDocs.clear();
-            showWorkersDocs.addAll(userWorkersDocs);
-        }
-
-        onlineWorkersDocs.clear();
-        offlineWorkersDocs.clear();
-
-        // Check for "TODAY's" available workers who are online
-        // A worker with no availability data will be shown as offline
-        for(DocumentSnapshot worker : showWorkersDocs) {
-            DocumentSnapshot avail = null;
-            for(DocumentSnapshot availability : documentManager.getAvailabilities()) {
-                if (availability.getString(CONSTANTS.ID_KEY).equals(worker.getString(CONSTANTS.ID_KEY))) {
-                    avail = availability;
-                    try {
-                        if(isWithinOperationHours(checkNull(availability.getString(dayKey)))) {
-                            onlineWorkersDocs.add(worker);
-                        } else {
-                            offlineWorkersDocs.add(worker);
-                        }
-                    } catch (ParseException e) {
-                        Log.d("FROM MAP", e.toString());
-                        offlineWorkersDocs.add(worker); // Consider a worker without availability to be offline
-                    }
-                }
-            }
-
-            if (avail == null) { // No availability data found
-                offlineWorkersDocs.add(worker);
-            }
-        }
-
-        showWorkersDocs.clear();
-        if(showOfflineWorkers) {
-            showWorkersDocs.addAll(offlineWorkersDocs);
-            if(offlineWorkersDocs.isEmpty()) {
-                Toast.makeText(this, "No Offline Workers!", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            showWorkersDocs.addAll(onlineWorkersDocs);
-            if(onlineWorkersDocs.isEmpty()) {
-                Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void checkDisplayingWorkersMode() {
-        if(showOfflineWorkers && showAllWorkers) {
-            Toast.makeText(this, "Displaying Offline Company Workers", Toast.LENGTH_SHORT).show();
-        } else if (showOfflineWorkers && !showAllWorkers) {
-            Toast.makeText(this, "Displaying Offline Assigned Workers", Toast.LENGTH_SHORT).show();
-        } else if (!showOfflineWorkers && showAllWorkers) {
-            Toast.makeText(this, "Displaying Online Company Workers", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Displaying Online Assigned Workers", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean isWithinOperationHours(String availability) throws ParseException {
-        String arr[] = null;
-        if(availability.equals(" - ") || availability.equals("-") || availability == null ) {
-            return false;
-        } else if(availability != null) {
-            if(availability.split("-") != null) {
-                arr = availability.split("-");
-            }
-        }
-
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        Date d1 = dateFormat.parse(arr[0]);
-        Date d2 = dateFormat.parse(arr[1]);
-        String currTime = dateFormat.format(Calendar.getInstance().getTime());
-        Date current = dateFormat.parse(currTime);
-
-        Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
-
-        return withinOpHrs;
-    }
-
-    private String checkNull(String data) {
-        if(data == null || data.isEmpty()) {
-            return " - ";
-        } else {
-            return data;
-        }
-    }
-
-    private void updateDayOfWeek() {
-        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        switch (day) {
-            case Calendar.MONDAY:
-                dayKey = CONSTANTS.MONDAY_KEY;
-                break;
-            case Calendar.TUESDAY:
-                dayKey = CONSTANTS.TUESDAY_KEY;
-                break;
-            case Calendar.WEDNESDAY:
-                dayKey = CONSTANTS.WEDNESDAY_KEY;
-                break;
-            case Calendar.THURSDAY:
-                dayKey = CONSTANTS.THURSDAY_KEY;
-                break;
-            case Calendar.FRIDAY:
-                dayKey = CONSTANTS.FRIDAY_KEY;
-                break;
-            case Calendar.SATURDAY:
-                dayKey = CONSTANTS.SATURDAY_KEY;
-                break;
-            case Calendar.SUNDAY:
-                dayKey = CONSTANTS.SUNDAY_KEY;
-                break;
-        }
-    }
-
-    public Bitmap resizeBitmap(String imageName) {
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
-                getResources().getIdentifier(imageName, "drawable", getPackageName()));
-        int imageWidth = imageBitmap.getWidth();
-        int imageHeight = imageBitmap.getHeight();
-        Log.d("FROM MAP", "imageWidth = " + imageWidth + " and imageHeight = " + imageHeight);
-
-        // Google map default marker is of size 20x32 (width x height) pixels
-        // 1 pixel = 24 bits for R, G, B --> each is 8 bits
-        float scaleX = (float) 20 * 8 / imageWidth;
-        float scaleY = (float) 32 * 8 / imageHeight;
-        Log.d("FROM MAP", "scaleX = " + scaleX + " and scaleY = " + scaleY);
-        float scaleFactor = 0;
-        if (scaleX <= scaleY) {
-            scaleFactor = scaleX;
-        } else {
-            scaleFactor = scaleY;
-        }
-        Log.d("FROM MAP", "scaleFactor = " + scaleFactor);
-
-        int newWidth = (int) Math.round(imageWidth * scaleFactor);
-        int newHeight = (int) Math.round(imageHeight * scaleFactor);
-        Log.d("FROM MAP", "newWidth = " + newWidth + " and newHeight = " + newHeight);
-
-        return Bitmap.createScaledBitmap(imageBitmap, newWidth, newHeight, false);
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
     }
 
     private void hideSoftKeyboard() {

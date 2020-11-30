@@ -30,26 +30,18 @@
             android:background="@drawable/white_round_corners_background"
             android:id="@+id/mapRelativeLayout">
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:id="@+id/ic_magnify"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                app:srcCompat="@drawable/ic_magnify"/>
-
-            <EditText
+            <SearchView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@id/ic_magnify"
-                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_centerVertical="true"
                 android:textSize="15sp"
                 android:textColor="#000000"
-                android:id="@+id/searchInputEditText"
+                android:id="@+id/sitemap_search_view"
                 android:background="@null"
                 android:hint="@string/search_input_hint"
-                android:imeOptions="actionSearch" />
+                android:layout_toLeftOf="@id/ic_more_options"/>
+
 
             <ImageView
                 android:layout_width="20dp"
