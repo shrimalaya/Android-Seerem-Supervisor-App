@@ -1,6 +1,7 @@
 package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -50,6 +51,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -58,6 +60,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -66,6 +74,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,6 +94,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     private static final String LAUNCH_FROM_ACTIVITY = "Launched map from other activities";
     private String previousActivity;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    ListenerRegistration registration;
     private DocumentManager documentManager = DocumentManager.getInstance();
     private List<DocumentSnapshot> sitesDocs = new ArrayList<>();
     private Site clickedSite;
@@ -94,6 +105,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     private List<DocumentSnapshot> userWorkersDocs = new ArrayList<>();
     private List<DocumentSnapshot> showWorkersDocs = new ArrayList<>();
     private Worker clickedWorker;
+    private HashMap<String, Marker> hashMapWorkerMarker;
+
     private Boolean showAllWorkers = false;
     private Boolean showOfflineWorkers = false;
     private String dayKey = CONSTANTS.SUNDAY_KEY;
@@ -171,6 +184,14 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         allWorkersDocs.clear();
         allWorkersDocs.addAll(documentManager.getWorkers());
         Log.d("FROM MAP", "onCreate(): workersList.size() = " + allWorkersDocs.size());
+        userWorkersDocs.clear();
+        for (DocumentSnapshot doc : documentManager.getWorkers()) {
+            if ((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
+                userWorkersDocs.add(doc);
+            }
+        }
+        updateDisplayWorkers();
+        updateDayOfWeek();
 
         setupDisplayOptionsView();
 
@@ -180,9 +201,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         mapSearchView = (SearchView) findViewById(R.id.sitemap_search_view);
         setupSearchView();
 
-        handler = new Handler();
-        updateDayOfWeek();
-        updateDisplayWorkers();
+        hashMapWorkerMarker = new HashMap<>();
     }
 
     private void checkGooglePlayServicesAvailable() {
@@ -245,27 +264,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
-//    private void goToSearchedLocation() {
-//        String searchInput = searchInputEditText.getText().toString();
-//        Geocoder geocoder = new Geocoder(SiteMapActivity.this);
-//
-//        List<Address> addresses = new ArrayList<>();
-//        try {
-//            addresses = geocoder.getFromLocationName(searchInput, 1);
-//        } catch (IOException e) {
-//            Log.e("SiteMapActivity", "goToSearchedLocation(): IOException" + e.getMessage());
-//        }
-//
-//        if (addresses.size() > 0) {
-//            Address address = addresses.get(0);
-////            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()),
-////                    DEFAULT_ZOOM,
-////                    address.getAddressLine(0));
-//            zoomCamera(new LatLng(address.getLatitude(), address.getLongitude()),
-//                    DEFAULT_ZOOM);
-//        }
-//    }
-
     private void getDeviceLocation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -301,47 +299,39 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void showWorkersPositions() {
-        if (showAllWorkers) {
-            for (DocumentSnapshot worker : showWorkersDocs) {
-                Worker newWorker = createWorker(worker);
-                displayWorkerMarker(newWorker);
-            }
-            handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
-                    updateDayOfWeek();
-                    updateDisplayWorkers();
-                    for (DocumentSnapshot worker : showWorkersDocs) {
-                        Worker newWorker = createWorker(worker);
-                        displayWorkerMarker(newWorker);
-                    }
-                    handler.postDelayed(this, 5000);
+        updateDisplayWorkers();
+//        if (showAllWorkers) {
+//            Log.d("FROM MAP", "showAllWorker = true");
+//            for (DocumentSnapshot worker : showWorkersDocs) {
+//                Worker newWorker = createWorker(worker);
+//                displayWorkerMarker(newWorker);
+//            }
+//        } else {
+//            Log.d("FROM MAP", "showAllWorker = false");
+//            for (DocumentSnapshot worker : userWorkersDocs) {
+//                Worker newWorker = createWorker(worker);
+//                displayWorkerMarker(newWorker);
+//            }
+//        }
+        Query query = db.collection(CONSTANTS.WORKERS_COLLECTION)
+                         .whereEqualTo(CONSTANTS.SUPERVISOR_ID_KEY, documentManager.getCurrentUser().getId());
+        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                if (error != null) { // if error occurs
+                    System.err.println("Listen failed: " + error);
                 }
-            };
-            handler.postDelayed(runnable, 5000);
-        } else {
-            for (DocumentSnapshot worker : userWorkersDocs) {
-                Worker newWorker = createWorker(worker);
-                displayWorkerMarker(newWorker);
-            }
-            handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
-                    updateDayOfWeek();
-                    updateDisplayWorkers();
-                    for (DocumentSnapshot worker : userWorkersDocs) {
-                        Worker newWorker = createWorker(worker);
-                        displayWorkerMarker(newWorker);
+
+                for (DocumentSnapshot doc : snapshots) {
+                    Worker newWorker = createWorker(doc);
+                    Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
+                    if (marker != null) {
+                        marker.remove();
                     }
-                    handler.postDelayed(this, 5000);
+                    displayWorkerMarker(newWorker);
                 }
-            };
-            handler.postDelayed(runnable, 5000);
-        }
+            }
+        });
     }
 
     private void zoomCamera(LatLng latLng, float zoom) {
@@ -444,7 +434,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 .title(getResources().getString(R.string.map_info_window_worker_location_title))
                 .snippet(info)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-        siteMap.addMarker(options);
+        Marker marker = siteMap.addMarker(options);
+        hashMapWorkerMarker.put(worker.getEmployeeID(), marker);
         Log.d("FROM MAP", "Marker's color is violet");
     }
 
@@ -953,13 +944,20 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         super.onResume();
         updateDayOfWeek();
         updateDisplayWorkers();
-        handler.postDelayed(runnable, 60000);
+//        handler.postDelayed(runnable, 60000);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        handler.removeCallbacks(runnable);
+//        handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // stop listening to database real time updates to protect user's device's bandwidth
+        registration.remove();
     }
 
     private void hideSoftKeyboard() {
