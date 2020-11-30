@@ -9,8 +9,6 @@
     tools:openDrawer="start">
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -38,31 +36,31 @@
                 android:id="@+id/ic_magnify"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_magnify"/>
+                app:srcCompat="@drawable/ic_magnify"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@id/ic_magnify"
+                android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
                 android:textSize="15sp"
                 android:textColor="#000000"
                 android:id="@+id/searchInputEditText"
                 android:background="@null"
                 android:hint="@string/search_input_hint"
-                android:imeOptions="actionSearch"/>
-        </RelativeLayout>
+                android:imeOptions="actionSearch" />
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/mapRelativeLayout"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:scaleType="centerCrop"
-            android:id="@+id/myLocationImageView"
-            android:src="@drawable/ic_my_location"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/ic_more_options"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                app:srcCompat="@drawable/ic_more_options" />
+
+        </RelativeLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationBar"
@@ -73,6 +71,17 @@
             app:itemIconTint="@drawable/selector"
             app:itemTextColor="@color/white"
             app:menu="@menu/menu_navigation_bar" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/my_location_floating_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:layout_above="@id/bottomNavigationBar"
+            android:layout_alignParentRight="true"
+            app:backgroundTint="@color/white"
+            app:srcCompat="@drawable/ic_my_location" />
 
     </RelativeLayout>
 

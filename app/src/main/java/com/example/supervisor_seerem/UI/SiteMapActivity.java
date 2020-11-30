@@ -20,14 +20,17 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,14 +55,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private boolean isLocationPermissionsGranted = false;
     private GoogleMap siteMap;
@@ -69,19 +78,29 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 10000;
-    private static final float DEFAULT_ZOOM = 15f; // 15 = street level view
+    private static final float DEFAULT_ZOOM = 15f; // 15 = around street level view
+    private static final float MAX_ZOOM = 20;
     private static final String LAUNCH_FROM_ACTIVITY = "Launched map from other activities";
     private String previousActivity;
 
     private DocumentManager documentManager = DocumentManager.getInstance();
-    private List<DocumentSnapshot> sitesList = new ArrayList<>();
+    private List<DocumentSnapshot> sitesDocs = new ArrayList<>();
     private Site clickedSite;
-    private List<DocumentSnapshot> workersList = new ArrayList<>();
+    private List<DocumentSnapshot> allWorkersDocs = new ArrayList<>();
+    private List<DocumentSnapshot> onlineWorkersDocs = new ArrayList<>();
+    private List<DocumentSnapshot> offlineWorkersDocs = new ArrayList<>();
+    private List<DocumentSnapshot> userWorkersDocs = new ArrayList<>();
+    private List<DocumentSnapshot> showWorkersDocs = new ArrayList<>();
     private Worker clickedWorker;
+    private Boolean showAllWorkers = false;
+    private Boolean showOfflineWorkers = false;
+    private String dayKey = CONSTANTS.SUNDAY_KEY;
 
     private EditText searchInputEditText;
-    private ImageView myLocationImageView;
+    private FloatingActionButton myLocationFAB;
     private DrawerLayout drawer;
+    private Handler handler;
+    private Runnable runnable;
 
     public static Intent launchMapIntent(Context context) {
         Intent mapIntent = new Intent(context, SiteMapActivity.class);
@@ -103,6 +122,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
         siteMap = googleMap;
+        siteMap.setMaxZoomPreference(MAX_ZOOM);
 
         if (isLocationPermissionsGranted) {
             if (ActivityCompat.checkSelfPermission(this, FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -117,12 +137,13 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
             siteMap.getUiSettings().setMyLocationButtonEnabled(false);
 
             Log.d("FROM MAP: ", "previousActivity is: " + previousActivity);
-            if (previousActivity != null && previousActivity.equals("SiteInfo")){ // if the user clicks on a site from the list of worksites
+            if (previousActivity != null && previousActivity.equals("SiteInfo")) { // if the user clicks on a site from the list of worksites
                 zoomToSiteLocation();
             } else if (previousActivity != null && previousActivity.equals("WorkerInfo")) { // if the user clicks on a worker from the list of workers
-               zoomToWorkerPosition();
+                zoomToWorkerPosition();
             } else {
                 // otherwise, just show my current location and all workers' and worksites' locations
+                Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
                 getDeviceLocation();
                 showAllWorkersPositions();
                 showAllWorksitesLocations();
@@ -216,19 +237,19 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch(menuItem.getItemId()) {
+                switch (menuItem.getItemId()) {
                     case R.id.workerNavigation:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteMapActivity.this);
                         finish();
                         startActivity(workerIntent);
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
 
                     case R.id.siteNavigation:
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(SiteMapActivity.this);
                         finish();
                         startActivity(siteIntent);
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
 
                     case R.id.mapNavigation:
@@ -239,14 +260,14 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                         Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(SiteMapActivity.this);
                         finish();
                         startActivity(sensorIntent);
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
 
                     case R.id.userNavigation:
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
                         finish();
                         startActivity(userIntent);
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -274,15 +295,15 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         setupSidebarNavigationDrawer();
         getPreviousActivityName();
 
-        sitesList.clear();
-        sitesList.addAll(documentManager.getSites());
-        Log.d("FROM MAP", "onCreate(): sitesList.size() = " + sitesList.size());
-        workersList.clear();
-        workersList.addAll(documentManager.getWorkers());
-        Log.d("FROM MAP", "onCreate(): workersList.size() = " + workersList.size());
+        sitesDocs.clear();
+        sitesDocs.addAll(documentManager.getSites());
+        Log.d("FROM MAP", "onCreate(): sitesList.size() = " + sitesDocs.size());
+        allWorkersDocs.clear();
+        allWorkersDocs.addAll(documentManager.getWorkers());
+        Log.d("FROM MAP", "onCreate(): workersList.size() = " + allWorkersDocs.size());
 
         searchInputEditText = (EditText) findViewById(R.id.searchInputEditText);
-        myLocationImageView = (ImageView) findViewById(R.id.myLocationImageView);
+        myLocationFAB = (FloatingActionButton) findViewById(R.id.my_location_floating_button);
 
         checkGooglePlayServicesAvailable();
         getLocationPermission();
@@ -298,8 +319,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                 dialog.show();
             } else {
                 Toast.makeText(SiteMapActivity.this,
-                                R.string.map_noServices_error_message,
-                                Toast.LENGTH_SHORT).show();
+                        R.string.map_noServices_error_message,
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -330,7 +351,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         isLocationPermissionsGranted = false;
 
-        switch(requestCode) {
+        switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0) {
                     for (int result : grantResults) {
@@ -362,17 +383,62 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
-        myLocationImageView.setOnClickListener(new View.OnClickListener() {
+        myLocationFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 previousActivity = "SiteMap";
                 siteMap.clear();
                 Log.d("FROM MAP", "Clear map and go to my location!");
+
                 getDeviceLocation();
-                showAllWorkersPositions();
                 showAllWorksitesLocations();
+                showAllWorkersPositions();
             }
         });
+
+        final ImageView moreOptions = (ImageView) findViewById(R.id.ic_more_options);
+        moreOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu displayPopupMenu = new PopupMenu(SiteMapActivity.this, moreOptions);
+                displayPopupMenu.getMenuInflater().inflate(R.menu.menu_sitemap_display_option, displayPopupMenu.getMenu());
+                displayPopupMenu.show();
+                displayPopupMenu.show();
+                displayPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.menu_display_workers_filter:
+                                if (showAllWorkers) {
+                                    showAllWorkers = false;
+                                    item.setTitle(getString(R.string.display_all_workers));
+                                } else {
+                                    showAllWorkers = true;
+                                    item.setTitle(getString(R.string.display_my_workers));
+                                }
+
+                                updateDisplayWorkers();
+                                return true;
+
+                            case R.id.menu_display_offline_workers:
+                                if (showOfflineWorkers) {
+                                    showOfflineWorkers = false;
+                                    item.setTitle(getString(R.string.display_offline_workers));
+                                } else {
+                                    showOfflineWorkers = true;
+                                    item.setTitle(getString(R.string.display_online_workers));
+                                }
+
+                                updateDisplayWorkers();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+            }
+
+        });
+
         hideSoftKeyboard();
     }
 
@@ -423,26 +489,55 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void showAllWorksitesLocations() {
-        for (DocumentSnapshot site : sitesList) {
+        for (DocumentSnapshot site : sitesDocs) {
             Site newSite = createSite(site);
-            LatLng latLng = new LatLng(newSite.getLocation().getLatitude(),
-                                        newSite.getLocation().getLongitude());
-            String title = getResources().getString(R.string.map_info_window_site_location_title);
             displayWorksiteMarker(newSite);
             displayMasterpointMarker(new LatLng(newSite.getMasterpoint().getLatitude(),
-                                                newSite.getMasterpoint().getLongitude()));
+                    newSite.getMasterpoint().getLongitude()));
         }
     }
 
     private void showAllWorkersPositions() {
-        for (DocumentSnapshot worker : workersList) {
-            Worker newWorker = createWorker(worker);
-            LatLng latLng = new LatLng(newWorker.getLocation().getLatitude(),
-                                        newWorker.getLocation().getLongitude());
-            String title = getResources().getString(R.string.map_info_window_worker_location_title);
-            displayWorkerMarker(newWorker);
+        if (showAllWorkers) {
+            for (DocumentSnapshot worker : showWorkersDocs) {
+                Worker newWorker = createWorker(worker);
+                displayWorkerMarker(newWorker);
+            }
+            handler = new Handler();
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                    for (DocumentSnapshot worker : showWorkersDocs) {
+                        Worker newWorker = createWorker(worker);
+                        displayWorkerMarker(newWorker);
+                    }
+                    handler.postDelayed(this, 5000);
+                }
+            };
+            handler.postDelayed(runnable, 5000);
+        } else {
+            for (DocumentSnapshot worker : userWorkersDocs) {
+                Worker newWorker = createWorker(worker);
+                displayWorkerMarker(newWorker);
+            }
+            handler = new Handler();
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                    for (DocumentSnapshot worker : userWorkersDocs) {
+                        Worker newWorker = createWorker(worker);
+                        displayWorkerMarker(newWorker);
+                    }
+                    handler.postDelayed(this, 5000);
+                }
+            };
+            handler.postDelayed(runnable, 5000);
         }
+
     }
+
 
     private void zoomCamera(LatLng latLng, float zoom) {
         // zoom to the specific latLng
@@ -458,8 +553,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         Log.d("FROM MAP", "clickedSiteID = " + clickedSiteID);
 
         DocumentSnapshot currentSite = null;
-        Log.d("FROM MAP", "zoomToSiteLocation(): sitesList.size() = " + sitesList.size());
-        for (DocumentSnapshot site : sitesList) {
+        Log.d("FROM MAP", "zoomToSiteLocation(): sitesList.size() = " + sitesDocs.size());
+        for (DocumentSnapshot site : sitesDocs) {
             Log.d("FROM MAP", site.toString());
             Log.d("FROM MAP", "siteID = " + site.getString(CONSTANTS.ID_KEY));
             if (site.getString(CONSTANTS.ID_KEY).equals(clickedSiteID)) {
@@ -472,8 +567,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
             clickedSite = createSite(currentSite);
             System.out.println(clickedSite.toString());
             zoomCamera(new LatLng(clickedSite.getLocation().getLatitude(),
-                                clickedSite.getLocation().getLongitude()),
-                        DEFAULT_ZOOM);
+                            clickedSite.getLocation().getLongitude()),
+                    DEFAULT_ZOOM);
 
             // zoom to clicked site, but also display all worksites and workers around
             showAllWorksitesLocations();
@@ -487,8 +582,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         Log.d("FROM MAP", "clickedWorkerID = " + clickedWorkerID);
 
         DocumentSnapshot currentWorker = null;
-        Log.d("FROM MAP", "zoomToSiteLocation(): workersList.size() = " + workersList.size());
-        for (DocumentSnapshot worker : workersList) {
+        Log.d("FROM MAP", "zoomToSiteLocation(): workersList.size() = " + allWorkersDocs.size());
+        for (DocumentSnapshot worker : allWorkersDocs) {
             Log.d("FROM MAP", worker.toString());
             Log.d("FROM MAP", "workerID = " + worker.getString(CONSTANTS.ID_KEY));
             if (worker.getString(CONSTANTS.ID_KEY).equals(clickedWorkerID)) {
@@ -501,8 +596,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
             clickedWorker = createWorker(currentWorker);
             System.out.println(clickedWorker.toString());
             zoomCamera(new LatLng(clickedWorker.getLocation().getLatitude(),
-                                clickedWorker.getLocation().getLongitude()),
-                        DEFAULT_ZOOM);
+                            clickedWorker.getLocation().getLongitude()),
+                    DEFAULT_ZOOM);
 
             // zoom to clicked worker, but also display all worksites and workers around
             showAllWorksitesLocations();
@@ -517,7 +612,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                 ";" + site.getOperationHour();
 
         LatLng latLng = new LatLng(site.getLocation().getLatitude(),
-                                    site.getLocation().getLongitude());
+                site.getLocation().getLongitude());
 
         // set worksite's marker's color to green
         MarkerOptions options = new MarkerOptions()
@@ -536,7 +631,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                 ";" + worker.getSupervisorID();
 
         LatLng latLng = new LatLng(worker.getLocation().getLatitude(),
-                                    worker.getLocation().getLongitude());
+                worker.getLocation().getLongitude());
 
         // set worker's marker's color to blue
         MarkerOptions options = new MarkerOptions()
@@ -579,12 +674,12 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
                 site.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
         String projectID = site.getString(CONSTANTS.PROJECT_ID_KEY);
         ModelLocation masterpointLocation = new ModelLocation(site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLatitude(),
-                                                            site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
+                site.getGeoPoint(CONSTANTS.MASTERPOINT_KEY).getLongitude());
         String hseLink = site.getString(CONSTANTS.HSE_LINK_KEY);
         String operationHour = site.getString(CONSTANTS.OPERATION_HRS_KEY);
 
         Site newSite = new Site(siteID, projectID, siteName, siteLocation,
-                masterpointLocation,hseLink, operationHour);
+                masterpointLocation, hseLink, operationHour);
 
         return newSite;
     }
@@ -597,7 +692,7 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         String siteID = worker.getString(CONSTANTS.WORKSITE_ID_KEY);
         String companyID = worker.getString(CONSTANTS.COMPANY_ID_KEY);
         ModelLocation workerPosition = new ModelLocation(worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLatitude(),
-                                                         worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
+                worker.getGeoPoint(CONSTANTS.LOCATION_KEY).getLongitude());
         List<String> skills = new ArrayList<String>();
         String[] workerSkills = worker.getString(CONSTANTS.SKILLS_KEY).split(",");
         for (String skill : workerSkills) {
@@ -610,17 +705,138 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         return newWorker;
     }
 
+    private void updateDisplayWorkers() {
+        checkDisplayingWorkersMode();
+
+        if(showAllWorkers) {
+            showWorkersDocs.clear();
+            showWorkersDocs.addAll(allWorkersDocs);
+        } else {
+            showWorkersDocs.clear();
+            showWorkersDocs.addAll(userWorkersDocs);
+        }
+
+        onlineWorkersDocs.clear();
+        offlineWorkersDocs.clear();
+
+        // Check for "TODAY's" available workers who are online
+        // A worker with no availability data will be shown as offline
+        for(DocumentSnapshot worker : showWorkersDocs) {
+            DocumentSnapshot avail = null;
+            for(DocumentSnapshot availability : documentManager.getAvailabilities()) {
+                if (availability.getString(CONSTANTS.ID_KEY).equals(worker.getString(CONSTANTS.ID_KEY))) {
+                    avail = availability;
+                    try {
+                        if(isWithinOperationHours(checkNull(availability.getString(dayKey)))) {
+                            onlineWorkersDocs.add(worker);
+                        } else {
+                            offlineWorkersDocs.add(worker);
+                        }
+                    } catch (ParseException e) {
+                        Log.d("FROM MAP", e.toString());
+                        offlineWorkersDocs.add(worker); // Consider a worker without availability to be offline
+                    }
+                }
+            }
+
+            if (avail == null) { // No availability data found
+                offlineWorkersDocs.add(worker);
+            }
+        }
+
+        showWorkersDocs.clear();
+        if(showOfflineWorkers) {
+            showWorkersDocs.addAll(offlineWorkersDocs);
+            if(offlineWorkersDocs.isEmpty()) {
+                Toast.makeText(this, "No Offline Workers!", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            showWorkersDocs.addAll(onlineWorkersDocs);
+            if(onlineWorkersDocs.isEmpty()) {
+                Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void checkDisplayingWorkersMode() {
+        if(showOfflineWorkers && showAllWorkers) {
+            Toast.makeText(this, "Displaying Offline Company Workers", Toast.LENGTH_SHORT).show();
+        } else if (showOfflineWorkers && !showAllWorkers) {
+            Toast.makeText(this, "Displaying Offline Assigned Workers", Toast.LENGTH_SHORT).show();
+        } else if (!showOfflineWorkers && showAllWorkers) {
+            Toast.makeText(this, "Displaying Online Company Workers", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Displaying Online Assigned Workers", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isWithinOperationHours(String availability) throws ParseException {
+        String arr[] = null;
+        if(availability.equals(" - ") || availability.equals("-") || availability == null ) {
+            return false;
+        } else if(availability != null) {
+            if(availability.split("-") != null) {
+                arr = availability.split("-");
+            }
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date d1 = dateFormat.parse(arr[0]);
+        Date d2 = dateFormat.parse(arr[1]);
+        String currTime = dateFormat.format(Calendar.getInstance().getTime());
+        Date current = dateFormat.parse(currTime);
+
+        Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
+
+        return withinOpHrs;
+    }
+
+    private String checkNull(String data) {
+        if(data == null || data.isEmpty()) {
+            return " - ";
+        } else {
+            return data;
+        }
+    }
+
+    private void updateDayOfWeek() {
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        switch (day) {
+            case Calendar.MONDAY:
+                dayKey = CONSTANTS.MONDAY_KEY;
+                break;
+            case Calendar.TUESDAY:
+                dayKey = CONSTANTS.TUESDAY_KEY;
+                break;
+            case Calendar.WEDNESDAY:
+                dayKey = CONSTANTS.WEDNESDAY_KEY;
+                break;
+            case Calendar.THURSDAY:
+                dayKey = CONSTANTS.THURSDAY_KEY;
+                break;
+            case Calendar.FRIDAY:
+                dayKey = CONSTANTS.FRIDAY_KEY;
+                break;
+            case Calendar.SATURDAY:
+                dayKey = CONSTANTS.SATURDAY_KEY;
+                break;
+            case Calendar.SUNDAY:
+                dayKey = CONSTANTS.SUNDAY_KEY;
+                break;
+        }
+    }
+
     public Bitmap resizeBitmap(String imageName) {
         Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
-                    getResources().getIdentifier(imageName, "drawable", getPackageName()));
+                getResources().getIdentifier(imageName, "drawable", getPackageName()));
         int imageWidth = imageBitmap.getWidth();
         int imageHeight = imageBitmap.getHeight();
         Log.d("FROM MAP", "imageWidth = " + imageWidth + " and imageHeight = " + imageHeight);
 
         // Google map default marker is of size 20x32 (width x height) pixels
         // 1 pixel = 24 bits for R, G, B --> each is 8 bits
-        float scaleX = (float) 20*8/imageWidth;
-        float scaleY = (float) 32*8/imageHeight;
+        float scaleX = (float) 20 * 8 / imageWidth;
+        float scaleY = (float) 32 * 8 / imageHeight;
         Log.d("FROM MAP", "scaleX = " + scaleX + " and scaleY = " + scaleY);
         float scaleFactor = 0;
         if (scaleX <= scaleY) {
@@ -630,8 +846,8 @@ public class  SiteMapActivity extends AppCompatActivity implements OnMapReadyCal
         }
         Log.d("FROM MAP", "scaleFactor = " + scaleFactor);
 
-        int newWidth = (int) Math.round(imageWidth*scaleFactor);
-        int newHeight = (int) Math.round(imageHeight*scaleFactor);
+        int newWidth = (int) Math.round(imageWidth * scaleFactor);
+        int newHeight = (int) Math.round(imageHeight * scaleFactor);
         Log.d("FROM MAP", "newWidth = " + newWidth + " and newHeight = " + newHeight);
 
         return Bitmap.createScaledBitmap(imageBitmap, newWidth, newHeight, false);

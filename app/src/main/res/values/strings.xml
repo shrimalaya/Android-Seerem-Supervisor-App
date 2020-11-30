@@ -65,6 +65,9 @@
     <string name="display_all_worksites">Display All Worksites</string>
     <string name="display_all_workers">Display All Workers</string>
     <string name="refresh">Refresh</string>
+    <string name="display_offline_workers">Display Offline Workers</string>
+    <string name="display_online_workers">Display Online Workers</string>
+    <string name="display_my_workers">Display My Workers</string>
 
     <string name="sidebar_navigation_open">Open sidebar navigation drawer</string>
     <string name="sidebar_navigation_close">Close sidebar navigation drawer</string>
