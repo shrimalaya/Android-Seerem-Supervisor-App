@@ -4,16 +4,183 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.AddOvertimeActivity">
+    tools:context=".UI.AddDayLeaveActivity"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:id="@+id/back_and_save_toolbar"
-        app:title="@string/add_overtime_title_toolbar"
+        app:title="@string/add_day_leave_title_toolbar"
         android:gravity="center_horizontal"
         app:titleTextColor="@color/white"
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:titleMargin="40dp" />
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7"
+        android:orientation="vertical">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/seerem_logo_colour"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/add_overtime_header"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center"
+                android:text="@string/add_overtime_header"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/seerem_logo_colour"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/overtime_help"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center"
+                android:text="@string/add_overtime_help"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:background="@color/seerem_logo_colour"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:backgroundTint="@color/white">
+
+            <Spinner
+                android:id="@+id/days_spinner"
+                android:textColor="@color/seerem_logo_colour"
+                android:textSize="20sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"/>
+
+            <TextView
+                android:id="@+id/overtime_hours"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center"
+                android:text="@string/add_overtime_hours"
+                android:textColor="@color/seerem_logo_colour"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!--            <EditText-->
+            <!--                android:id="@+id/addDayLeaveMonth"-->
+            <!--                android:layout_width="0dip"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:fontFamily="sans-serif-smallcaps"-->
+            <!--                android:gravity="center"-->
+            <!--                android:inputType="number"-->
+            <!--                android:hint="@string/hour_exceptions_numerical_month_input"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="22sp"-->
+            <!--                android:textStyle="bold" />-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/addDayLeaveDay"-->
+            <!--                android:layout_width="0dip"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:fontFamily="sans-serif-smallcaps"-->
+            <!--                android:gravity="center"-->
+            <!--                android:inputType="number"-->
+            <!--                android:hint="@string/hour_exceptions_numerical_day_input"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="22sp"-->
+            <!--                android:textStyle="bold" />-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/addDayLeaveYear"-->
+            <!--                android:layout_width="0dip"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="2"-->
+            <!--                android:fontFamily="sans-serif-smallcaps"-->
+            <!--                android:gravity="center"-->
+            <!--                android:inputType="number"-->
+            <!--                android:hint="@string/hour_exceptions_numerical_year_input"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="22sp"-->
+            <!--                android:textStyle="bold" />-->
+
+            <EditText
+                android:id="@+id/add_overtime_hours"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:inputType="number"
+                android:hint="@string/add_overtime_duration"
+                android:textColor="@color/seerem_logo_colour"
+                android:textSize="22sp" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/add_overtime_explanation"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:hint="@string/add_overtime_explanation"
+                android:textColor="@color/seerem_logo_colour"
+                android:textSize="22sp" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/seerem_logo_colour"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:backgroundTint="@color/white">
+            <TextView
+                android:id="@+id/overtime_requests_header"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center"
+                android:text="@string/add_overtime_requests"
+                android:textColor="@color/grey"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </TableRow>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/overtime_view_requests"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
+
 </LinearLayout>

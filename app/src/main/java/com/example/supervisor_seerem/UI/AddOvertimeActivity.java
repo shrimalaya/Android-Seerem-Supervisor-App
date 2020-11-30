@@ -7,14 +7,38 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.model.CONSTANTS;
+import com.example.supervisor_seerem.model.DocumentManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class AddOvertimeActivity extends AppCompatActivity {
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+public class AddOvertimeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    DocumentManager documentManager;
+    EditText editTextOvertimeHours;
+    EditText editTextOvertimeExplanation;
+    Spinner spinner;
+
+    Calendar cal = Calendar.getInstance();
 
     public static Intent launchAddOvertimeIntent(Context context) {
         Intent overtimeIntent = new Intent(context, AddOvertimeActivity.class);
@@ -50,17 +74,107 @@ public class AddOvertimeActivity extends AppCompatActivity {
             case R.id.checkmark:
                 // TODO: Do whatever in onCreate() or somewhere else,
                 //       then save changes accordingly (in SharedPrefs or Database)
-                Toast.makeText(this, "Need to save changes", Toast.LENGTH_SHORT).show();
-                finish();
+                storeInputs();
+//                Toast.makeText(this, "Need to save changes", Toast.LENGTH_SHORT).show();
+//                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean areAllImportantInputsFilled(String[] inputs){
+        for (String input : inputs) {
+            Log.i("Checking!: ", input);
+            if (input.isEmpty()) {
+                return false;
+            }
+            Log.i("OKAY!: ", input + " is okay!");
+        }
+        return true;
+    }
+
+    private void storeInputs(){
+        // From Ace @ https://stackoverflow.com/a/9751330
+        TextView textView = (TextView) spinner.getSelectedView();
+        String selectedDay = textView.getText().toString();
+        String selectedOvertimeHours = editTextOvertimeHours.getText().toString();
+        String inputs[] = {selectedDay, selectedOvertimeHours};
+        if(!areAllImportantInputsFilled(inputs)){
+            Toast.makeText(this, R.string.error_request_info_incomplete, Toast.LENGTH_LONG).show();
+        }else{
+            // Explanation is optional; set it to N/A if nothing was given.
+            String selectedOvertimeExplanation = editTextOvertimeExplanation.getText().toString();
+            if(selectedOvertimeExplanation.isEmpty()){
+                selectedOvertimeExplanation = "N/A";
+            }
+
+            //Get the current day to save the request in a UNIQUeLY_NAAMED  collection on Firebase
+            int year = cal.get(Calendar.YEAR);
+            int day = cal.get(Calendar.DAY_OF_MONTH);//Get day in current month since different months hav edifferent avilable days
+            int month = cal.get(Calendar.MONTH);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy");
+            cal.set(year, month, day);
+            String currentDate = sdf.format(cal.getTime());
+
+//            DocumentReference overtimeRef = FirebaseFirestore.getInstance()
+//                    .collection(CONSTANTS.PENDING_OVERTIME_COLLECTION)
+//                    .document(documentManager.getCurrentUser().getId()).collection("overtime_requests").document(currentDate);
+            DocumentReference overtimeRef = FirebaseFirestore.getInstance()
+                    .collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
+                    .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_OVERTIME_COLLECTION).document(currentDate);
+            Map<String,Object> user = new HashMap<>();
+            user.put(CONSTANTS.ID_KEY, documentManager.getCurrentUser().getId());
+            user.put(CONSTANTS.OVERTIME_DAY_KEY, selectedDay);
+            user.put(CONSTANTS.OVERTIME_DURATION_KEY, selectedOvertimeHours);
+            user.put(CONSTANTS.OVERTIME_EXPLANATION_KEY, selectedOvertimeExplanation);
+
+            overtimeRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(getApplicationContext(), getText(R.string.add_overtime_success), Toast.LENGTH_LONG).show();
+                }
+            });
+            overtimeRef.set(user).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), getText(R.string.add_overtime_fail), Toast.LENGTH_LONG).show();
+                    Log.i("onFailure()", e.toString());
+                }
+            });
+        }
+
+        }
+
+    private void setUpComponeents(){
+        editTextOvertimeHours = findViewById(R.id.add_overtime_hours);
+        editTextOvertimeExplanation = findViewById(R.id.add_overtime_explanation);
+        spinner = (Spinner)findViewById(R.id.days_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.days_of_week,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_overtime);
+        documentManager = DocumentManager.getInstance();
         setupToolbar();
+        setUpComponeents();
+    }
+
+    // Strictly speaking, we aren't actually doing anything with the selected day
+    // UNTIL the checkmark is pressed. Therefore, we can keep the required methods to Override empty.
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selectedDay = parent.getItemAtPosition(position).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

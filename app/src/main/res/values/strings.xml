@@ -115,4 +115,43 @@
     <string name="add_overtime_title_toolbar">Add overtime</string>
     <string name="add_day_leave_title_toolbar">Add Day Leave</string>
 
+<!--    Used in multiple activities where entering a date is allowed-->
+    <string name="hour_exceptions_numerical_month_input">mm</string>
+    <string name="hour_exceptions_numerical_day_input">dd</string>
+    <string name="hour_exceptions_numerical_year_input">yyyy</string>
+    <string name="hour_exceptions_enter_date">Pick Date</string>
+    <string name="hour_exceptions_select_dates_on_calendar">Select on Calendar</string>
+    <string name="hour_exceptions_submit_request">Submit request</string>
+    <string name="error_request_info_incomplete">Please input all required details of your request to submit it.</string>
+
+    <string name="add_day_leave_help">Add day leaves you wish to request Administration for, which they must verify and allow to put into effect.</string>
+    <string name="add_day_leave_enter_duration"># of days</string>
+    <string name="add_day_leave_no_date_selected">(No date selected)</string>
+    <string name="add_day_leave_requests">Your Day Leave Requests</string>
+    <string name="add_day_leave_date">Date</string>
+    <string name="add_day_leave_days_duration">Duration (days):</string>
+    <string name="add_day_leave_days_explanation">(Optional) Briefly explain why you are requesting a day leave period.</string>
+    <string name="add_day_leave_save_success">Your day leave request was sent successfully.</string>
+    <string name="add_day_leave_save_fail">Your day leave request was not sent successfully.</string>
+
+    <string name= "add_overtime_header">Add Overtime Hours</string>
+    <string name= "add_overtime_help">Request days in the week from Administration when you will work overtime, which they must verify and allow to put into effect.</string>
+    <string name= "add_overtime_header_">Select day:</string>
+    <string name= "add_overtime_duration"># of hours</string>
+    <string name= "add_overtime_hours">Overtime (Hours):</string>
+    <string name= "add_overtime_explanation">(Optional) Briefly explain why you are requesting Overtime.</string>
+    <string name= "add_overtime_requests">Your Overtime Requests</string>
+    <string name= "add_overtime_success">Your Overtime request was sent successfully.</string>
+    <string name= "add_overtime_fail">Your Overtime request was not sent successfully.</string>
+    <string name= "monday">Monday</string>
+
+    <string-array name="days_of_week">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
 </resources>

@@ -20,6 +20,8 @@ public class DocumentManager {
     private List<DocumentSnapshot> emergencyInfo = new ArrayList<>();
     private List<DocumentSnapshot> contacts = new ArrayList<>();
     private List<DocumentSnapshot> availabilities = new ArrayList<>();
+    private List<DocumentSnapshot> sickLeaves = new ArrayList<>();
+    private List<DocumentSnapshot> overTime = new ArrayList<>();
 
     private Supervisor currentUser;
 
