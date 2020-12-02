@@ -339,6 +339,11 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void showWorkersPositions() {
+        for (Marker marker: workerMarkers) {
+            marker.remove();
+        }
+        workerMarkers.clear();
+
         Query query = db.collection(CONSTANTS.WORKERS_COLLECTION)
                          .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, documentManager.getCurrentUser().getCompany_id());
         registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -364,18 +369,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         for (DocumentSnapshot onlineWorker: onlineWorkersDocs) {
             if(onlineWorker.getString(CONSTANTS.ID_KEY).equals(doc.getString(CONSTANTS.ID_KEY))) {
                 Worker newWorker = createWorker(doc);
-                Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
-                if (marker != null) {
-                    marker.remove();
-                }
                 displayWorkerMarker(newWorker);
-            } else {
-                Worker newWorker = createWorker(doc);
-                Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
-
-                if (marker!= null) {
-                    marker.remove();
-                }
             }
         }
 
@@ -533,8 +527,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 .snippet(info)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
 
-        Marker marker = siteMap.addMarker(options);
-        hashMapWorkerMarker.put(worker.getEmployeeID(), marker);
+        workerMarkers.add(siteMap.addMarker(options));
         Log.d("FROM MAP", "Marker's color is violet");
     }
 
