@@ -330,9 +330,16 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         }
         worksiteMarkers.clear();
 
-        for (DocumentSnapshot site : allWorksitesDocs) {
+        for (DocumentSnapshot site : onlineWorksitesDocs) {
             Site newSite = createSite(site);
-            displayWorksiteMarker(newSite);
+            displayWorksiteMarker(newSite, true);
+            displayMasterpointMarker(new LatLng(newSite.getMasterpoint().getLatitude(),
+                    newSite.getMasterpoint().getLongitude()));
+        }
+
+        for (DocumentSnapshot site : offlineWorksitesDocs) {
+            Site newSite = createSite(site);
+            displayWorksiteMarker(newSite, false);
             displayMasterpointMarker(new LatLng(newSite.getMasterpoint().getLatitude(),
                     newSite.getMasterpoint().getLongitude()));
         }
@@ -401,6 +408,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     private void zoomToSiteLocation() {
         Intent intent = getIntent();
         String clickedSiteID = intent.getStringExtra("SITE ID FROM SiteInfoActivity");
+        showAllWorksites = intent.getBooleanExtra("SHOW ALL SITES", false);
         Log.d("FROM MAP", "clickedSiteID = " + clickedSiteID);
 
         DocumentSnapshot currentSite = null;
@@ -429,6 +437,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     private void zoomToWorkerPosition() {
         Intent intent = getIntent();
         String clickedWorkerID = intent.getStringExtra("WorkerID FROM WorkerInfoActivity");
+        showAllWorkers = intent.getBooleanExtra("SHOW ALL WORKERS", false);
         Log.d("FROM MAP", "clickedWorkerID = " + clickedWorkerID);
 
         DocumentSnapshot currentWorker = null;
@@ -467,7 +476,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void displayWorksiteMarker(Site site) {
+    private void displayWorksiteMarker(Site site, Boolean isOnline) {
         String info = "Site;" + site.getID() +
                 ";" + site.getSiteName() +
                 ";" + site.getProjectID() +
@@ -489,24 +498,10 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 .snippet(info)
                 .icon(bitmapDescriptorFromVector(this, R.drawable.ic_peg_grey));
 
-        try {
-            Boolean withinOpHours = timeParser(site.getOperationHour());
-            if (!withinOpHours) {
-                // offline
-                worksiteMarkers.add(siteMap.addMarker(optionsOffline));
-
-                Log.d("FROM MAP", "Marker's color is grey");
-
-            } else {
-                // online
-                worksiteMarkers.add(siteMap.addMarker(optionsOnline));
-                Log.d("FROM MAP", "Marker's color is green");
-            }
-        } catch (ParseException e) {
-            Log.d("SITEMAP","Parse Exception" + e.toString());
-            // online
+        if (isOnline) {
             worksiteMarkers.add(siteMap.addMarker(optionsOnline));
-            Log.d("FROM MAP", "Marker's color is green");
+        } else {
+            worksiteMarkers.add(siteMap.addMarker(optionsOffline));
         }
 
     }
@@ -631,8 +626,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
             onlineWorksitesDocs.addAll(tempOnline);
             offlineWorksitesDocs.addAll(tempOffline);
-
-            showWorksitesDocs.clear();
 
             showWorksitesLocations();
         }

@@ -56,12 +56,15 @@ public class WorkerInfoActivity extends AppCompatActivity {
     private List<DocumentSnapshot> mOnlineDocs = new ArrayList<>();
     private List<DocumentSnapshot> mOfflineDocs = new ArrayList<>();
 
-    private Boolean showAllWorkers = false;
+    private static Boolean showAllWorkers = false;
     private Boolean showOfflineWorkers = false;
     private String dayKey = CONSTANTS.SUNDAY_KEY;
     private Handler handler;
     private Runnable runnable;
 
+    public static Boolean getShowAllWorkers() {
+        return showAllWorkers;
+    }
     public static Intent launchWorkerInfoIntent(Context context) {
         Intent workerInfoIntent = new Intent(context, WorkerInfoActivity.class);
         return workerInfoIntent;
@@ -559,9 +562,10 @@ public class WorkerInfoActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            finishAffinity();
-            Intent intent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
-            startActivity(intent);
+//            finishAffinity();
+//            Intent intent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
+//            startActivity(intent);
+            finish();
         }
     }
 
