@@ -194,19 +194,19 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         mapSearchView = (SearchView) findViewById(R.id.sitemap_search_view);
         setupSearchView();
 
-        hashMapWorkerMarker = new HashMap<>();
+//        hashMapWorkerMarker = new HashMap<>();
 
-//        handler =new Handler();
-//        runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                updateDisplayWorkers();
-//                updateDisplayWorksites();
-//                handler.postDelayed(this, 10000);
-//            }
-//        };
-//
-//        handler.postDelayed(runnable, 10000);
+        handler =new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateDisplayWorkers();
+                updateDisplayWorksites();
+                handler.postDelayed(this, 10000);
+            }
+        };
+
+        handler.postDelayed(runnable, 10000);
 
     }
 
