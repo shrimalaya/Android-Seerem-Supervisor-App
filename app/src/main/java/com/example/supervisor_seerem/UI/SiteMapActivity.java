@@ -43,6 +43,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -144,6 +145,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
         siteMap = googleMap;
         siteMap.setMaxZoomPreference(MAX_ZOOM);
+        siteMap.getUiSettings().setZoomControlsEnabled(true);
 
         if (isLocationPermissionsGranted) {
             if (ActivityCompat.checkSelfPermission(this, FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -170,6 +172,17 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
         updateDisplayWorkers();
         updateDisplayWorksites();
+
+        siteMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                CameraUpdate location = CameraUpdateFactory.
+                        newLatLngZoom(marker.getPosition(), DEFAULT_ZOOM);
+                siteMap.animateCamera(location);
+                marker.showInfoWindow();
+                return true;
+            }
+        });
     }
 
 
