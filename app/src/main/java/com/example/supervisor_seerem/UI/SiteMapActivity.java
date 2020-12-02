@@ -766,7 +766,21 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             public void onClick(View view) {
                 PopupMenu displayPopupMenu = new PopupMenu(SiteMapActivity.this, moreOptions);
                 displayPopupMenu.getMenuInflater().inflate(R.menu.menu_sitemap_display_option, displayPopupMenu.getMenu());
-                displayPopupMenu.show();
+                MenuItem showAllTxt = displayPopupMenu.getMenu().getItem(0);
+                MenuItem showOfflineTxt = displayPopupMenu.getMenu().getItem(1);
+
+                if(showAllWorkers) {
+                    showAllTxt.setTitle(getString(R.string.display_my_workers));
+                } else {
+                    showAllTxt.setTitle(getString(R.string.display_all_workers));
+                }
+
+                if(showOfflineWorkers) {
+                    showOfflineTxt.setTitle(getString(R.string.display_online_workers));
+                } else {
+                    showOfflineTxt.setTitle(getString(R.string.display_offline_workers));
+                }
+
                 displayPopupMenu.show();
                 displayPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -775,10 +789,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             case R.id.menu_display_workers_filter:
                                 if (showAllWorkers) {
                                     showAllWorkers = false;
-                                    item.setTitle(getString(R.string.display_all_workers));
                                 } else {
                                     showAllWorkers = true;
-                                    item.setTitle(getString(R.string.display_my_workers));
                                 }
 
                                 updateDisplayWorkers();
@@ -787,10 +799,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             case R.id.menu_display_offline_workers:
                                 if (showOfflineWorkers) {
                                     showOfflineWorkers = false;
-                                    item.setTitle(getString(R.string.display_offline_workers));
                                 } else {
                                     showOfflineWorkers = true;
-                                    item.setTitle(getString(R.string.display_online_workers));
                                 }
 
                                 updateDisplayWorkers();
