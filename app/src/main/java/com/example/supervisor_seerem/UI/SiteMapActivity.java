@@ -17,18 +17,15 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
@@ -50,6 +47,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -67,7 +65,6 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,18 +94,26 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ListenerRegistration registration;
     private DocumentManager documentManager = DocumentManager.getInstance();
-    private List<DocumentSnapshot> sitesDocs = new ArrayList<>();
     private Site clickedSite;
+
     private List<DocumentSnapshot> allWorkersDocs = new ArrayList<>();
     private List<DocumentSnapshot> onlineWorkersDocs = new ArrayList<>();
-    private List<DocumentSnapshot> offlineWorkersDocs = new ArrayList<>();
     private List<DocumentSnapshot> userWorkersDocs = new ArrayList<>();
+    private List<DocumentSnapshot> allWorksitesDocs = new ArrayList<>();
+    private List<DocumentSnapshot> userWorksitesDocs = new ArrayList<>();
+    private List<DocumentSnapshot> onlineWorksitesDocs = new ArrayList<>();
+    private List<DocumentSnapshot> offlineWorksitesDocs = new ArrayList<>();
     private List<DocumentSnapshot> showWorkersDocs = new ArrayList<>();
+    private List<DocumentSnapshot> showWorksitesDocs = new ArrayList<>();
+
     private Worker clickedWorker;
     private HashMap<String, Marker> hashMapWorkerMarker;
+    private List<Marker> workerMarkers = new ArrayList<>();
+    private List<Marker> worksiteMarkers = new ArrayList<>();
 
     private Boolean showAllWorkers = false;
-    private Boolean showOfflineWorkers = false;
+    private Boolean showAllWorksites = false;
+
     private String dayKey = CONSTANTS.SUNDAY_KEY;
 
     private SearchView mapSearchView;
@@ -160,10 +165,11 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 // otherwise, just show my current location and all workers' and worksites' locations
                 Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
                 getDeviceLocation();
-                showWorkersPositions();
-                showWorksitesLocations();
             }
         }
+
+        updateDisplayWorkers();
+        updateDisplayWorksites();
     }
 
 
@@ -178,20 +184,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         checkGooglePlayServicesAvailable();
         getLocationPermission();
 
-        sitesDocs.clear();
-        sitesDocs.addAll(documentManager.getSites());
-        Log.d("FROM MAP", "onCreate(): sitesList.size() = " + sitesDocs.size());
-        allWorkersDocs.clear();
-        allWorkersDocs.addAll(documentManager.getWorkers());
-        Log.d("FROM MAP", "onCreate(): workersList.size() = " + allWorkersDocs.size());
-        userWorkersDocs.clear();
-        for (DocumentSnapshot doc : documentManager.getWorkers()) {
-            if ((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
-                userWorkersDocs.add(doc);
-            }
-        }
-        updateDisplayWorkers();
-        updateDayOfWeek();
+        retrieveData();
 
         setupDisplayOptionsView();
 
@@ -202,6 +195,48 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         setupSearchView();
 
         hashMapWorkerMarker = new HashMap<>();
+
+//        handler =new Handler();
+//        runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                updateDisplayWorkers();
+//                updateDisplayWorksites();
+//                handler.postDelayed(this, 10000);
+//            }
+//        };
+//
+//        handler.postDelayed(runnable, 10000);
+
+    }
+
+    private void retrieveData() {
+        allWorksitesDocs.clear();
+        allWorksitesDocs.addAll(documentManager.getSites());
+        Log.d("FROM MAP", "onCreate(): sitesList.size() = " + allWorksitesDocs.size());
+
+        userWorksitesDocs.clear();
+        for (DocumentSnapshot site: documentManager.getSites()) {
+            for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
+                if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
+                    userWorksitesDocs.add(site);
+                }
+            }
+        }
+
+        allWorkersDocs.clear();
+        allWorkersDocs.addAll(documentManager.getWorkers());
+        Log.d("FROM MAP", "onCreate(): workersList.size() = " + allWorkersDocs.size());
+
+        userWorkersDocs.clear();
+        for (DocumentSnapshot doc : documentManager.getWorkers()) {
+            if ((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
+                userWorkersDocs.add(doc);
+            }
+        }
+
+        updateDayOfWeek();
+        System.out.println("TEST6> Day of week = " + dayKey);
     }
 
     private void checkGooglePlayServicesAvailable() {
@@ -290,7 +325,12 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void showWorksitesLocations() {
-        for (DocumentSnapshot site : sitesDocs) {
+        for (Marker marker: worksiteMarkers) {
+            marker.remove();
+        }
+        worksiteMarkers.clear();
+
+        for (DocumentSnapshot site : allWorksitesDocs) {
             Site newSite = createSite(site);
             displayWorksiteMarker(newSite);
             displayMasterpointMarker(new LatLng(newSite.getMasterpoint().getLatitude(),
@@ -299,22 +339,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void showWorkersPositions() {
-        updateDisplayWorkers();
-//        if (showAllWorkers) {
-//            Log.d("FROM MAP", "showAllWorker = true");
-//            for (DocumentSnapshot worker : showWorkersDocs) {
-//                Worker newWorker = createWorker(worker);
-//                displayWorkerMarker(newWorker);
-//            }
-//        } else {
-//            Log.d("FROM MAP", "showAllWorker = false");
-//            for (DocumentSnapshot worker : userWorkersDocs) {
-//                Worker newWorker = createWorker(worker);
-//                displayWorkerMarker(newWorker);
-//            }
-//        }
         Query query = db.collection(CONSTANTS.WORKERS_COLLECTION)
-                         .whereEqualTo(CONSTANTS.SUPERVISOR_ID_KEY, documentManager.getCurrentUser().getId());
+                         .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, documentManager.getCurrentUser().getCompany_id());
         registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
@@ -322,16 +348,52 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                     System.err.println("Listen failed: " + error);
                 }
 
+                System.out.println("TEST6> Size of snapshot for workers = " + snapshots.getDocuments().size());
                 for (DocumentSnapshot doc : snapshots) {
-                    Worker newWorker = createWorker(doc);
-                    Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
-                    if (marker != null) {
-                        marker.remove();
-                    }
-                    displayWorkerMarker(newWorker);
+                    checkOnline(doc);
                 }
             }
         });
+    }
+
+    private void checkOnline(DocumentSnapshot doc) {
+        System.out.println("TEST6> online? " + onlineWorkersDocs.contains(doc));
+        System.out.println("TEST6> ID: " + doc.getString(CONSTANTS.ID_KEY));
+        System.out.println("TEST6> CHECK no of online workers = " + onlineWorkersDocs.size());
+
+        for (DocumentSnapshot onlineWorker: onlineWorkersDocs) {
+            if(onlineWorker.getString(CONSTANTS.ID_KEY).equals(doc.getString(CONSTANTS.ID_KEY))) {
+                Worker newWorker = createWorker(doc);
+                Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
+                if (marker != null) {
+                    marker.remove();
+                }
+                displayWorkerMarker(newWorker);
+            } else {
+                Worker newWorker = createWorker(doc);
+                Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
+
+                if (marker!= null) {
+                    marker.remove();
+                }
+            }
+        }
+
+//        if (onlineWorkersDocs.contains(doc)) {
+//            Worker newWorker = createWorker(doc);
+//            Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
+//            if (marker != null) {
+//                marker.remove();
+//            }
+//            displayWorkerMarker(newWorker);
+//        } else {
+//            Worker newWorker = createWorker(doc);
+//            Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
+//
+//            if (marker!= null) {
+//                marker.remove();
+//            }
+//        }
     }
 
     private void zoomCamera(LatLng latLng, float zoom) {
@@ -348,8 +410,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         Log.d("FROM MAP", "clickedSiteID = " + clickedSiteID);
 
         DocumentSnapshot currentSite = null;
-        Log.d("FROM MAP", "zoomToSiteLocation(): sitesList.size() = " + sitesDocs.size());
-        for (DocumentSnapshot site : sitesDocs) {
+        Log.d("FROM MAP", "zoomToSiteLocation(): sitesList.size() = " + allWorksitesDocs.size());
+        for (DocumentSnapshot site : allWorksitesDocs) {
             Log.d("FROM MAP", site.toString());
             Log.d("FROM MAP", "siteID = " + site.getString(CONSTANTS.ID_KEY));
             if (site.getString(CONSTANTS.ID_KEY).equals(clickedSiteID)) {
@@ -365,9 +427,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             clickedSite.getLocation().getLongitude()),
                     DEFAULT_ZOOM);
 
-            // zoom to clicked site, but also display all worksites and workers around
-            showWorksitesLocations();
-            showWorkersPositions();
+//            showWorksitesLocations();
+//            showWorkersPositions();
         }
     }
 
@@ -395,9 +456,21 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                     DEFAULT_ZOOM);
 
             // zoom to clicked worker, but also display all worksites and workers around
-            showWorksitesLocations();
-            showWorkersPositions();
+//            showWorksitesLocations();
+//            showWorkersPositions();
         }
+    }
+
+    // For peg icon
+    // Learned from:https://stackoverflow.com/questions/42365658/custom-marker-in-google-maps-in-android-with-vector-asset-icon
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     private void displayWorksiteMarker(Site site) {
@@ -410,13 +483,38 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 site.getLocation().getLongitude());
 
         // set worksite's marker's color to green
-        MarkerOptions options = new MarkerOptions()
+        MarkerOptions optionsOnline = new MarkerOptions()
                 .position(latLng)
                 .title(getResources().getString(R.string.map_info_window_site_location_title))
                 .snippet(info)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        siteMap.addMarker(options);
-        Log.d("FROM MAP", "Marker's color is green");
+
+        MarkerOptions optionsOffline = new MarkerOptions()
+                .position(latLng)
+                .title(getResources().getString(R.string.map_info_window_site_location_title))
+                .snippet(info)
+                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_peg_grey));
+
+        try {
+            Boolean withinOpHours = timeParser(site.getOperationHour());
+            if (!withinOpHours) {
+                // offline
+                worksiteMarkers.add(siteMap.addMarker(optionsOffline));
+
+                Log.d("FROM MAP", "Marker's color is grey");
+
+            } else {
+                // online
+                worksiteMarkers.add(siteMap.addMarker(optionsOnline));
+                Log.d("FROM MAP", "Marker's color is green");
+            }
+        } catch (ParseException e) {
+            Log.d("SITEMAP","Parse Exception" + e.toString());
+            // online
+            worksiteMarkers.add(siteMap.addMarker(optionsOnline));
+            Log.d("FROM MAP", "Marker's color is green");
+        }
+
     }
 
     private void displayWorkerMarker(Worker worker) {
@@ -434,6 +532,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 .title(getResources().getString(R.string.map_info_window_worker_location_title))
                 .snippet(info)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+
         Marker marker = siteMap.addMarker(options);
         hashMapWorkerMarker.put(worker.getEmployeeID(), marker);
         Log.d("FROM MAP", "Marker's color is violet");
@@ -459,7 +558,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 .title(getResources().getString(R.string.map_info_window_masterpoint_title))
                 .snippet(getResources().getString(R.string.map_info_window_masterpoint_snippet))
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("alert_emergency_light")));
-        siteMap.addMarker(options);
+
+        worksiteMarkers.add(siteMap.addMarker(options));
         Log.d("FROM MAP", "Masterpoint custom peg");
     }
 
@@ -501,9 +601,51 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         return newWorker;
     }
 
-    private void updateDisplayWorkers() {
-        checkDisplayingWorkersMode();
+    private void updateDisplayWorksites() {
+        if(showAllWorksites) {
+            showWorksitesDocs.clear();
+            showWorksitesDocs.addAll(allWorksitesDocs);
+        } else {
+            showWorksitesDocs.clear();
+            showWorksitesDocs.addAll(userWorksitesDocs);
+        }
 
+
+        List<DocumentSnapshot> tempOnline = new ArrayList<>();
+        List<DocumentSnapshot> tempOffline = new ArrayList<>();
+
+        for (DocumentSnapshot doc : showWorksitesDocs) {
+            try {
+                Boolean withinOpHours = timeParser(doc.getString(CONSTANTS.OPERATION_HRS_KEY));
+                if (withinOpHours) {
+                    tempOnline.add(doc);
+                } else {
+                    tempOffline.add(doc);
+                }
+            } catch (ParseException e) {
+                Log.d("SITEMAP","Parse Exception" + e.toString());
+                tempOnline.add(doc); // A site with no operation hours specified will be added to Online Docs
+            }
+        }
+
+        Boolean onlineChanged = !tempOnline.equals(onlineWorksitesDocs);
+        Boolean offlineChanged = !tempOffline.equals(offlineWorksitesDocs);
+        Boolean listChanged = onlineChanged || offlineChanged;
+
+        if(listChanged) {
+            onlineWorksitesDocs.clear();
+            offlineWorksitesDocs.clear();
+
+            onlineWorksitesDocs.addAll(tempOnline);
+            offlineWorksitesDocs.addAll(tempOffline);
+
+            showWorksitesDocs.clear();
+
+            showWorksitesLocations();
+        }
+    }
+
+    private void updateDisplayWorkers() {
         if (showAllWorkers) {
             showWorkersDocs.clear();
             showWorkersDocs.addAll(allWorkersDocs);
@@ -512,8 +654,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             showWorkersDocs.addAll(userWorkersDocs);
         }
 
-        onlineWorkersDocs.clear();
-        offlineWorkersDocs.clear();
+        List<DocumentSnapshot> tempOnline = new ArrayList<>();
 
         // Check for "TODAY's" available workers who are online
         // A worker with no availability data will be shown as offline
@@ -523,56 +664,52 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 if (availability.getString(CONSTANTS.ID_KEY).equals(worker.getString(CONSTANTS.ID_KEY))) {
                     avail = availability;
                     try {
-                        if (isWithinOperationHours(checkNull(availability.getString(dayKey)))) {
-                            onlineWorkersDocs.add(worker);
-                        } else {
-                            offlineWorkersDocs.add(worker);
+                        Boolean withinOpHours = timeParser(checkNull(availability.getString(dayKey)));
+                        if (withinOpHours) {
+                            tempOnline.add(worker);
                         }
                     } catch (ParseException e) {
-                        Log.d("FROM MAP", e.toString());
-                        offlineWorkersDocs.add(worker); // Consider a worker without availability to be offline
+                        Log.d("SITEMAP", e.toString());
+                        // offline
                     }
                 }
             }
 
             if (avail == null) { // No availability data found
-                offlineWorkersDocs.add(worker);
+                // offline
             }
         }
 
-        showWorkersDocs.clear();
-        if (showOfflineWorkers) {
-            showWorkersDocs.addAll(offlineWorkersDocs);
-            if (offlineWorkersDocs.isEmpty()) {
-                Toast.makeText(this, "No Offline Workers!", Toast.LENGTH_LONG).show();
-            }
-        } else {
+        Boolean listChanged = !tempOnline.equals(onlineWorkersDocs);
+
+        System.out.println("TEST6> listChanged = " + listChanged);
+        System.out.println("TEST6> Size of online workers = " + tempOnline.size());
+
+        if(listChanged) {
+            onlineWorkersDocs.clear();
+            onlineWorkersDocs.addAll(tempOnline);
+
+            showWorkersDocs.clear();
             showWorkersDocs.addAll(onlineWorkersDocs);
+
             if (onlineWorkersDocs.isEmpty()) {
                 Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
             }
+
+            showWorkersPositions();
         }
     }
 
-    private void checkDisplayingWorkersMode() {
-        if (showOfflineWorkers && showAllWorkers) {
-            Toast.makeText(this, "Displaying Offline Company Workers", Toast.LENGTH_SHORT).show();
-        } else if (showOfflineWorkers && !showAllWorkers) {
-            Toast.makeText(this, "Displaying Offline Assigned Workers", Toast.LENGTH_SHORT).show();
-        } else if (!showOfflineWorkers && showAllWorkers) {
-            Toast.makeText(this, "Displaying Online Company Workers", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Displaying Online Assigned Workers", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean isWithinOperationHours(String availability) throws ParseException {
+    /**
+     * HH:mm = 24hr format
+     * hh:mm = 12 hr format
+     * Return true if timeString includes the current time
+     */
+    private boolean timeParser(String timeString) throws ParseException {
         String arr[] = null;
-        if (availability.equals(" - ") || availability.equals("-") || availability == null) {
-            return false;
-        } else if (availability != null) {
-            if (availability.split("-") != null) {
-                arr = availability.split("-");
+        if(timeString != null) {
+            if(timeString.split("-") != null) {
+                arr = timeString.split("-");
             }
         }
 
@@ -753,8 +890,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 Log.d("FROM MAP", "Clear map and go to my location!");
 
                 getDeviceLocation();
-                showWorksitesLocations();
-                showWorkersPositions();
             }
         });
     }
@@ -766,19 +901,19 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             public void onClick(View view) {
                 PopupMenu displayPopupMenu = new PopupMenu(SiteMapActivity.this, moreOptions);
                 displayPopupMenu.getMenuInflater().inflate(R.menu.menu_sitemap_display_option, displayPopupMenu.getMenu());
-                MenuItem showAllTxt = displayPopupMenu.getMenu().getItem(0);
-                MenuItem showOfflineTxt = displayPopupMenu.getMenu().getItem(1);
+                MenuItem showAllWorkersTxt = displayPopupMenu.getMenu().getItem(0);
+                MenuItem showAllWorksitesTxt = displayPopupMenu.getMenu().getItem(1);
 
                 if(showAllWorkers) {
-                    showAllTxt.setTitle(getString(R.string.display_my_workers));
+                    showAllWorkersTxt.setTitle(getString(R.string.display_my_workers));
                 } else {
-                    showAllTxt.setTitle(getString(R.string.display_all_workers));
+                    showAllWorkersTxt.setTitle(getString(R.string.display_all_workers));
                 }
 
-                if(showOfflineWorkers) {
-                    showOfflineTxt.setTitle(getString(R.string.display_online_workers));
+                if(showAllWorksites) {
+                    showAllWorksitesTxt.setTitle(getString(R.string.display_my_worksites));
                 } else {
-                    showOfflineTxt.setTitle(getString(R.string.display_offline_workers));
+                    showAllWorksitesTxt.setTitle(getString(R.string.display_all_worksites));
                 }
 
                 displayPopupMenu.show();
@@ -796,14 +931,14 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                                 updateDisplayWorkers();
                                 return true;
 
-                            case R.id.menu_display_offline_workers:
-                                if (showOfflineWorkers) {
-                                    showOfflineWorkers = false;
+                            case R.id.menu_display_worksites_filter:
+                                if (showAllWorksites) {
+                                    showAllWorksites= false;
                                 } else {
-                                    showOfflineWorkers = true;
+                                    showAllWorksites = true;
                                 }
 
-                                updateDisplayWorkers();
+                                updateDisplayWorksites();
                                 return true;
                         }
                         return true;
@@ -943,17 +1078,15 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            finishAffinity();
-            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
-            startActivity(intent);
+//            finishAffinity();
+//            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
+//            startActivity(intent);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateDayOfWeek();
-        updateDisplayWorkers();
 //        handler.postDelayed(runnable, 60000);
     }
 

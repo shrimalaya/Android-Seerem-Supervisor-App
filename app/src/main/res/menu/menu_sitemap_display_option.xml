@@ -7,7 +7,7 @@
         android:title="@string/display_all_workers" />
 
     <item
-        android:id="@+id/menu_display_offline_workers"
-        android:title="@string/display_offline_workers" />
+        android:id="@+id/menu_display_worksites_filter"
+        android:title="@string/display_all_worksites" />
 
 </menu>

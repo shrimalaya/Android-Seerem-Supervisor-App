@@ -64,6 +64,7 @@
     <string name="user_navigation_bar_text">Me</string>
 
     <string name="display_all_worksites">Display All Worksites</string>
+    <string name="display_my_worksites">Display My Worksites</string>
     <string name="display_all_workers">Display All Workers</string>
     <string name="refresh">Refresh</string>
     <string name="display_offline_workers">Display Offline Workers</string>
