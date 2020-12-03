@@ -2,7 +2,6 @@ package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,7 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,12 +32,18 @@ import java.util.regex.Pattern;
  */
 public class CommunicationActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final String ZOOM = "zoom";
+    private static final String SKYPE = "skype";
+    private static final String TEAMS = "teams";
+    private static final String MEET = "meet";
+    private static final String NONE = "none";
+
     TextView communicationRecipient;
     TextView displayedPhoneNumber;
     TextView displayedEmail;
     TextView displayedLink;
 
-    Button goToLink;
+    ImageView linkImage;
 
     String employeeID;
     DocumentSnapshot employee;
@@ -51,7 +56,7 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
     String employeeEmail;
     String employeeLink;
 
-    String linkType;
+    String linkType = NONE;
 
     int employeeClickablePhoneNumber;
 
@@ -66,7 +71,25 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
 
         setupNavigationBar();
         retrieveIntent();
+        setupImageIcon();
         setUpTextViews();
+    }
+
+    private void setupImageIcon() {
+        linkImage = findViewById(R.id.iconInternetLink);
+        linkImage.setOnClickListener(this);
+
+        if(linkType.equals(ZOOM)) {
+            linkImage.setImageResource(R.drawable.ic_zoom);
+        } else if (linkType.equals(MEET)) {
+            linkImage.setImageResource(R.drawable.ic_google_meet);
+        } else if (linkType.equals(TEAMS)) {
+            linkImage.setImageResource(R.drawable.ic_microsoftteams);
+        } else if (linkType.equals(SKYPE)) {
+            linkImage.setImageResource(R.drawable.ic_skype);
+        } else {
+            linkImage.setImageResource(R.drawable.ic_none_communication);
+        }
     }
 
 //    private interface DocListCallback{
@@ -76,7 +99,7 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
     private void parseEmployeeLinkType(String employeeLink) {
         if(employeeLink.equals(" - ")) {
             // No link provided
-            linkType = "none";
+            linkType = NONE;
             return;
         }
 
@@ -88,33 +111,30 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         Matcher matcher = zoom.matcher(employeeLink);
         if (matcher.find()) {
             // zoom
-            linkType = "zoom";
+            linkType = ZOOM;
             return;
         }
 
         matcher = teams.matcher(employeeLink);
         if (matcher.find()) {
             // teams
-            linkType = "teams";
+            linkType = TEAMS;
             return;
         }
 
         matcher = skype.matcher(employeeLink);
         if (matcher.find()) {
             // skype
-            linkType = "skype";
+            linkType = SKYPE;
             return;
         }
 
         matcher = meet.matcher(employeeLink);
         if (matcher.find()) {
             // meet
-            linkType = "meet";
+            linkType = MEET;
             return;
         }
-
-//        https://join.skype.com/XU4heiXvGWq8 = meeting link
-//        https://join.skype.com/invite/VX3ey1mN0ODZ = username
     }
 
     // Intent should include fields in Contact which the user was able to pass.
@@ -149,7 +169,7 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
             parseEmployeeLinkType(employeeLink);
             Log.d("COMMUNICATION", "Link type: " + linkType);
         } else {
-            linkType = "none";
+            linkType = NONE;
         }
 
     }
@@ -169,9 +189,6 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         displayedEmail = findViewById(R.id.linkedEmail);
         displayedLink = findViewById(R.id.linkedInternetCommunication);
 
-        goToLink = findViewById(R.id.buttonInternetLink);
-        goToLink.setOnClickListener(this);
-
         if(employeeLastName == null || employeeFirstName == null){
             employeeFullName = getString(R.string.communication_no_employee);
         }else{
@@ -187,15 +204,82 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         }
 
         if(employeeLink == null){
-            employeeLink = getString(R.string.communication_no_zoom);
-            goToLink.setBackgroundColor(ContextCompat.getColor(this, R.color.grey));
+            employeeLink = getString(R.string.communication_no_link);
         }
 
         communicationRecipient.setText(employeeFullName);
         displayedPhoneNumber.setText(employeePhoneNumber);
         displayedEmail.setText(employeeEmail);
         displayedPhoneNumber.setAutoLinkMask(Linkify.PHONE_NUMBERS);
-        displayedLink.setText(employeeMEETS);
+        displayedLink.setText(employeeLink);
+        displayedLink.setAutoLinkMask(Linkify.WEB_URLS);
+    }
+
+    // Return true if the app is installed
+    // False if not
+    private boolean checkForCommunicationAppPackages(String packageName, PackageManager packageManager){
+        try{
+            packageManager.getPackageInfo(packageName, 0);
+            return true;
+        }catch(PackageManager.NameNotFoundException e){
+            return false;
+        }
+    }
+
+
+    // For apps which autolink do not cover, we will have to creat Implicit Intents ourselves.
+    @Override
+    public void onClick(View view) {
+        Context context = getApplicationContext();
+        PackageManager pm = context.getPackageManager();
+
+        // These were taken from the links to the corresponding apps in the Play Store.
+        // On mobile, click on the top right 3 dots -> Share -> Copy.
+        // The strings below are everything after after "...details?id=" in the copied liked
+        String zoomPackage = "us.zoom.videomeetings";
+        String googleMeetsPackage = "com.google.android.apps.meetings";
+        String microsoftTeamsPackage = "com.microsoft.teams";
+        String skypePackage = "com.skype.raider";
+
+        String packageName = "";
+
+        if (view.getId() == R.id.iconInternetLink) {
+            // Code for checking for installed Apps and launching the Play Store adapted from different answers in:
+            // https://stackoverflow.com/questions/11753000/how-to-open-the-google-play-store-directly-from-my-android-application
+            if(linkType.equals(MEET)) {
+                packageName = googleMeetsPackage;
+                launchCommunicationChannel(packageName, pm);
+            } else if (linkType.equals(TEAMS)) {
+                packageName = microsoftTeamsPackage;
+                launchCommunicationChannel(packageName, pm);
+            } else if (linkType.equals(ZOOM)) {
+                packageName = zoomPackage;
+                launchCommunicationChannel(packageName, pm);
+            } else if (linkType.equals(SKYPE)) {
+                packageName = skypePackage;
+                launchCommunicationChannel(packageName, pm);
+            }
+        }
+    }
+
+    private void launchCommunicationChannel(String packageName, PackageManager pm) {
+        if (checkForCommunicationAppPackages(packageName,
+                pm)) {
+
+            Intent communicationChannelIntent = getPackageManager()
+                    .getLaunchIntentForPackage(packageName);
+            startActivity(communicationChannelIntent);
+        } else {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=" + packageName)));
+            } catch (android.content.ActivityNotFoundException e) {
+                //If google play is not installed, launch on the web.
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id="
+                                + packageName)));
+            }
+        }
     }
 
     private void setupNavigationBar() {
@@ -239,68 +323,4 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         });
     }
 
-      // Probably unnecessary since this activity should have the data passed to it from another
-      // activity (which knows what specific user is being checked for example.
-//    private void getContactData(final DocListCallback callback){
-//        firestoreReference.collection(CONSTANTS.CONTACT_INFO_COLLECTION)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isComplete()){
-//                            callback.onCallback(task.getResult().getDocuments());
-//                        }
-//                    }
-//                });
-//    }
-
-    // Return true if the app is installed
-    // False if not
-    private boolean checkForCommunicationAppPackages(String packageName, PackageManager packageManager){
-        try{
-            packageManager.getPackageInfo(packageName, 0);
-            return true;
-        }catch(PackageManager.NameNotFoundException e){
-            return false;
-        }
-    }
-
-
-    // For apps which autolink do not cover, we will have to creat Implicit Intents ourselves.
-    @Override
-    public void onClick(View view) {
-        Context context = getApplicationContext();
-        PackageManager pm = context.getPackageManager();
-
-        // These were taken from the links to the corresponding apps in the Play Store.
-        // On mobile, click on the top right 3 dots -> Share -> Copy.
-        // The strings below are everything after after "...details?id=" in the copied liked
-        String zoomPackage = "us.zoom.videomeetings";
-        String googleMeetsPackage = "com.google.android.apps.meetings";
-        String microsoftTeamsPackage = "com.microsoft.teams";
-        String skypePackage = "com.skype.raider";
-
-        if (view.getId() == R.id.buttonInternetLink) {
-            // Code for checking for installed Apps and launching the Play Store adapted from different answers in:
-            // https://stackoverflow.com/questions/11753000/how-to-open-the-google-play-store-directly-from-my-android-application
-            if (checkForCommunicationAppPackages(googleMeetsPackage,
-                    pm)) {
-
-                Intent googleMeetIntent = getPackageManager()
-                        .getLaunchIntentForPackage(googleMeetsPackage);
-                startActivity(googleMeetIntent);
-            } else {
-                Toast.makeText(this, R.string.install_meets_prompt, Toast.LENGTH_LONG).show();
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("market://details?id=" + googleMeetsPackage)));
-                } catch (android.content.ActivityNotFoundException e) {
-                    //If google play is not installed, launch on the web.
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("https://play.google.com/store/apps/details?id="
-                                    + googleMeetsPackage)));
-                }
-            }
-        }
-    }
 }

@@ -144,27 +144,27 @@
             android:background="@color/white"
             android:gravity="center">
 
-            <Button
-                android:id="@+id/buttonInternetLink"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="@color/grey"
-                android:fontFamily="sans-serif-smallcaps"
-                android:text="@string/communication_other_link"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/iconInternetLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="28dp"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
+                app:srcCompat="@drawable/ic_none_communication" />
 
             <TextView
                 android:id="@+id/linkedInternetCommunication"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:ems="10"
                 android:fontFamily="serif"
-                android:text="@string/communication_no_other_link"
-                android:textColor="@color/colorPrimaryDark" />
+                android:text="@string/communication_no_link"
+                android:autoLink="web"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp" />
         </TableRow>
     </TableLayout>
 
