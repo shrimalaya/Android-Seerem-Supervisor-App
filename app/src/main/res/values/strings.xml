@@ -29,7 +29,8 @@
     <string name="user_info_save_fail">Your User Info Settings have not been successfully saved.</string>
     <string name="new_user_prompt">Welcome! Please input and submit the information described here for use at SEEDA.</string>
     <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
-    <string name="search_input_hint">Enter a worker\'s name or a site\'s ID</string>
+    <string name="search_input_hint">Enter ID of worker or site</string>
+    <string name="clear_search_input_hint">Clear search</string>
 
     <string name="communication_header">Communication</string>
     <string name="communication_help">Select communication method for:</string>
@@ -63,8 +64,12 @@
     <string name="user_navigation_bar_text">Me</string>
 
     <string name="display_all_worksites">Display All Worksites</string>
+    <string name="display_my_worksites">Display My Worksites</string>
     <string name="display_all_workers">Display All Workers</string>
     <string name="refresh">Refresh</string>
+    <string name="display_offline_workers">Display Offline Workers</string>
+    <string name="display_online_workers">Display Online Workers</string>
+    <string name="display_my_workers">Display My Workers</string>
 
     <string name="sidebar_navigation_open">Open sidebar navigation drawer</string>
     <string name="sidebar_navigation_close">Close sidebar navigation drawer</string>
