@@ -142,10 +142,19 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
 
         employeeID = getIntent().getStringExtra("ID");
 
-        for(DocumentSnapshot doc: manager.getWorkers()) {
-            if(doc.getString(CONSTANTS.ID_KEY).equals(employeeID)) {
-                employee = doc;
-                break;
+        if(employeeID.contains("WK")) {
+            for (DocumentSnapshot doc : manager.getWorkers()) {
+                if (doc.getString(CONSTANTS.ID_KEY).equals(employeeID)) {
+                    employee = doc;
+                    break;
+                }
+            }
+        } else {
+            for (DocumentSnapshot doc : manager.getSupervisors()) {
+                if (doc.getString(CONSTANTS.ID_KEY).equals(employeeID)) {
+                    employee = doc;
+                    break;
+                }
             }
         }
 

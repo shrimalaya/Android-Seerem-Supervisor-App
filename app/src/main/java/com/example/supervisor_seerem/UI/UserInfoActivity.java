@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.UI.util.EmployeeDirectoryAdapter;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -306,10 +307,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
                         startActivity(workerIntent);
-                        finish();
                         break;
 
                     case R.id.sidebar_company:
+                        Intent employeeDirectoryIntent = new Intent(UserInfoActivity.this, EmployeeDirectoryActivity.class);
+                        startActivity(employeeDirectoryIntent);
                         break;
 
                     case R.id.sidebar_ui_preferences:
