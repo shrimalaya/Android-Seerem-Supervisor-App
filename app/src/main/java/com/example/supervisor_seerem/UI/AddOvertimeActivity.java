@@ -55,7 +55,7 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
 
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-    Calendar cal = Calendar.getInstance();
+    Calendar cal;
 
     public static Intent launchAddOvertimeIntent(Context context) {
         Intent overtimeIntent = new Intent(context, AddOvertimeActivity.class);
@@ -118,7 +118,6 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
-                            System.out.println("TEST3> Size of overtime  = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -157,9 +156,20 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
         String selectedDay = textView.getText().toString();
         String selectedOvertimeHours = editTextOvertimeHours.getText().toString();
         String inputs[] = {selectedDay, selectedOvertimeHours};
+
+        Boolean dayUnique = true;
+        if(!selectedDay.isEmpty()) {
+            for (DocumentSnapshot request: mUserDocs) {
+                if(selectedDay.equals(request.getString(CONSTANTS.OVERTIME_DAY_KEY))) {
+                    dayUnique = false;
+                    break;
+                }
+            }
+        }
+
         if(!areAllImportantInputsFilled(inputs)){
             Toast.makeText(this, R.string.error_request_info_incomplete, Toast.LENGTH_LONG).show();
-        }else{
+        }else if (dayUnique) {
             // Explanation is optional; set it to N/A if nothing was given.
             String selectedOvertimeExplanation = editTextOvertimeExplanation.getText().toString();
             if(selectedOvertimeExplanation.isEmpty()){
@@ -167,11 +177,13 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
             }
 
             //Get the current day to save the request in a UNIQUeLY_NAAMED  collection on Firebase
+            cal = Calendar.getInstance();
             int year = cal.get(Calendar.YEAR);
             int day = cal.get(Calendar.DAY_OF_MONTH);//Get day in current month since different months hav edifferent avilable days
             int month = cal.get(Calendar.MONTH);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("MMM dd");
             cal.set(year, month, day);
             String currentDate = sdf.format(cal.getTime());
 
@@ -185,6 +197,7 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
             user.put(CONSTANTS.OVERTIME_DAY_KEY, selectedDay);
             user.put(CONSTANTS.OVERTIME_DURATION_KEY, selectedOvertimeHours);
             user.put(CONSTANTS.OVERTIME_EXPLANATION_KEY, selectedOvertimeExplanation);
+            user.put(CONSTANTS.REQUEST_DATE_KEY, sdf2.format(cal.getTime()));
 
             dayLeaveRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -203,6 +216,8 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
 
             editTextOvertimeExplanation.setText("");
             editTextOvertimeHours.setText("");
+        } else {
+            Toast.makeText(this, R.string.select_unique_day, Toast.LENGTH_LONG).show();
         }
 
     }

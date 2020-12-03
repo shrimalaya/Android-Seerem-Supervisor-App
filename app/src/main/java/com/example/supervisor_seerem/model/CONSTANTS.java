@@ -52,6 +52,7 @@ public class CONSTANTS {
     public static final String SICK_DAY_EXPLANATION_KEY = "LEAVE_EXPLANATION";
 
     public static final String OVERTIME_DAY_KEY = "DAY_WITH_OVERTIME";
+    public static final String REQUEST_DATE_KEY = "REQUEST_DATE";
     public static final String OVERTIME_DURATION_KEY = "NUMBER_OF_HOURS";
     public static final String OVERTIME_EXPLANATION_KEY = "OVERTIME_EXPLANATION";
 }

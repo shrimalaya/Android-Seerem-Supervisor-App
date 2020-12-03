@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -22,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
-import com.example.supervisor_seerem.UI.util.EmployeeDirectoryAdapter;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -84,10 +84,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         setupInterface();
         populateData();
         setupNavigationBar();
-        setupSidebarNavigationDrawer();
+        hideSoftKeyboard();
     }
 
     private void setupInterface() {
+        setupSidebarNavigationDrawer();
+
         navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
         navigation.setSelectedItemId(R.id.userNavigation);
 
@@ -307,11 +309,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
                         startActivity(workerIntent);
+                        finish();
                         break;
 
                     case R.id.sidebar_company:
-                        Intent employeeDirectoryIntent = new Intent(UserInfoActivity.this, EmployeeDirectoryActivity.class);
-                        startActivity(employeeDirectoryIntent);
                         break;
 
                     case R.id.sidebar_ui_preferences:
@@ -392,6 +393,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     protected void onResume() {
         super.onResume();
         navigation.setSelectedItemId(R.id.userNavigation);
+    }
+
+    private void hideSoftKeyboard() {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 }
 
