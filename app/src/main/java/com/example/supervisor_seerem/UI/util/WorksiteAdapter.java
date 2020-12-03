@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.UI.SiteInfoActivity;
 import com.example.supervisor_seerem.UI.SiteMapActivity;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.ModelLocation;
@@ -61,6 +62,7 @@ public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.Worksi
                 String siteID = curr.getString(CONSTANTS.ID_KEY);
                 Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(context, "SiteInfo");
                 mapIntent.putExtra("SITE ID FROM SiteInfoActivity", siteID);
+                mapIntent.putExtra("SHOW ALL SITES", SiteInfoActivity.getShowAllSites());
                 context.startActivity(mapIntent);
             }
         });
@@ -69,7 +71,7 @@ public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.Worksi
         holder.masterpointTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Launch map and point to Masterpoint
+                // TODO: Launch with Masterpoint in focus
             }
         });
 

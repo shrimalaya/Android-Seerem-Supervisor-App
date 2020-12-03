@@ -346,28 +346,24 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     case R.id.workerNavigation:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
                         startActivity(workerIntent);
-                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.siteNavigation:
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(UserInfoActivity.this);
                         startActivity(siteIntent);
-                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.mapNavigation:
                         Intent mapIntent = SiteMapActivity.launchMapIntent(UserInfoActivity.this);
                         startActivity(mapIntent);
-                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.sensorNavigation:
                         Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(UserInfoActivity.this);
                         startActivity(sensorIntent);
-                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
@@ -386,10 +382,14 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            finishAffinity();
-            Intent intent = new Intent(UserInfoActivity.this, LoginInfoActivity.class);
-            startActivity(intent);
+            finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigation.setSelectedItemId(R.id.userNavigation);
     }
 }
 

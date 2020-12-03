@@ -1,6 +1,5 @@
 package com.example.supervisor_seerem.UI;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -187,9 +186,10 @@ public class SensorsUsageActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            finishAffinity();
-            Intent intent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
-            startActivity(intent);
+//            finishAffinity();
+//            Intent intent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
+//            startActivity(intent);
+            finish();
         }
     }
 

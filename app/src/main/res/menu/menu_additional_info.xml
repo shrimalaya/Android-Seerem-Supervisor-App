@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_additional_contact"
-        android:icon="@drawable/ic_baseline_contacts_24"
+        android:icon="@drawable/ic_baseline_contacts"
         android:title="contact"
         app:showAsAction="always" />
     <item
