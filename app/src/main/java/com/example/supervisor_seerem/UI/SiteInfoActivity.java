@@ -106,7 +106,7 @@ public class SiteInfoActivity extends AppCompatActivity {
 
     /**
      -> Get user info
-     -> Display using Works     iteAdapter by passing List of DocumentSnapshots
+     -> Display using WorksiteAdapter by passing List of DocumentSnapshots
      */
     private void retrieveData() {
         mAllDocs.clear();
