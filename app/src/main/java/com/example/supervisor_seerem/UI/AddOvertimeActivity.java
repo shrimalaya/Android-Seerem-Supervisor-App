@@ -186,7 +186,7 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
             // Store data in the user's pending overwtires colledction, in a document named after the current date.
             DocumentReference dayLeaveRef= FirebaseFirestore.getInstance()
                     .collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
-                    .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_SICK_LEAVE_COLLECTION).document(currentDate);
+                    .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_OVERTIME_COLLECTION).document(currentDate);
             Map<String,Object> user = new HashMap<>();
             user.put(CONSTANTS.ID_KEY, documentManager.getCurrentUser().getId());
             user.put(CONSTANTS.OVERTIME_DAY_KEY, selectedDay);

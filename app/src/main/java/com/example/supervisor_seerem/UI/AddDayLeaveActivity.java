@@ -95,7 +95,7 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
         //Add the user's overtime Documents to the list of data be displayed
         mUserDocs.clear();
         //mAdapter.notifyDataSetChanged();
-        for (DocumentSnapshot overtime: documentManager.getOvertime()) {
+        for (DocumentSnapshot overtime: documentManager.getSickLeaves()) {
             if ((overtime.getString(CONSTANTS.ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
                 mUserDocs.add(overtime);
             }
@@ -105,7 +105,7 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
 
     // Actually set the contents of the adapter.
     public void displayData(){
-        mRecycler = findViewById(R.id.overtime_view_requests_recyclerview);
+        mRecycler = findViewById(R.id.day_leave_recyclerview);
         mAdapter = new DayLeaveAdapter(mUserDocs);
         mRecycler.setAdapter(mAdapter);
     }
