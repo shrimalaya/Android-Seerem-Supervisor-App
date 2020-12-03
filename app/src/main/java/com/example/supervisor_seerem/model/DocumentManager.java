@@ -318,7 +318,8 @@ public class DocumentManager {
 
     private void getSitesData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, currentUser.getCompany_id())
+                .document(currentUser.getId())
+                .collection(CONSTANTS.PENDING_SICK_LEAVE_COLLECTION)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

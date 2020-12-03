@@ -3,6 +3,7 @@ package com.example.supervisor_seerem.UI;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -23,16 +24,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.UI.util.DayLeaveAdapter;
+import com.example.supervisor_seerem.UI.util.OvertimeAdapter;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -47,10 +53,15 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
     EditText dayLeaveExplanationEditText;
     String currentDate;
 
+    DayLeaveAdapter mAdapter;
+    RecyclerView mRecycler;
     Calendar cal = Calendar.getInstance();
 
+    private List<DocumentSnapshot> mAllDocs = new ArrayList<>();
+    private List<DocumentSnapshot> mUserDocs = new ArrayList<>();
+
     private DatePickerDialog.OnDateSetListener dateSetListener;
-    DocumentManager documentManager;
+    DocumentManager documentManager = DocumentManager.getInstance();;
     public static Intent launchAddDayLeaveIntent(Context context) {
         Intent dayLeaveIntent = new Intent(context, AddDayLeaveActivity.class);
         return dayLeaveIntent;
@@ -77,6 +88,29 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
         return true;
     }
 
+
+    //Get the data from DocumentManager
+    private void retrieveData(){
+
+        //Add the user's overtime Documents to the list of data be displayed
+        mUserDocs.clear();
+        //mAdapter.notifyDataSetChanged();
+        for (DocumentSnapshot overtime: documentManager.getOvertime()) {
+            if ((overtime.getString(CONSTANTS.ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
+                mUserDocs.add(overtime);
+            }
+        }
+
+    }
+
+    // Actually set the contents of the adapter.
+    public void displayData(){
+        mRecycler = findViewById(R.id.overtime_view_requests_recyclerview);
+        mAdapter = new DayLeaveAdapter(mUserDocs);
+        mRecycler.setAdapter(mAdapter);
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -94,16 +128,6 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_day_leave);
-        setupToolbar();
-        setupComponents();
-        selectDateButton.setOnClickListener(this);
-        documentManager = DocumentManager.getInstance();
-    }
-
     private void setupComponents(){
         selectDateButton = findViewById(R.id.buttonSelectDateDialog);
         selectedDate = findViewById(R.id.textViewSelectedDate);
@@ -117,6 +141,19 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
         cal.set(year, month, day);
         currentDate = sdf.format(cal.getTime());
         selectedDate.setText(currentDate);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_day_leave);
+        setupToolbar();
+        setupComponents();
+        selectDateButton.setOnClickListener(this);
+
+        retrieveData();
+        displayData();
+        mAdapter.notifyDataSetChanged();
     }
 
     private boolean areAnyImportantInputsEmpty(String[] inputs){
@@ -211,6 +248,15 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
             };
 
         }
+
+    // Should update data upon resuming/starting activity
+    @Override
+    protected void onResume() {
+        super.onResume();
+        retrieveData();
+        displayData();
+        mAdapter.notifyDataSetChanged();
+    }
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.buttonSelectDateDialog) {

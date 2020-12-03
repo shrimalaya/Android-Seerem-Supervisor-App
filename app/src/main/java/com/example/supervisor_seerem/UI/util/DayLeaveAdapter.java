@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.model.CONSTANTS;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import static com.example.supervisor_seerem.R.layout.day_leave_row;
@@ -37,6 +38,13 @@ public class DayLeaveAdapter extends RecyclerView.Adapter<DayLeaveAdapter.DayLea
     @Override
     public void onBindViewHolder(@NonNull DayLeaveAdapter.DayLeaveViewHolder holder, int position) {
         //holder.dayLeaveStartTextView.setText(cur);
+        final DocumentSnapshot curr = mList.get(position);
+
+        holder.dayLeaveStartTextView.setText(curr.getString(CONSTANTS.OVERTIME_DAY_KEY));
+        holder.dayLeaveStartDaysDurationTextView.setText(curr.getString(CONSTANTS.OVERTIME_DURATION_KEY));
+        holder.dayLeaveExplanation.setText(curr.getString(CONSTANTS.OVERTIME_EXPLANATION_KEY));
+
+
     }
 
     @Override
@@ -54,7 +62,7 @@ public class DayLeaveAdapter extends RecyclerView.Adapter<DayLeaveAdapter.DayLea
 
         dayLeaveStartTextView = itemView.findViewById(R.id.day_leave_row_date);
         dayLeaveStartDaysDurationTextView = itemView.findViewById(R.id.day_leave_row_duration);
-
+        dayLeaveExplanation = itemView.findViewById(R.id.day_leave_row_explanation);
     }
 }
 

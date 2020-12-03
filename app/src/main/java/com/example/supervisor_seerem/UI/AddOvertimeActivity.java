@@ -42,7 +42,7 @@ import java.util.Map;
 
 public class AddOvertimeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    DocumentManager documentManager;
+    private DocumentManager documentManager = DocumentManager.getInstance();
     EditText editTextOvertimeHours;
     EditText editTextOvertimeExplanation;
     Spinner spinner;
@@ -84,11 +84,12 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
     private void retrieveData(){
         //mAllDocs
 
-        mUserDocs.clear();
-        mUserDocs.addAll(documentManager.getOvertime());
+        //mUserDocs.clear();
+        //mUserDocs.addAll(documentManager.getOvertime());
 
         //Add the user's overtime Documents to the list of data be displayed
         mUserDocs.clear();
+        //mAdapter.notifyDataSetChanged();
         for (DocumentSnapshot overtime: documentManager.getOvertime()) {
             if ((overtime.getString(CONSTANTS.ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
                 mUserDocs.add(overtime);
@@ -99,10 +100,8 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
 
     // Actually set the contents of the adapter.
     public void displayData(){
-        //updateDisplayOvertime();
         mRecycler = findViewById(R.id.overtime_view_requests_recyclerview);
         mAdapter = new OvertimeAdapter(mUserDocs);
-        mAdapter.notifyDataSetChanged();
         mRecycler.setAdapter(mAdapter);
     }
 
@@ -140,8 +139,6 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
                 mAdapter.notifyDataSetChanged();
                 retrieveData();
                 displayData();
-//                Toast.makeText(this, "Need to save changes", Toast.LENGTH_SHORT).show();
-//                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -187,22 +184,22 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
 //                    .document(documentManager.getCurrentUser().getId()).collection("overtime_requests").document(currentDate);
 
             // Store data in the user's pending overwtires colledction, in a document named after the current date.
-            DocumentReference overtimeRef = FirebaseFirestore.getInstance()
+            DocumentReference dayLeaveRef= FirebaseFirestore.getInstance()
                     .collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
-                    .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_OVERTIME_COLLECTION).document(currentDate);
+                    .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_SICK_LEAVE_COLLECTION).document(currentDate);
             Map<String,Object> user = new HashMap<>();
             user.put(CONSTANTS.ID_KEY, documentManager.getCurrentUser().getId());
             user.put(CONSTANTS.OVERTIME_DAY_KEY, selectedDay);
             user.put(CONSTANTS.OVERTIME_DURATION_KEY, selectedOvertimeHours);
             user.put(CONSTANTS.OVERTIME_EXPLANATION_KEY, selectedOvertimeExplanation);
 
-            overtimeRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            dayLeaveRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(getApplicationContext(), getText(R.string.add_overtime_success), Toast.LENGTH_LONG).show();
                 }
             });
-            overtimeRef.set(user).addOnFailureListener(new OnFailureListener() {
+            dayLeaveRef.set(user).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(getApplicationContext(), getText(R.string.add_overtime_fail), Toast.LENGTH_LONG).show();
@@ -229,7 +226,6 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_overtime);
-        documentManager = DocumentManager.getInstance();
 
         setupToolbar();
         setUpComponents();
@@ -248,7 +244,6 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
         mAdapter.notifyDataSetChanged();
     }
 
-
     // Strictly speaking, we aren't actually doing anything with the selected day
     // UNTIL the checkmark is pressed. Therefore, we can keep the required methods to Override empty.
     @Override
@@ -257,6 +252,5 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 }
