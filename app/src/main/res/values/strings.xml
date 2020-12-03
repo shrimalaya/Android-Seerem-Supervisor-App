@@ -165,4 +165,5 @@
     <string name="change_password_current_and_new_are_same">Your selected new password is the same as your old password. Please enter a different new password.</string>
     <string name="change_password_wrong_current_password">Your input for your current password is incorrect. Please enter your correct current password.</string>
     <string name="change_password_successful_change">Your password has been successfully changed.</string>
+    <string name="select_unique_day">Please select a unique day of week!</string>
 </resources>

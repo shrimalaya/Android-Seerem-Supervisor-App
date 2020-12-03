@@ -118,7 +118,6 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
-                            System.out.println("TEST3> Size of overtime  = " + task.getResult().getDocuments().size());
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
@@ -157,9 +156,20 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
         String selectedDay = textView.getText().toString();
         String selectedOvertimeHours = editTextOvertimeHours.getText().toString();
         String inputs[] = {selectedDay, selectedOvertimeHours};
+
+        Boolean dayUnique = true;
+        if(!selectedDay.isEmpty()) {
+            for (DocumentSnapshot request: mUserDocs) {
+                if(selectedDay.equals(request.getString(CONSTANTS.OVERTIME_DAY_KEY))) {
+                    dayUnique = false;
+                    break;
+                }
+            }
+        }
+
         if(!areAllImportantInputsFilled(inputs)){
             Toast.makeText(this, R.string.error_request_info_incomplete, Toast.LENGTH_LONG).show();
-        }else{
+        }else if (dayUnique) {
             // Explanation is optional; set it to N/A if nothing was given.
             String selectedOvertimeExplanation = editTextOvertimeExplanation.getText().toString();
             if(selectedOvertimeExplanation.isEmpty()){
@@ -173,7 +183,7 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
             int month = cal.get(Calendar.MONTH);
 
             SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
-            SimpleDateFormat sdf2 = new SimpleDateFormat("MMM dd, yyyy");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("MMM dd");
             cal.set(year, month, day);
             String currentDate = sdf.format(cal.getTime());
 
@@ -206,6 +216,8 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
 
             editTextOvertimeExplanation.setText("");
             editTextOvertimeHours.setText("");
+        } else {
+            Toast.makeText(this, R.string.select_unique_day, Toast.LENGTH_LONG).show();
         }
 
     }
