@@ -1086,13 +1086,13 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     protected void onResume() {
         super.onResume();
-//        handler.postDelayed(runnable, 60000);
+        handler.postDelayed(runnable, 10000);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        handler.removeCallbacks(runnable);
+        handler.removeCallbacks(runnable);
     }
 
     @Override
