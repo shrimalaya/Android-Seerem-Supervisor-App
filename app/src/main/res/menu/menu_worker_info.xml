@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_worker_search"
-        android:icon="@drawable/ic_baseline_search_24"
+        android:icon="@drawable/ic_search_icon"
         android:title="Search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
@@ -20,7 +20,7 @@
 
     <item
         android:id="@+id/menu_worker_offline"
-        android:title="Display Offline Workers" />
+        android:title="@string/display_offline_workers" />
     <item
         android:id="@+id/menu_worker_clear"
         android:title="Clear Search"

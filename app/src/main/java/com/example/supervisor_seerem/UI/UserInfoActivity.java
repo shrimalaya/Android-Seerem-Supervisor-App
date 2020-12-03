@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.UI.util.EmployeeDirectoryAdapter;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -84,12 +84,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         setupInterface();
         populateData();
         setupNavigationBar();
-        hideSoftKeyboard();
+        setupSidebarNavigationDrawer();
     }
 
     private void setupInterface() {
-        setupSidebarNavigationDrawer();
-
         navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
         navigation.setSelectedItemId(R.id.userNavigation);
 
@@ -309,10 +307,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
                         startActivity(workerIntent);
-                        finish();
                         break;
 
                     case R.id.sidebar_company:
+                        Intent employeeDirectoryIntent = new Intent(UserInfoActivity.this, EmployeeDirectoryActivity.class);
+                        startActivity(employeeDirectoryIntent);
                         break;
 
                     case R.id.sidebar_ui_preferences:
@@ -349,28 +348,24 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     case R.id.workerNavigation:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
                         startActivity(workerIntent);
-                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.siteNavigation:
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(UserInfoActivity.this);
                         startActivity(siteIntent);
-                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.mapNavigation:
                         Intent mapIntent = SiteMapActivity.launchMapIntent(UserInfoActivity.this);
                         startActivity(mapIntent);
-                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.sensorNavigation:
                         Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(UserInfoActivity.this);
                         startActivity(sensorIntent);
-                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
@@ -389,14 +384,14 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            finishAffinity();
-            Intent intent = new Intent(UserInfoActivity.this, LoginInfoActivity.class);
-            startActivity(intent);
+            finish();
         }
     }
 
-    private void hideSoftKeyboard() {
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigation.setSelectedItemId(R.id.userNavigation);
     }
 }
 

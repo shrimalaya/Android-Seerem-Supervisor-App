@@ -56,12 +56,15 @@ public class WorkerInfoActivity extends AppCompatActivity {
     private List<DocumentSnapshot> mOnlineDocs = new ArrayList<>();
     private List<DocumentSnapshot> mOfflineDocs = new ArrayList<>();
 
-    private Boolean showAllWorkers = false;
+    private static Boolean showAllWorkers = false;
     private Boolean showOfflineWorkers = false;
     private String dayKey = CONSTANTS.SUNDAY_KEY;
     private Handler handler;
     private Runnable runnable;
 
+    public static Boolean getShowAllWorkers() {
+        return showAllWorkers;
+    }
     public static Intent launchWorkerInfoIntent(Context context) {
         Intent workerInfoIntent = new Intent(context, WorkerInfoActivity.class);
         return workerInfoIntent;
@@ -122,12 +125,11 @@ public class WorkerInfoActivity extends AppCompatActivity {
             case Calendar.SUNDAY:
                 dayKey = CONSTANTS.SUNDAY_KEY;
                 break;
+        }
     }
 
-}
-
     private String checkNull(String data) {
-        if(data == null || data.isEmpty()) {
+        if (data == null || data.isEmpty()) {
             return " - ";
         } else {
             return data;
@@ -137,7 +139,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
     private void updateDisplayWorkers() {
         checkDisplayingWorkersHeader();
 
-        if(showAllWorkers) {
+        if (showAllWorkers) {
             mShowDocs.clear();
             mShowDocs.addAll(mAllDocs);
         } else {
@@ -150,14 +152,14 @@ public class WorkerInfoActivity extends AppCompatActivity {
 
         // Check for "TODAY's" available workers who are online
         // A worker with no availability data will be shown as offline
-        for(DocumentSnapshot worker: mShowDocs) {
+        for (DocumentSnapshot worker : mShowDocs) {
             DocumentSnapshot avail = null;
-            for(DocumentSnapshot availability: documentManager.getAvailabilities()) {
+            for (DocumentSnapshot availability : documentManager.getAvailabilities()) {
                 if (availability.getString(CONSTANTS.ID_KEY).equals(worker.getString(CONSTANTS.ID_KEY))) {
                     avail = availability;
                     try {
                         Boolean withinOpHours = timeParser(checkNull(availability.getString(dayKey)));
-                        if(withinOpHours) {
+                        if (withinOpHours) {
                             mOnlineDocs.add(worker);
                         } else {
                             mOfflineDocs.add(worker);
@@ -175,18 +177,17 @@ public class WorkerInfoActivity extends AppCompatActivity {
         }
 
         mShowDocs.clear();
-        if(showOfflineWorkers) {
+        if (showOfflineWorkers) {
             mShowDocs.addAll(mOfflineDocs);
-            if(mOfflineDocs.isEmpty()) {
+            if (mOfflineDocs.isEmpty()) {
                 Toast.makeText(this, "No Offline Workers!", Toast.LENGTH_LONG).show();
             }
         } else {
             mShowDocs.addAll(mOnlineDocs);
-            if(mOnlineDocs.isEmpty()) {
+            if (mOnlineDocs.isEmpty()) {
                 Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
             }
         }
-
     }
 
     public void displayData() {
@@ -194,8 +195,8 @@ public class WorkerInfoActivity extends AppCompatActivity {
         mAllDocs.addAll(documentManager.getWorkers());
 
         mUserDocs.clear();
-        for (DocumentSnapshot doc: documentManager.getWorkers()) {
-            if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
+        for (DocumentSnapshot doc : documentManager.getWorkers()) {
+            if ((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
                 mUserDocs.add(doc);
             }
         }
@@ -278,13 +279,13 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 documentManager.retrieveAllData(new DocumentManager.RetrieveCallback() {
                     @Override
                     public void onCallback(Boolean result) {
-                        if(result) {
+                        if (result) {
                             mAllDocs.clear();
                             mAllDocs.addAll(documentManager.getWorkers());
 
                             mUserDocs.clear();
-                            for (DocumentSnapshot doc: documentManager.getWorkers()) {
-                                if((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
+                            for (DocumentSnapshot doc : documentManager.getWorkers()) {
+                                if ((doc.getString(CONSTANTS.SUPERVISOR_ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
                                     mUserDocs.add(doc);
                                 }
                             }
@@ -299,12 +300,12 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 return true;
 
             case (R.id.menu_worker_display_filter):
-                if(showAllWorkers) {
+                if (showAllWorkers) {
                     showAllWorkers = false;
-                    item.setTitle("Display All Workers");
+                    item.setTitle(getString(R.string.display_all_workers));
                 } else {
                     showAllWorkers = true;
-                    item.setTitle("Display My Workers");
+                    item.setTitle(getString(R.string.display_my_workers));
                 }
 
                 updateDisplayWorkers();
@@ -314,10 +315,10 @@ public class WorkerInfoActivity extends AppCompatActivity {
             case (R.id.menu_worker_offline):
                 if (showOfflineWorkers) {
                     showOfflineWorkers = false;
-                    item.setTitle("Display Offline Workers");
+                    item.setTitle(getString(R.string.display_offline_workers));
                 } else {
                     showOfflineWorkers = true;
-                    item.setTitle("Display Online Workers");
+                    item.setTitle(getString(R.string.display_online_workers));
                 }
 
                 updateDisplayWorkers();
@@ -332,44 +333,44 @@ public class WorkerInfoActivity extends AppCompatActivity {
     // Search function
     private void search(String expr) {
         List<DocumentSnapshot> results = new ArrayList<>();
-        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(expr, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
-        for(DocumentSnapshot doc: documentManager.getWorkers()) {
-            if(results.contains(doc)) {
+        for (DocumentSnapshot doc : documentManager.getWorkers()) {
+            if (results.contains(doc)) {
                 //skip
             } else {
                 // Look for matching name
                 Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.FIRST_NAME_KEY)
                         + " " + doc.getString(CONSTANTS.LAST_NAME_KEY));
-                if(matcher.find() == true) {
+                if (matcher.find() == true) {
                     results.add(doc);
                     continue;
                 }
 
                 // Look for matching Skills
                 matcher = pattern.matcher(doc.getString(CONSTANTS.SKILLS_KEY));
-                if(matcher.find()) {
+                if (matcher.find()) {
                     results.add(doc);
                     continue;
                 }
 
                 // Look for matching ID
                 matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
-                if(matcher.find()) {
+                if (matcher.find()) {
                     results.add(doc);
                     continue;
                 }
 
                 // Look for matching Supervisor ID
                 matcher = pattern.matcher(doc.getString(CONSTANTS.SUPERVISOR_ID_KEY));
-                if(matcher.find()) {
+                if (matcher.find()) {
                     results.add(doc);
                     continue;
                 }
 
                 // Look for matching Worksite
                 matcher = pattern.matcher(doc.getString(CONSTANTS.WORKSITE_ID_KEY));
-                if(matcher.find()) {
+                if (matcher.find()) {
                     results.add(doc);
                     continue;
                 }
@@ -388,10 +389,10 @@ public class WorkerInfoActivity extends AppCompatActivity {
      */
     private boolean timeParser(String availability) throws ParseException {
         String arr[] = null;
-        if(availability.equals(" - ") || availability.equals("-") || availability == null ) {
+        if (availability.equals(" - ") || availability.equals("-") || availability == null) {
             return false;
-        } else if(availability != null) {
-            if(availability.split("-") != null) {
+        } else if (availability != null) {
+            if (availability.split("-") != null) {
                 arr = availability.split("-");
             }
         }
@@ -402,13 +403,13 @@ public class WorkerInfoActivity extends AppCompatActivity {
         String currTime = dateFormat.format(Calendar.getInstance().getTime());
         Log.d("WORKERINFO", "TEST4> Curr time: " + currTime);
         Date current = dateFormat.parse(currTime);
-        Log.d("WORKERINFO","TEST4> Curr time in Date format: " + current);
-        Log.d("WORKERINFO","TEST4> d1 time: " + d1);
-        Log.d("WORKERINFO","TEST4> d2 time: " + d2);
+        Log.d("WORKERINFO", "TEST4> Curr time in Date format: " + current);
+        Log.d("WORKERINFO", "TEST4> d1 time: " + d1);
+        Log.d("WORKERINFO", "TEST4> d2 time: " + d2);
 
         Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
 
-        Log.d("WORKERINFO","TEST4> Within op hours: " + withinOpHrs);
+        Log.d("WORKERINFO", "TEST4> Within op hours: " + withinOpHrs);
 
         return withinOpHrs;
     }
@@ -416,7 +417,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
     private void checkDisplayingWorkersHeader() {
         TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
 
-        if(showOfflineWorkers && showAllWorkers) {
+        if (showOfflineWorkers && showAllWorkers) {
             currentlyDisplaying.setText("Offline Company Workers");
         } else if (showOfflineWorkers && !showAllWorkers) {
             currentlyDisplaying.setText("Offline Assigned Workers");
@@ -482,6 +483,8 @@ public class WorkerInfoActivity extends AppCompatActivity {
                         break;
 
                     case R.id.sidebar_company:
+                        Intent employeeDirectoryIntent = new Intent(WorkerInfoActivity.this, EmployeeDirectoryActivity.class);
+                        startActivity(employeeDirectoryIntent);
                         break;
 
                     case R.id.sidebar_ui_preferences:
@@ -517,7 +520,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch(menuItem.getItemId()) {
+                switch (menuItem.getItemId()) {
                     case R.id.workerNavigation:
                         // home activity --> do nothing
                         return true;
@@ -526,28 +529,28 @@ public class WorkerInfoActivity extends AppCompatActivity {
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(WorkerInfoActivity.this);
                         startActivity(siteIntent);
                         finish();
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
 
                     case R.id.mapNavigation:
                         Intent mapIntent = SiteMapActivity.launchMapIntent(WorkerInfoActivity.this);
                         startActivity(mapIntent);
                         finish();
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
 
                     case R.id.sensorNavigation:
                         Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(WorkerInfoActivity.this);
                         startActivity(sensorIntent);
                         finish();
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
 
                     case R.id.userNavigation:
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
                         startActivity(userIntent);
                         finish();
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -561,9 +564,10 @@ public class WorkerInfoActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            finishAffinity();
-            Intent intent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
-            startActivity(intent);
+//            finishAffinity();
+//            Intent intent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
+//            startActivity(intent);
+            finish();
         }
     }
 
@@ -572,7 +576,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
         super.onResume();
         updateDayOfWeek();
         updateDisplayWorkers();
-        handler.postDelayed(runnable,60000);
+        handler.postDelayed(runnable, 60000);
     }
 
     @Override

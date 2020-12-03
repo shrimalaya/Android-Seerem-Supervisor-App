@@ -29,7 +29,8 @@
     <string name="user_info_save_fail">Your User Info Settings have not been successfully saved.</string>
     <string name="new_user_prompt">Welcome! Please input and submit the information described here for use at SEEDA.</string>
     <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
-    <string name="search_input_hint">Enter a worker\'s name or a site\'s ID</string>
+    <string name="search_input_hint">Enter ID of worker or site</string>
+    <string name="clear_search_input_hint">Clear search</string>
 
     <string name="communication_header">Communication</string>
     <string name="communication_help">Select communication method for:</string>
@@ -40,6 +41,8 @@
     <string name="communication_email">EMAIL</string>
     <string name="communication_no_email">(No Email)</string>
 
+    <string name="communication_other_link">NO LINK</string>
+    <string name="communication_no_link">(No communication links available)</string>
     <string name="communication_google_meet">Google MEET</string>
     <string name="communication_no_google_meet">(No MEET contact)</string>
     <string name="communication_google_meet_exists">MEET linked</string>
@@ -63,8 +66,12 @@
     <string name="user_navigation_bar_text">Me</string>
 
     <string name="display_all_worksites">Display All Worksites</string>
+    <string name="display_my_worksites">Display My Worksites</string>
     <string name="display_all_workers">Display All Workers</string>
     <string name="refresh">Refresh</string>
+    <string name="display_offline_workers">Display Offline Workers</string>
+    <string name="display_online_workers">Display Online Workers</string>
+    <string name="display_my_workers">Display My Workers</string>
 
     <string name="sidebar_navigation_open">Open sidebar navigation drawer</string>
     <string name="sidebar_navigation_close">Close sidebar navigation drawer</string>
@@ -107,6 +114,12 @@
     <string name="noPressureSensorTextView">(No Pressure sensor found)</string>
     <string name="temperatureUnitsTextView">%1$f°C (Degrees Celsius)</string>
     <string name="pressureUnitsTextView">%1$fhPA (Hectopascal)</string>
+
+    <string name="install_meets_prompt">To communicate with this employee through Google MEETS, please install the app first.</string>
+    <string name="install_teams_prompt">To communicate with this employee through Microsoft TEAMs, please install the app first.</string>
+    <string name="install_skype_prompt">To communicate with this employee through Skype, please install the app first.</string>
+    <string name="install_zoom_prompt">To communicate with this employee through Zoom, please install the app first.</string>
+
 
     <string name="change_password_title_toolbar">Change Password</string>
     <string name="change_language_title_toolbar">Change App Language</string>

@@ -53,7 +53,7 @@ public class SiteInfoActivity extends AppCompatActivity {
     RecyclerView mRecycler;
     WorksiteAdapter mAdapter;
 
-    private Boolean showAllSites = false;
+    private static Boolean showAllSites = false;
     private Boolean showOfflineSites = false;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -69,6 +69,9 @@ public class SiteInfoActivity extends AppCompatActivity {
     private Handler handler;
     private Runnable runnable;
 
+    public static  Boolean getShowAllSites() {
+        return showAllSites;
+    }
     public static Intent launchSiteInfoIntent(Context context) {
         Intent siteInfoIntent = new Intent(context, SiteInfoActivity.class);
         return siteInfoIntent;
@@ -441,6 +444,8 @@ public class SiteInfoActivity extends AppCompatActivity {
                         break;
 
                     case R.id.sidebar_company:
+                        Intent employeeDirectoryIntent = new Intent(SiteInfoActivity.this, EmployeeDirectoryActivity.class);
+                        startActivity(employeeDirectoryIntent);
                         break;
 
                     case R.id.sidebar_ui_preferences:
@@ -520,9 +525,10 @@ public class SiteInfoActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            finishAffinity();
-            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteInfoActivity.this);
-            startActivity(intent);
+//            finishAffinity();
+//            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteInfoActivity.this);
+//            startActivity(intent);
+            finish();
         }
     }
 
