@@ -8,7 +8,7 @@ public class CONSTANTS {
     public static final String CONTACT_INFO_COLLECTION = "contact_info";
     public static final String AVAILABILITY_COLLECTION = "availability";
     public static final String PENDING_OVERTIME_COLLECTION = "pending_overtime";
-    public static final String PENDING_SICKLEAVE_COLLECTION = "pending_sickleave";
+    public static final String PENDING_SICK_LEAVE_COLLECTION = "pending_sickleave";
     public static final String PENDING_USER_HOURS_CHANGES_COLLECTION = "pending_user_hours_changes";
 
 

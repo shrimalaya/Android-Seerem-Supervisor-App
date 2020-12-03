@@ -163,7 +163,7 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
 //                    .document(documentManager.getCurrentUser().getId()).collection.document(currentDate);
                         DocumentReference sickLeaveRef = FirebaseFirestore.getInstance()
                     .collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
-                    .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_SICKLEAVE_COLLECTION).document(currentDate);
+                    .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_SICK_LEAVE_COLLECTION).document(currentDate);
             Map<String,Object> user = new HashMap<>();
             user.put(CONSTANTS.ID_KEY, documentManager.getCurrentUser().getId());
             user.put(CONSTANTS.SICK_DAY_DATE_KEY, dayLeaveStartDate);

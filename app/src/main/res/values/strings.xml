@@ -123,6 +123,7 @@
     <string name="hour_exceptions_select_dates_on_calendar">Select on Calendar</string>
     <string name="hour_exceptions_submit_request">Submit request</string>
     <string name="error_request_info_incomplete">Please input all required details of your request to submit it.</string>
+    <string name="recyclerview_row_explanation">Explanation</string>
 
     <string name="add_day_leave_help">Add day leaves you wish to request Administration for, which they must verify and allow to put into effect.</string>
     <string name="add_day_leave_enter_duration"># of days</string>
@@ -137,13 +138,13 @@
     <string name= "add_overtime_header">Add Overtime Hours</string>
     <string name= "add_overtime_help">Request days in the week from Administration when you will work overtime, which they must verify and allow to put into effect.</string>
     <string name= "add_overtime_header_">Select day:</string>
-    <string name= "add_overtime_duration"># of hours</string>
+    <string name= "add_overtime_duration">Hours</string>
     <string name= "add_overtime_hours">Overtime (Hours):</string>
     <string name= "add_overtime_explanation">(Optional) Briefly explain why you are requesting Overtime.</string>
     <string name= "add_overtime_requests">Your Overtime Requests</string>
     <string name= "add_overtime_success">Your Overtime request was sent successfully.</string>
     <string name= "add_overtime_fail">Your Overtime request was not sent successfully.</string>
-    <string name= "monday">Monday</string>
+    <string name= "add_overtime_day">Day</string>
 
     <string-array name="days_of_week">
         <item>Monday</item>

@@ -3,6 +3,7 @@ package com.example.supervisor_seerem.UI;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,16 +20,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
+import com.example.supervisor_seerem.UI.util.OvertimeAdapter;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddOvertimeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -37,12 +46,64 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
     EditText editTextOvertimeHours;
     EditText editTextOvertimeExplanation;
     Spinner spinner;
+    OvertimeAdapter mAdapter;
+    RecyclerView mRecycler;
+
+    private List<DocumentSnapshot> mAllDocs = new ArrayList<>();
+    private List<DocumentSnapshot> mUserDocs = new ArrayList<>();
+
+    private FirebaseFirestore database = FirebaseFirestore.getInstance();
 
     Calendar cal = Calendar.getInstance();
 
     public static Intent launchAddOvertimeIntent(Context context) {
         Intent overtimeIntent = new Intent(context, AddOvertimeActivity.class);
         return overtimeIntent;
+    }
+
+    //Retrieve all documents about the overtime from the database.
+//    private void retrieveAndDisplayPendingRequests(){
+//        database.collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
+//                .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_OVERTIME_COLLECTION)
+//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if(task.isSuccessful()){
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        Log.d("HEY!", document.getId() + " => " + document.getData());
+//                        //String theData = document.getString();
+//                    }
+//                } else {
+//                    Log.d("OOPS!", "COULDN'T GET OVERTIME!");
+//                }
+//            }
+//        });
+//    }
+
+    //Get the data from DocumentManager
+    private void retrieveData(){
+        //mAllDocs
+
+        mUserDocs.clear();
+        mUserDocs.addAll(documentManager.getOvertime());
+
+        //Add the user's overtime Documents to the list of data be displayed
+        mUserDocs.clear();
+        for (DocumentSnapshot overtime: documentManager.getOvertime()) {
+            if ((overtime.getString(CONSTANTS.ID_KEY)).equals(documentManager.getCurrentUser().getId())) {
+                mUserDocs.add(overtime);
+            }
+        }
+
+    }
+
+    // Actually set the contents of the adapter.
+    public void displayData(){
+        //updateDisplayOvertime();
+        mRecycler = findViewById(R.id.overtime_view_requests_recyclerview);
+        mAdapter = new OvertimeAdapter(mUserDocs);
+        mAdapter.notifyDataSetChanged();
+        mRecycler.setAdapter(mAdapter);
     }
 
     private void setupToolbar() {
@@ -75,6 +136,10 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
                 // TODO: Do whatever in onCreate() or somewhere else,
                 //       then save changes accordingly (in SharedPrefs or Database)
                 storeInputs();
+
+                mAdapter.notifyDataSetChanged();
+                retrieveData();
+                displayData();
 //                Toast.makeText(this, "Need to save changes", Toast.LENGTH_SHORT).show();
 //                finish();
                 break;
@@ -120,6 +185,8 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
 //            DocumentReference overtimeRef = FirebaseFirestore.getInstance()
 //                    .collection(CONSTANTS.PENDING_OVERTIME_COLLECTION)
 //                    .document(documentManager.getCurrentUser().getId()).collection("overtime_requests").document(currentDate);
+
+            // Store data in the user's pending overwtires colledction, in a document named after the current date.
             DocumentReference overtimeRef = FirebaseFirestore.getInstance()
                     .collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
                     .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_OVERTIME_COLLECTION).document(currentDate);
@@ -142,11 +209,12 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
                     Log.i("onFailure()", e.toString());
                 }
             });
+            mAdapter.notifyDataSetChanged();
         }
 
         }
 
-    private void setUpComponeents(){
+    private void setUpComponents(){
         editTextOvertimeHours = findViewById(R.id.add_overtime_hours);
         editTextOvertimeExplanation = findViewById(R.id.add_overtime_explanation);
         spinner = (Spinner)findViewById(R.id.days_spinner);
@@ -162,15 +230,29 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_overtime);
         documentManager = DocumentManager.getInstance();
+
         setupToolbar();
-        setUpComponeents();
+        setUpComponents();
+
+        retrieveData();
+        displayData();
+        mAdapter.notifyDataSetChanged();
     }
+
+    // Should update data upon resuming/starting activity
+    @Override
+    protected void onResume() {
+        super.onResume();
+        retrieveData();
+        displayData();
+        mAdapter.notifyDataSetChanged();
+    }
+
 
     // Strictly speaking, we aren't actually doing anything with the selected day
     // UNTIL the checkmark is pressed. Therefore, we can keep the required methods to Override empty.
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String selectedDay = parent.getItemAtPosition(position).toString();
     }
 
     @Override
