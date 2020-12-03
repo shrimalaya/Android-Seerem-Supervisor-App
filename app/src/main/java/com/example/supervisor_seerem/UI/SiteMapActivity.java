@@ -834,46 +834,46 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         mapSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String input) {
-                mapSearchView.setQueryHint(getString(R.string.clear_search_input_hint));
-                if (input.contains("WS")) {
-                    Site searchedSite = searchForSite(input);
-                    if (searchedSite != null) {
-                        zoomCamera(new LatLng(searchedSite.getLocation().getLatitude(),
-                                        searchedSite.getLocation().getLongitude()),
-                                DEFAULT_ZOOM);
-                        showWorkersPositions();
-                        showWorksitesLocations();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "No work sites found!", Toast.LENGTH_SHORT).show();
-                        mapSearchView.setQuery("", false);
-                        mapSearchView.clearFocus();
-                        mapSearchView.setIconified(true);
-                    }
-                } else if (input.contains("WK")) {
-                    Worker searchedWorker = searchForWorker(input);
-                    if (searchedWorker != null) {
-                        zoomCamera(new LatLng(searchedWorker.getLocation().getLatitude(),
-                                        searchedWorker.getLocation().getLongitude()),
-                                DEFAULT_ZOOM);
-                        showWorkersPositions();
-                        showWorksitesLocations();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "No worker found!", Toast.LENGTH_SHORT).show();
-                        mapSearchView.setQuery("", false);
-                        mapSearchView.clearFocus();
-                        mapSearchView.setIconified(true);
-                    }
-                }
-
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String input) {
                 if (input.equals("")) {
                     mapSearchView.setQueryHint(getString(R.string.search_input_hint));
+                } else {
+                    mapSearchView.setQueryHint(getString(R.string.clear_search_input_hint));
+                    if (input.contains("WS")) {
+                        Site searchedSite = searchForSite(input);
+                        if (searchedSite != null) {
+                            zoomCamera(new LatLng(searchedSite.getLocation().getLatitude(),
+                                            searchedSite.getLocation().getLongitude()),
+                                    DEFAULT_ZOOM);
+                            showWorkersPositions();
+                            showWorksitesLocations();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No work sites found!", Toast.LENGTH_SHORT).show();
+                            mapSearchView.setQuery("", false);
+                            mapSearchView.clearFocus();
+                            mapSearchView.setIconified(true);
+                        }
+                    } else if (input.contains("WK")) {
+                        Worker searchedWorker = searchForWorker(input);
+                        if (searchedWorker != null) {
+                            zoomCamera(new LatLng(searchedWorker.getLocation().getLatitude(),
+                                            searchedWorker.getLocation().getLongitude()),
+                                    DEFAULT_ZOOM);
+                            showWorkersPositions();
+                            showWorksitesLocations();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No worker found!", Toast.LENGTH_SHORT).show();
+                            mapSearchView.setQuery("", false);
+                            mapSearchView.clearFocus();
+                            mapSearchView.setIconified(true);
+                        }
+                    }
                 }
-                return false;
+                return true;
             }
         });
 
