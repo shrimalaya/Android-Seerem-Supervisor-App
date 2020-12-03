@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.UI.AdditionalInfoActivity;
 import com.example.supervisor_seerem.UI.SiteMapActivity;
+import com.example.supervisor_seerem.UI.WorkerInfoActivity;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.ModelLocation;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -60,6 +61,7 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
                 String workerID = curr.getString(CONSTANTS.ID_KEY);
                 Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(context, "WorkerInfo");
                 mapIntent.putExtra("WorkerID FROM WorkerInfoActivity", workerID);
+                mapIntent.putExtra("SHOW ALL WORKERS", WorkerInfoActivity.getShowAllWorkers());
                 context.startActivity(mapIntent);
             }
         });
