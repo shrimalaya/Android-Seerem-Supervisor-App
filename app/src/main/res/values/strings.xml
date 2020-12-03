@@ -118,8 +118,7 @@
     <string name="install_meets_prompt">To communicate with this employee through Google MEETS, please install the app first.</string>
     <string name="install_teams_prompt">To communicate with this employee through Microsoft TEAMs, please install the app first.</string>
     <string name="install_skype_prompt">To communicate with this employee through Skype, please install the app first.</string>
-    <string name ="install_zoom_prompt">To communicate with this employee through Zoom, please install the app first.</string>
-
+    <string name="install_zoom_prompt">To communicate with this employee through Zoom, please install the app first.</string>
 
 
     <string name="change_password_title_toolbar">Change Password</string>

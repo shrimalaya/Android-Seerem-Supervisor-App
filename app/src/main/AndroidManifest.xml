@@ -15,6 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".UI.EmployeeDirectoryActivity"
+            android:label="Employee Directory" ></activity>
         <activity
             android:name=".UI.ChangePasswordActivity"
             android:theme="@style/AppTheme_NoActionBar" />
@@ -59,7 +61,8 @@
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.CommunicationActivity"
-            android:label="Individual Communication" />
+            android:label="Individual Communication"
+            android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.SiteMapActivity"
             android:theme="@style/AppTheme_NoActionBar" />
