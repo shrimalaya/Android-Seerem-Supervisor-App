@@ -998,6 +998,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                         break;
 
                     case R.id.sidebar_company:
+                        Intent employeeDirectoryIntent = new Intent(SiteMapActivity.this, EmployeeDirectoryActivity.class);
+                        startActivity(employeeDirectoryIntent);
                         break;
 
                     case R.id.sidebar_ui_preferences:
@@ -1083,6 +1085,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 //            finishAffinity();
 //            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
 //            startActivity(intent);
+            finish();
         }
     }
 

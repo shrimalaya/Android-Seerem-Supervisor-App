@@ -293,7 +293,8 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
 
     private void setupNavigationBar() {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-        navigation.setSelectedItemId(R.id.userNavigation);
+
+        navigation.setSelected(false);
 
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -303,28 +304,35 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(CommunicationActivity.this);
                         startActivity(workerIntent);
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
 
                     case R.id.siteNavigation:
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(CommunicationActivity.this);
                         startActivity(siteIntent);
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
 
                     case R.id.mapNavigation:
                         Intent mapIntent = SiteMapActivity.launchMapIntent(CommunicationActivity.this);
                         startActivity(mapIntent);
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
 
                     case R.id.sensorNavigation:
                         Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(CommunicationActivity.this);
                         startActivity(sensorIntent);
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
 
                     case R.id.userNavigation:
-                        // home activity --> do nothing
+                        finishAffinity();
+                        Intent userInfoIntent = UserInfoActivity.launchUserInfoIntent(CommunicationActivity.this);
+                        startActivity(userInfoIntent);
+                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
