@@ -55,7 +55,7 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
 
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-    Calendar cal = Calendar.getInstance();
+    Calendar cal;
 
     public static Intent launchAddOvertimeIntent(Context context) {
         Intent overtimeIntent = new Intent(context, AddOvertimeActivity.class);
@@ -167,11 +167,13 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
             }
 
             //Get the current day to save the request in a UNIQUeLY_NAAMED  collection on Firebase
+            cal = Calendar.getInstance();
             int year = cal.get(Calendar.YEAR);
             int day = cal.get(Calendar.DAY_OF_MONTH);//Get day in current month since different months hav edifferent avilable days
             int month = cal.get(Calendar.MONTH);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("MMM dd, yyyy");
             cal.set(year, month, day);
             String currentDate = sdf.format(cal.getTime());
 
@@ -185,6 +187,7 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
             user.put(CONSTANTS.OVERTIME_DAY_KEY, selectedDay);
             user.put(CONSTANTS.OVERTIME_DURATION_KEY, selectedOvertimeHours);
             user.put(CONSTANTS.OVERTIME_EXPLANATION_KEY, selectedOvertimeExplanation);
+            user.put(CONSTANTS.REQUEST_DATE_KEY, sdf2.format(cal.getTime()));
 
             dayLeaveRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
