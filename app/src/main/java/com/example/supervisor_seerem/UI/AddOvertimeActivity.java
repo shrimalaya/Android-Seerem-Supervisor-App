@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -61,32 +62,21 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
         return overtimeIntent;
     }
 
-    //Retrieve all documents about the overtime from the database.
-//    private void retrieveAndDisplayPendingRequests(){
-//        database.collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
-//                .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_OVERTIME_COLLECTION)
-//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if(task.isSuccessful()){
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Log.d("HEY!", document.getId() + " => " + document.getData());
-//                        //String theData = document.getString();
-//                    }
-//                } else {
-//                    Log.d("OOPS!", "COULDN'T GET OVERTIME!");
-//                }
-//            }
-//        });
-//    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_overtime);
+
+        setupToolbar();
+        setUpComponents();
+
+        retrieveData();
+        displayData();
+        mAdapter.notifyDataSetChanged();
+    }
 
     //Get the data from DocumentManager
     private void retrieveData(){
-        //mAllDocs
-
-        //mUserDocs.clear();
-        //mUserDocs.addAll(documentManager.getOvertime());
-
         //Add the user's overtime Documents to the list of data be displayed
         mUserDocs.clear();
         //mAdapter.notifyDataSetChanged();
@@ -95,7 +85,6 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
                 mUserDocs.add(overtime);
             }
         }
-
     }
 
     // Actually set the contents of the adapter.
@@ -103,6 +92,37 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
         mRecycler = findViewById(R.id.overtime_view_requests_recyclerview);
         mAdapter = new OvertimeAdapter(mUserDocs);
         mRecycler.setAdapter(mAdapter);
+    }
+
+    // Refresh data locally
+    private void refreshOvertimeData() {
+        getOvertimeData(new OvertimeCallback() {
+            @Override
+            public void onCallback(List<DocumentSnapshot> docs) {
+                documentManager.setOvertime(docs);
+                retrieveData();
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private interface OvertimeCallback {
+        void onCallback(List<DocumentSnapshot> docs);
+    }
+    private void getOvertimeData(final OvertimeCallback callback) {
+        database.collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
+                .document(documentManager.getCurrentUser().getId())
+                .collection(CONSTANTS.PENDING_OVERTIME_COLLECTION)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            System.out.println("TEST3> Size of overtime  = " + task.getResult().getDocuments().size());
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
     }
 
     private void setupToolbar() {
@@ -118,30 +138,6 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
                 finish();
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_save_changes, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.checkmark:
-                // TODO: Do whatever in onCreate() or somewhere else,
-                //       then save changes accordingly (in SharedPrefs or Database)
-                storeInputs();
-
-                mAdapter.notifyDataSetChanged();
-                retrieveData();
-                displayData();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private boolean areAllImportantInputsFilled(String[] inputs){
@@ -179,14 +175,11 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
             cal.set(year, month, day);
             String currentDate = sdf.format(cal.getTime());
 
-//            DocumentReference overtimeRef = FirebaseFirestore.getInstance()
-//                    .collection(CONSTANTS.PENDING_OVERTIME_COLLECTION)
-//                    .document(documentManager.getCurrentUser().getId()).collection("overtime_requests").document(currentDate);
-
             // Store data in the user's pending overwtires colledction, in a document named after the current date.
             DocumentReference dayLeaveRef= FirebaseFirestore.getInstance()
                     .collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
-                    .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_SICK_LEAVE_COLLECTION).document(currentDate);
+                    .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_OVERTIME_COLLECTION).document(currentDate);
+
             Map<String,Object> user = new HashMap<>();
             user.put(CONSTANTS.ID_KEY, documentManager.getCurrentUser().getId());
             user.put(CONSTANTS.OVERTIME_DAY_KEY, selectedDay);
@@ -199,6 +192,7 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
                     Toast.makeText(getApplicationContext(), getText(R.string.add_overtime_success), Toast.LENGTH_LONG).show();
                 }
             });
+
             dayLeaveRef.set(user).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
@@ -206,10 +200,12 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
                     Log.i("onFailure()", e.toString());
                 }
             });
-            mAdapter.notifyDataSetChanged();
+
+            editTextOvertimeExplanation.setText("");
+            editTextOvertimeHours.setText("");
         }
 
-        }
+    }
 
     private void setUpComponents(){
         editTextOvertimeHours = findViewById(R.id.add_overtime_hours);
@@ -223,24 +219,35 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_overtime);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_save_changes, menu);
+        return true;
+    }
 
-        setupToolbar();
-        setUpComponents();
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.checkmark:
+                storeInputs();
+                refreshOvertimeData();
+                hideSoftKeyboard();
+                return true;
 
-        retrieveData();
-        displayData();
-        mAdapter.notifyDataSetChanged();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    private void hideSoftKeyboard() {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     // Should update data upon resuming/starting activity
     @Override
     protected void onResume() {
         super.onResume();
-        retrieveData();
-        displayData();
+        refreshOvertimeData();
         mAdapter.notifyDataSetChanged();
     }
 
