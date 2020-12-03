@@ -63,6 +63,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth firebaseAuthentication;
 
     private DrawerLayout drawer;
+    NavigationView navigationView;
     BottomNavigationView navigation;
 
     public static Intent launchUserInfoIntent(Context context) {
@@ -82,11 +83,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         setupInterface();
         populateData();
         setupNavigationBar();
+        setupSidebarNavigationDrawer();
     }
 
     private void setupInterface() {
-        setupSidebarNavigationDrawer();
-
         navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
         navigation.setSelectedItemId(R.id.userNavigation);
 
@@ -257,7 +257,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void setupSidebarNavigationDrawer() {
         drawer = findViewById(R.id.sidebar_drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
+        navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
 
         // customized toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_for_sidebar);

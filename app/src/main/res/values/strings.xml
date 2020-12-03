@@ -41,6 +41,8 @@
     <string name="communication_email">EMAIL</string>
     <string name="communication_no_email">(No Email)</string>
 
+    <string name="communication_other_link">NO LINK</string>
+    <string name="communication_no_link">(No communication links available)</string>
     <string name="communication_google_meet">Google MEET</string>
     <string name="communication_no_google_meet">(No MEET contact)</string>
     <string name="communication_google_meet_exists">MEET linked</string>
@@ -112,6 +114,13 @@
     <string name="noPressureSensorTextView">(No Pressure sensor found)</string>
     <string name="temperatureUnitsTextView">%1$f°C (Degrees Celsius)</string>
     <string name="pressureUnitsTextView">%1$fhPA (Hectopascal)</string>
+
+    <string name="install_meets_prompt">To communicate with this employee through Google MEETS, please install the app first.</string>
+    <string name="install_teams_prompt">To communicate with this employee through Microsoft TEAMs, please install the app first.</string>
+    <string name="install_skype_prompt">To communicate with this employee through Skype, please install the app first.</string>
+    <string name ="install_zoom_prompt">To communicate with this employee through Zoom, please install the app first.</string>
+
+
 
     <string name="change_password_title_toolbar">Change Password</string>
     <string name="change_language_title_toolbar">Change App Language</string>

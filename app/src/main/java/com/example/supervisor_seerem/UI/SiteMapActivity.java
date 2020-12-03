@@ -1076,6 +1076,9 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            if(registration!=null) {
+                registration.remove();
+            }
             super.onBackPressed();
 //            finishAffinity();
 //            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
@@ -1086,20 +1089,22 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     protected void onResume() {
         super.onResume();
-//        handler.postDelayed(runnable, 60000);
+        handler.postDelayed(runnable, 10000);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        handler.removeCallbacks(runnable);
+        handler.removeCallbacks(runnable);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         // stop listening to database real time updates to protect user's device's bandwidth
-        registration.remove();
+        if(registration!=null) {
+            registration.remove();
+        }
     }
 
     private void hideSoftKeyboard() {
