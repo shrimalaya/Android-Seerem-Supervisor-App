@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -63,6 +64,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth firebaseAuthentication;
 
     private DrawerLayout drawer;
+    NavigationView navigationView;
     BottomNavigationView navigation;
 
     public static Intent launchUserInfoIntent(Context context) {
@@ -82,6 +84,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         setupInterface();
         populateData();
         setupNavigationBar();
+        hideSoftKeyboard();
     }
 
     private void setupInterface() {
@@ -257,7 +260,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void setupSidebarNavigationDrawer() {
         drawer = findViewById(R.id.sidebar_drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
+        navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
 
         // customized toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_for_sidebar);
@@ -390,6 +393,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             Intent intent = new Intent(UserInfoActivity.this, LoginInfoActivity.class);
             startActivity(intent);
         }
+    }
+
+    private void hideSoftKeyboard() {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 }
 

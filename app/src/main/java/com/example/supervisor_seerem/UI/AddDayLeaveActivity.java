@@ -57,7 +57,6 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
     RecyclerView mRecycler;
     Calendar cal = Calendar.getInstance();
 
-    private List<DocumentSnapshot> mAllDocs = new ArrayList<>();
     private List<DocumentSnapshot> mUserDocs = new ArrayList<>();
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
@@ -65,6 +64,18 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
     public static Intent launchAddDayLeaveIntent(Context context) {
         Intent dayLeaveIntent = new Intent(context, AddDayLeaveActivity.class);
         return dayLeaveIntent;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_day_leave);
+        setupToolbar();
+        setupComponents();
+
+        retrieveData();
+        displayData();
+        mAdapter.notifyDataSetChanged();
     }
 
     private void setupToolbar() {
@@ -80,12 +91,6 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
                 finish();
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_save_changes, menu);
-        return true;
     }
 
 
@@ -130,6 +135,8 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
 
     private void setupComponents(){
         selectDateButton = findViewById(R.id.buttonSelectDateDialog);
+        selectDateButton.setOnClickListener(this);
+
         selectedDate = findViewById(R.id.textViewSelectedDate);
         dayLeaveDurationEditText = findViewById(R.id.addDayLeaveDuration);
         dayLeaveExplanationEditText = findViewById(R.id.editTextDayLeaveExplanation);
@@ -141,19 +148,6 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
         cal.set(year, month, day);
         currentDate = sdf.format(cal.getTime());
         selectedDate.setText(currentDate);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_day_leave);
-        setupToolbar();
-        setupComponents();
-        selectDateButton.setOnClickListener(this);
-
-        retrieveData();
-        displayData();
-        mAdapter.notifyDataSetChanged();
     }
 
     private boolean areAnyImportantInputsEmpty(String[] inputs){
@@ -249,6 +243,12 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
 
         }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_save_changes, menu);
+        return true;
+    }
+
     // Should update data upon resuming/starting activity
     @Override
     protected void onResume() {
@@ -263,4 +263,6 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
             selectDateViaDatePickerDialog();
         }
     }
+
+
 }

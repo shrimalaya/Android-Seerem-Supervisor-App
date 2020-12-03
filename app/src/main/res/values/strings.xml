@@ -138,7 +138,7 @@
     <string name= "add_overtime_header">Add Overtime Hours</string>
     <string name= "add_overtime_help">Request days in the week from Administration when you will work overtime, which they must verify and allow to put into effect.</string>
     <string name= "add_overtime_header_">Select day:</string>
-    <string name= "add_overtime_duration">Hours</string>
+    <string name= "add_overtime_duration">Hrs</string>
     <string name= "add_overtime_hours">Overtime (Hours):</string>
     <string name= "add_overtime_explanation">(Optional) Briefly explain why you are requesting Overtime.</string>
     <string name= "add_overtime_requests">Your Overtime Requests</string>
