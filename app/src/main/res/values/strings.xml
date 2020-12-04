@@ -128,6 +128,47 @@
     <string name="add_overtime_title_toolbar">Add overtime</string>
     <string name="add_day_leave_title_toolbar">Add Day Leave</string>
 
+<!--    Used in multiple activities where entering a date is allowed-->
+    <string name="hour_exceptions_numerical_month_input">mm</string>
+    <string name="hour_exceptions_numerical_day_input">dd</string>
+    <string name="hour_exceptions_numerical_year_input">yyyy</string>
+    <string name="hour_exceptions_enter_date">Pick Date</string>
+    <string name="hour_exceptions_select_dates_on_calendar">Select on Calendar</string>
+    <string name="hour_exceptions_submit_request">Submit request</string>
+    <string name="error_request_info_incomplete">Please input all required details of your request to submit it.</string>
+    <string name="recyclerview_row_explanation">Explanation</string>
+
+    <string name="add_day_leave_help">Add day leaves you wish to request Administration for, which they must verify and allow to put into effect.</string>
+    <string name="add_day_leave_enter_duration"># of days</string>
+    <string name="add_day_leave_no_date_selected">(No date selected)</string>
+    <string name="add_day_leave_requests">Your Day Leave Requests</string>
+    <string name="add_day_leave_date">Date</string>
+    <string name="add_day_leave_days_duration">Duration (days):</string>
+    <string name="add_day_leave_days">Days</string>
+    <string name="add_day_leave_days_explanation">(Optional) Briefly explain why you are requesting a day leave period.</string>
+    <string name="add_day_leave_save_success">Your day leave request was sent successfully.</string>
+    <string name="add_day_leave_save_fail">Your day leave request was not sent successfully.</string>
+
+    <string name= "add_overtime_header">Add Overtime Hours</string>
+    <string name= "add_overtime_help">Request days in the week from Administration when you will work overtime, which they must verify and allow to put into effect.</string>
+    <string name= "add_overtime_header_">Select day:</string>
+    <string name= "add_overtime_duration">Hrs</string>
+    <string name= "add_overtime_hours">Overtime (Hours):</string>
+    <string name= "add_overtime_explanation">(Optional) Briefly explain why you are requesting Overtime.</string>
+    <string name= "add_overtime_requests">Your Overtime Requests</string>
+    <string name= "add_overtime_success">Your Overtime request was sent successfully.</string>
+    <string name= "add_overtime_fail">Your Overtime request was not sent successfully.</string>
+    <string name= "add_overtime_day">Day</string>
+
+    <string-array name="days_of_week">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
     <string name="change_password_header">Change Password</string>
     <string name="change_password_hint">Change your locally-stored password.</string>
     <string name="change_password_enter_current_password">Current Password</string>
@@ -138,4 +179,5 @@
     <string name="change_password_current_and_new_are_same">Your selected new password is the same as your old password. Please enter a different new password.</string>
     <string name="change_password_wrong_current_password">Your input for your current password is incorrect. Please enter your correct current password.</string>
     <string name="change_password_successful_change">Your password has been successfully changed.</string>
+    <string name="select_unique_day">Please select a unique day of week!</string>
 </resources>

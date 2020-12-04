@@ -20,6 +20,9 @@ public class DocumentManager {
     private List<DocumentSnapshot> emergencyInfo = new ArrayList<>();
     private List<DocumentSnapshot> contacts = new ArrayList<>();
     private List<DocumentSnapshot> availabilities = new ArrayList<>();
+    private List<DocumentSnapshot> dayLeaves = new ArrayList<>();
+    private List<DocumentSnapshot> overtime = new ArrayList<>();
+    private List<DocumentSnapshot> userHoursChanges = new ArrayList<>();
 
     private Supervisor currentUser;
 
@@ -71,6 +74,12 @@ public class DocumentManager {
         return availabilities;
     }
 
+    public List<DocumentSnapshot> getDayLeaves() { return dayLeaves; }
+
+    public List<DocumentSnapshot> getOvertime() { return overtime; }
+
+    public List<DocumentSnapshot> getUserHoursChanges() { return userHoursChanges; }
+
     public void setWorkers(List<DocumentSnapshot> workers) {
         this.workers.clear();
         this.workers.addAll(workers);
@@ -99,6 +108,21 @@ public class DocumentManager {
     public void setAvailabilities(List<DocumentSnapshot> availabilities) {
         this.availabilities.clear();
         this.availabilities.addAll(availabilities);
+    }
+
+    public void setDayLeaves(List<DocumentSnapshot> sickLeaves) {
+        this.dayLeaves.clear();
+        this.dayLeaves = sickLeaves;
+    }
+
+    public void setOvertime(List<DocumentSnapshot> overtime) {
+        this.overtime.clear();
+        this.overtime = overtime;
+    }
+
+    public void setUserHoursChanges(List<DocumentSnapshot> userHoursChanges) {
+        this.userHoursChanges.clear();
+        this.userHoursChanges = userHoursChanges;
     }
 
     //TODO: The ASYNC Task may not complete in time for activities to repopulate
@@ -149,6 +173,22 @@ public class DocumentManager {
                                         callback.onCallback(true);
                                     }
                                 });
+
+                                getDayLeaveData(new DocListCallback() {
+                                    @Override
+                                    public void onCallback(List<DocumentSnapshot> docs) {
+                                        setDayLeaves(docs);
+                                        callback.onCallback(true);
+                                    }
+                                });
+
+                                getOvertimeData(new DocListCallback() {
+                                    @Override
+                                    public void onCallback(List<DocumentSnapshot> docs) {
+                                        setOvertime(docs);
+                                        callback.onCallback(true);
+                                    }
+                                });
                             }
                         });
                     }
@@ -186,21 +226,21 @@ public class DocumentManager {
                     }
                 });
     }
-
-    private void getSitesData(final DocListCallback callback) {
-        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
-                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, currentUser.getCompany_id())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isComplete()) {
-                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
-                            callback.onCallback(task.getResult().getDocuments());
-                        }
-                    }
-                });
-    }
+//
+//    private void getSitesData(final DocListCallback callback) {
+//        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
+//                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, currentUser.getCompany_id())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isComplete()) {
+//                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
+//                            callback.onCallback(task.getResult().getDocuments());
+//                        }
+//                    }
+//                });
+//    }
 
     private void getAvailabilityData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.AVAILABILITY_COLLECTION)
@@ -243,4 +283,70 @@ public class DocumentManager {
                     }
                 });
     }
+
+    private void getDayLeaveData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
+                .document(currentUser.getId())
+                .collection(CONSTANTS.PENDING_DAY_LEAVE_COLLECTION)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            System.out.println("TEST3> Size of sick leave = " + task.getResult().getDocuments().size());
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
+
+    // Collection: User Changes > Get the document based on user id
+    // -> get the overtime collection associated with that user's id
+    private void getOvertimeData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
+                .document(currentUser.getId())
+                .collection(CONSTANTS.PENDING_OVERTIME_COLLECTION)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            System.out.println("TEST3> Size of overtime  = " + task.getResult().getDocuments().size());
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
+
+    private void getSitesData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
+                .document(currentUser.getId())
+                .collection(CONSTANTS.PENDING_DAY_LEAVE_COLLECTION)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
+//
+//    private void getPendingUserHoursChangesData(final DocListCallback callback) {
+//        mRef.collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
+//                .whereEqualTo(CONSTANTS.ID_KEY, currentUser.getId())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isComplete()) {
+//                            System.out.println("TEST3> Size of overtime  = " + task.getResult().getDocuments().size());
+//                            callback.onCallback(task.getResult().getDocuments());
+//                        }
+//                    }
+//                });
+//    }
+
 }
