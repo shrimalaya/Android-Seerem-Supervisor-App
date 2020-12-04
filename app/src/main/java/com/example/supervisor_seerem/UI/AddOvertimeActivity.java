@@ -66,7 +66,6 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_overtime);
-
         setupToolbar();
         setUpComponents();
 
@@ -109,6 +108,7 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
     private interface OvertimeCallback {
         void onCallback(List<DocumentSnapshot> docs);
     }
+
     private void getOvertimeData(final OvertimeCallback callback) {
         database.collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
                 .document(documentManager.getCurrentUser().getId())
@@ -150,6 +150,17 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
         return true;
     }
 
+    private boolean isSelectedDateUnique(String selectedDay){
+        if(!selectedDay.isEmpty()) {
+            for (DocumentSnapshot request: mUserDocs) {
+                if(selectedDay.equals(request.getString(CONSTANTS.OVERTIME_DAY_KEY))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private void storeInputs(){
         // From Ace @ https://stackoverflow.com/a/9751330
         TextView textView = (TextView) spinner.getSelectedView();
@@ -157,19 +168,9 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
         String selectedOvertimeHours = editTextOvertimeHours.getText().toString();
         String inputs[] = {selectedDay, selectedOvertimeHours};
 
-        Boolean dayUnique = true;
-        if(!selectedDay.isEmpty()) {
-            for (DocumentSnapshot request: mUserDocs) {
-                if(selectedDay.equals(request.getString(CONSTANTS.OVERTIME_DAY_KEY))) {
-                    dayUnique = false;
-                    break;
-                }
-            }
-        }
-
         if(!areAllImportantInputsFilled(inputs)){
             Toast.makeText(this, R.string.error_request_info_incomplete, Toast.LENGTH_LONG).show();
-        }else if (dayUnique) {
+        }else if (isSelectedDateUnique(selectedDay)) {
             // Explanation is optional; set it to N/A if nothing was given.
             String selectedOvertimeExplanation = editTextOvertimeExplanation.getText().toString();
             if(selectedOvertimeExplanation.isEmpty()){
@@ -188,10 +189,9 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
             String currentDate = sdf.format(cal.getTime());
 
             // Store data in the user's pending overwtires colledction, in a document named after the current date.
-            DocumentReference dayLeaveRef= FirebaseFirestore.getInstance()
+            DocumentReference overtimeRef= FirebaseFirestore.getInstance()
                     .collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
                     .document(documentManager.getCurrentUser().getId()).collection(CONSTANTS.PENDING_OVERTIME_COLLECTION).document(currentDate);
-
             Map<String,Object> user = new HashMap<>();
             user.put(CONSTANTS.ID_KEY, documentManager.getCurrentUser().getId());
             user.put(CONSTANTS.OVERTIME_DAY_KEY, selectedDay);
@@ -199,14 +199,14 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
             user.put(CONSTANTS.OVERTIME_EXPLANATION_KEY, selectedOvertimeExplanation);
             user.put(CONSTANTS.REQUEST_DATE_KEY, sdf2.format(cal.getTime()));
 
-            dayLeaveRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            overtimeRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(getApplicationContext(), getText(R.string.add_overtime_success), Toast.LENGTH_LONG).show();
                 }
             });
 
-            dayLeaveRef.set(user).addOnFailureListener(new OnFailureListener() {
+            overtimeRef.set(user).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(getApplicationContext(), getText(R.string.add_overtime_fail), Toast.LENGTH_LONG).show();

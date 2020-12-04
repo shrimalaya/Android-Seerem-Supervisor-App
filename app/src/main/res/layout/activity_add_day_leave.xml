@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UI.AddDayLeaveActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusableInTouchMode="false">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -173,28 +174,28 @@
                 android:textColor="@color/seerem_logo_colour"
                 android:textSize="22sp" />
         </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0"
-            android:background="@color/seerem_logo_colour"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:backgroundTint="@color/white">
+<!--        <TableRow-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="0"-->
+<!--            android:background="@color/seerem_logo_colour"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:backgroundTint="@color/white">-->
 
-            <Button
-                android:id="@+id/buttonOpenAddDayLeaveCalendar"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="@color/seerem_logo_colour"
-                android:fontFamily="monospace"
-                android:text="@string/hour_exceptions_select_dates_on_calendar"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editPassword" />
-        </TableRow>
+<!--            <Button-->
+<!--                android:id="@+id/buttonOpenAddDayLeaveCalendar"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:backgroundTint="@color/seerem_logo_colour"-->
+<!--                android:fontFamily="monospace"-->
+<!--                android:text="@string/hour_exceptions_select_dates_on_calendar"-->
+<!--                android:textColor="@color/white"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/editPassword" />-->
+<!--        </TableRow>-->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -210,12 +211,78 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:text="@string/add_day_leave_requests"
-                android:textColor="@color/grey"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/seerem_logo_colour"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:backgroundTint="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="0"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:text="@string/recyclerview_row_explanation"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textView5"
+                    app:layout_constraintTop_toTopOf="@+id/textView5" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="0"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:text="@string/add_day_leave_days"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/textView"
+                    app:layout_constraintTop_toTopOf="@+id/textView" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="0"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:text="@string/add_day_leave_date"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </TableRow>
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/day_leave_recyclerview"
+            android:id="@+id/day_leave_requests_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

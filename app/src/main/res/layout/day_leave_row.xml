@@ -2,24 +2,24 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/worker_row_layout"
+    android:id="@+id/day_leave_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:scrollbarSize="1dp"
     android:scrollbars="none">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:scrollbarSize="1dp">
+            android:scrollbarSize="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
 <!--            <TextView-->
 <!--                android:id="@+id/dayLeaveRow_date"-->
@@ -50,43 +50,46 @@
 
             <TextView
                 android:id="@+id/day_leave_row_date"
-                android:layout_width="wrap_content"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
+                android:layout_weight="0"
+                android:scrollbarSize="7dp"
                 android:text="@string/add_day_leave_date"
                 android:textSize="18sp"
+                android:textStyle="italic|bold"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_ID"
                 app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
 
             <TextView
                 android:id="@+id/day_leave_row_duration"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="@string/add_day_leave_days_duration"
+                android:text="@string/add_day_leave_days"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/day_leave_row_date"
                 app:layout_constraintTop_toTopOf="@+id/day_leave_row_date" />
 
             <TextView
                 android:id="@+id/day_leave_row_explanation"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="18dp"
                 android:layout_marginLeft="8dp"
-                android:text="@string/add_day_leave_days_duration"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="0"
+                android:text="@string/recyclerview_row_explanation"
                 android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/day_leave_row_duration"
                 app:layout_constraintTop_toTopOf="@+id/day_leave_row_duration" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

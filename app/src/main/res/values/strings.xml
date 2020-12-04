@@ -144,6 +144,7 @@
     <string name="add_day_leave_requests">Your Day Leave Requests</string>
     <string name="add_day_leave_date">Date</string>
     <string name="add_day_leave_days_duration">Duration (days):</string>
+    <string name="add_day_leave_days">Days</string>
     <string name="add_day_leave_days_explanation">(Optional) Briefly explain why you are requesting a day leave period.</string>
     <string name="add_day_leave_save_success">Your day leave request was sent successfully.</string>
     <string name="add_day_leave_save_fail">Your day leave request was not sent successfully.</string>

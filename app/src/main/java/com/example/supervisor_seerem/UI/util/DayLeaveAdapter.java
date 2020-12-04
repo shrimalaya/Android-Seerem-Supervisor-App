@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.supervisor_seerem.R;
@@ -21,10 +22,7 @@ public class DayLeaveAdapter extends RecyclerView.Adapter<DayLeaveAdapter.DayLea
     public List<DocumentSnapshot> mList;
     Context context;
 
-    public DayLeaveAdapter(List<DocumentSnapshot> mList) {
-        this.mList = mList;
-
-    }
+    public DayLeaveAdapter(List<DocumentSnapshot> mList) { this.mList = mList; }
 
     @NonNull
     @Override
@@ -32,7 +30,7 @@ public class DayLeaveAdapter extends RecyclerView.Adapter<DayLeaveAdapter.DayLea
         context = parent.getContext();
         View v = LayoutInflater.from(context).inflate(day_leave_row, parent, false);
         DayLeaveViewHolder mHolder = new DayLeaveViewHolder(v);
-        return null;
+        return mHolder;
     }
 
     @Override
@@ -40,10 +38,9 @@ public class DayLeaveAdapter extends RecyclerView.Adapter<DayLeaveAdapter.DayLea
         //holder.dayLeaveStartTextView.setText(cur);
         final DocumentSnapshot curr = mList.get(position);
 
-        holder.dayLeaveStartTextView.setText(curr.getString(CONSTANTS.OVERTIME_DAY_KEY));
-        holder.dayLeaveStartDaysDurationTextView.setText(curr.getString(CONSTANTS.OVERTIME_DURATION_KEY));
-        holder.dayLeaveExplanation.setText(curr.getString(CONSTANTS.OVERTIME_EXPLANATION_KEY));
-
+        holder.dayLeaveStartTextView.setText(curr.getString(CONSTANTS.DAY_LEAVE_DATE_KEY));
+        holder.dayLeaveStartDaysDurationTextView.setText(curr.getString(CONSTANTS.DAY_LEAVE_DURATION_KEY));
+        holder.dayLeaveExplanation.setText(curr.getString(CONSTANTS.DAY_LEAVE_EXPLANATION_KEY));
 
     }
 
@@ -54,15 +51,19 @@ public class DayLeaveAdapter extends RecyclerView.Adapter<DayLeaveAdapter.DayLea
 
     public static class DayLeaveViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView dayLeaveStartTextView;
-    public TextView dayLeaveStartDaysDurationTextView;
-    public TextView dayLeaveExplanation;
-    public DayLeaveViewHolder(@NonNull View itemView) {
-        super(itemView);
 
-        dayLeaveStartTextView = itemView.findViewById(R.id.day_leave_row_date);
-        dayLeaveStartDaysDurationTextView = itemView.findViewById(R.id.day_leave_row_duration);
-        dayLeaveExplanation = itemView.findViewById(R.id.day_leave_row_explanation);
+        ConstraintLayout mLayout;
+        public TextView dayLeaveStartTextView;
+        public TextView dayLeaveStartDaysDurationTextView;
+        public TextView dayLeaveExplanation;
+
+        public DayLeaveViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mLayout = (ConstraintLayout) itemView;
+
+            dayLeaveStartTextView = itemView.findViewById(R.id.day_leave_row_date);
+            dayLeaveStartDaysDurationTextView = itemView.findViewById(R.id.day_leave_row_duration);
+            dayLeaveExplanation = itemView.findViewById(R.id.day_leave_row_explanation);
     }
 }
 

@@ -8,7 +8,7 @@ public class CONSTANTS {
     public static final String CONTACT_INFO_COLLECTION = "contact_info";
     public static final String AVAILABILITY_COLLECTION = "availability";
     public static final String PENDING_OVERTIME_COLLECTION = "pending_overtime";
-    public static final String PENDING_SICK_LEAVE_COLLECTION = "pending_sickleave";
+    public static final String PENDING_DAY_LEAVE_COLLECTION = "pending_sickleave";
     public static final String PENDING_USER_HOURS_CHANGES_COLLECTION = "pending_user_hours_changes";
 
 
@@ -47,9 +47,9 @@ public class CONSTANTS {
     public static final String TOTAL_HOURS_KEY = "TOTAL_HRS";
     public static final String OVERTIME_KEY = "OVERTIME_HRS";
 
-    public static final String SICK_DAY_DATE_KEY = "FROM_DATE";
-    public static final String SICK_DAY_DURATION_KEY = "NUMBER_OF_DAYS";
-    public static final String SICK_DAY_EXPLANATION_KEY = "LEAVE_EXPLANATION";
+    public static final String DAY_LEAVE_DATE_KEY = "FROM_DATE";
+    public static final String DAY_LEAVE_DURATION_KEY = "NUMBER_OF_DAYS";
+    public static final String DAY_LEAVE_EXPLANATION_KEY = "LEAVE_EXPLANATION";
 
     public static final String OVERTIME_DAY_KEY = "DAY_WITH_OVERTIME";
     public static final String REQUEST_DATE_KEY = "REQUEST_DATE";

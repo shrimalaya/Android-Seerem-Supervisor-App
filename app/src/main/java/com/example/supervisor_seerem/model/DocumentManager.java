@@ -20,7 +20,7 @@ public class DocumentManager {
     private List<DocumentSnapshot> emergencyInfo = new ArrayList<>();
     private List<DocumentSnapshot> contacts = new ArrayList<>();
     private List<DocumentSnapshot> availabilities = new ArrayList<>();
-    private List<DocumentSnapshot> sickLeaves = new ArrayList<>();
+    private List<DocumentSnapshot> dayLeaves = new ArrayList<>();
     private List<DocumentSnapshot> overtime = new ArrayList<>();
     private List<DocumentSnapshot> userHoursChanges = new ArrayList<>();
 
@@ -74,7 +74,7 @@ public class DocumentManager {
         return availabilities;
     }
 
-    public List<DocumentSnapshot> getSickLeaves() { return sickLeaves; }
+    public List<DocumentSnapshot> getDayLeaves() { return dayLeaves; }
 
     public List<DocumentSnapshot> getOvertime() { return overtime; }
 
@@ -110,9 +110,9 @@ public class DocumentManager {
         this.availabilities.addAll(availabilities);
     }
 
-    public void setSickLeaves(List<DocumentSnapshot> sickLeaves) {
-        this.sickLeaves.clear();
-        this.sickLeaves = sickLeaves;
+    public void setDayLeaves(List<DocumentSnapshot> sickLeaves) {
+        this.dayLeaves.clear();
+        this.dayLeaves = sickLeaves;
     }
 
     public void setOvertime(List<DocumentSnapshot> overtime) {
@@ -174,10 +174,10 @@ public class DocumentManager {
                                     }
                                 });
 
-                                getSickLeavesData(new DocListCallback() {
+                                getDayLeaveData(new DocListCallback() {
                                     @Override
                                     public void onCallback(List<DocumentSnapshot> docs) {
-                                        setSickLeaves(docs);
+                                        setDayLeaves(docs);
                                         callback.onCallback(true);
                                     }
                                 });
@@ -284,8 +284,10 @@ public class DocumentManager {
                 });
     }
 
-    private void getSickLeavesData(final DocListCallback callback) {
-        mRef.collection(CONSTANTS.PENDING_SICK_LEAVE_COLLECTION)
+    private void getDayLeaveData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)
+                .document(currentUser.getId())
+                .collection(CONSTANTS.PENDING_DAY_LEAVE_COLLECTION)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -319,7 +321,7 @@ public class DocumentManager {
     private void getSitesData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
                 .document(currentUser.getId())
-                .collection(CONSTANTS.PENDING_SICK_LEAVE_COLLECTION)
+                .collection(CONSTANTS.PENDING_DAY_LEAVE_COLLECTION)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
