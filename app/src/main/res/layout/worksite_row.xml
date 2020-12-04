@@ -17,18 +17,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/txt_siteId_worksite"
-        app:layout_constraintTop_toBottomOf="@+id/txt_masterpoint_worksite" />
-
-    <TextView
-        android:id="@+id/fixMasterpoint_worksite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:text="Masterpoint:"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/fixHSE"
-        app:layout_constraintTop_toBottomOf="@+id/txt_siteName_worksiteRow" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_masterpoint_worksite" />
 
     <TextView
         android:id="@+id/txt_siteId_worksite"
@@ -51,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
-        android:text="Company Id"
+        android:text="Project Id"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/txt_location_worksite"
         app:layout_constraintStart_toEndOf="@+id/txt_siteId_worksite"
@@ -69,19 +58,16 @@
         app:layout_constraintStart_toEndOf="@+id/txt_projectId_worksite"
         app:layout_constraintTop_toTopOf="@+id/txt_siteId_worksite" />
 
-    <TextView
-        android:id="@+id/txt_masterpoint_worksite"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/btn_masterpoint_worksite"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
         android:text="Masterpoint"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fixMasterpoint_worksite"
-        app:layout_constraintTop_toTopOf="@+id/fixMasterpoint_worksite" />
+        android:textStyle="bold"
+        android:layout_marginTop="9dp"
+        app:layout_constraintStart_toStartOf="@+id/fixHSE"
+        app:layout_constraintTop_toBottomOf="@+id/txt_siteName_worksiteRow" />
 
     <TextView
         android:id="@+id/txt_HSElink_worksite"

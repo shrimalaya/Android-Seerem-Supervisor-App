@@ -163,6 +163,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 zoomToSiteLocation();
             } else if (previousActivity != null && previousActivity.equals("WorkerInfo")) { // if the user clicks on a worker from the list of workers
                 zoomToWorkerPosition();
+            } else if (previousActivity != null && previousActivity.equals("Masterpoint")) {
+                zoomToMasterPoint();
             } else {
                 // otherwise, just show my current location and all workers' and worksites' locations
                 Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
@@ -209,7 +211,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
 //        hashMapWorkerMarker = new HashMap<>();
 
-        handler =new Handler();
+        handler = new Handler();
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -229,8 +231,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         Log.d("FROM MAP", "onCreate(): sitesList.size() = " + allWorksitesDocs.size());
 
         userWorksitesDocs.clear();
-        for (DocumentSnapshot site: documentManager.getSites()) {
-            for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
+        for (DocumentSnapshot site : documentManager.getSites()) {
+            for (DocumentSnapshot supervisor : documentManager.getSupervisors()) {
                 if (site.getString(CONSTANTS.ID_KEY).equals(supervisor.getString(CONSTANTS.WORKSITE_ID_KEY))) {
                     userWorksitesDocs.add(site);
                 }
@@ -338,7 +340,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void showWorksitesLocations() {
-        for (Marker marker: worksiteMarkers) {
+        for (Marker marker : worksiteMarkers) {
             marker.remove();
         }
         worksiteMarkers.clear();
@@ -359,13 +361,13 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void showWorkersPositions() {
-        for (Marker marker: workerMarkers) {
+        for (Marker marker : workerMarkers) {
             marker.remove();
         }
         workerMarkers.clear();
 
         Query query = db.collection(CONSTANTS.WORKERS_COLLECTION)
-                         .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, documentManager.getCurrentUser().getCompany_id());
+                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, documentManager.getCurrentUser().getCompany_id());
         registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
@@ -386,8 +388,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         System.out.println("TEST6> ID: " + doc.getString(CONSTANTS.ID_KEY));
         System.out.println("TEST6> CHECK no of online workers = " + onlineWorkersDocs.size());
 
-        for (DocumentSnapshot onlineWorker: onlineWorkersDocs) {
-            if(onlineWorker.getString(CONSTANTS.ID_KEY).equals(doc.getString(CONSTANTS.ID_KEY))) {
+        for (DocumentSnapshot onlineWorker : onlineWorkersDocs) {
+            if (onlineWorker.getString(CONSTANTS.ID_KEY).equals(doc.getString(CONSTANTS.ID_KEY))) {
                 Worker newWorker = createWorker(doc);
                 displayWorkerMarker(newWorker);
             }
@@ -472,6 +474,30 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                     DEFAULT_ZOOM);
 
             // zoom to clicked worker, but also display all worksites and workers around
+//            showWorksitesLocations();
+//            showWorkersPositions();
+        }
+    }
+
+    private void zoomToMasterPoint() {
+        Intent intent = getIntent();
+        String clickedMasterpointSiteID = intent.getStringExtra("MASTERPOINT OF SITE ID FROM SiteInfoActivity");
+
+        DocumentSnapshot currentSite = null;
+        for (DocumentSnapshot site : allWorksitesDocs) {
+            if (site.getString(CONSTANTS.ID_KEY).equals(clickedMasterpointSiteID)) {
+                currentSite = site;
+                break;
+            }
+        }
+
+        if (currentSite != null) {
+            Site newSite = createSite(currentSite);
+            ModelLocation masterpoint = newSite.getMasterpoint();
+            LatLng masterpointLatLng = new LatLng(masterpoint.getLatitude(), masterpoint.getLongitude());
+            zoomCamera(masterpointLatLng, DEFAULT_ZOOM);
+            displayMasterpointMarker(masterpointLatLng);
+
 //            showWorksitesLocations();
 //            showWorkersPositions();
         }
@@ -603,7 +629,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void updateDisplayWorksites() {
-        if(showAllWorksites) {
+        if (showAllWorksites) {
             showWorksitesDocs.clear();
             showWorksitesDocs.addAll(allWorksitesDocs);
         } else {
@@ -624,7 +650,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                     tempOffline.add(doc);
                 }
             } catch (ParseException e) {
-                Log.d("SITEMAP","Parse Exception" + e.toString());
+                Log.d("SITEMAP", "Parse Exception" + e.toString());
                 tempOnline.add(doc); // A site with no operation hours specified will be added to Online Docs
             }
         }
@@ -633,7 +659,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         Boolean offlineChanged = !tempOffline.equals(offlineWorksitesDocs);
         Boolean listChanged = onlineChanged || offlineChanged;
 
-        if(listChanged) {
+        if (listChanged) {
             onlineWorksitesDocs.clear();
             offlineWorksitesDocs.clear();
 
@@ -684,7 +710,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         System.out.println("TEST6> listChanged = " + listChanged);
         System.out.println("TEST6> Size of online workers = " + tempOnline.size());
 
-        if(listChanged) {
+        if (listChanged) {
             onlineWorkersDocs.clear();
             onlineWorkersDocs.addAll(tempOnline);
 
@@ -706,8 +732,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
      */
     private boolean timeParser(String timeString) throws ParseException {
         String arr[] = null;
-        if(timeString != null) {
-            if(timeString.split("-") != null) {
+        if (timeString != null) {
+            if (timeString.split("-") != null) {
                 arr = timeString.split("-");
             }
         }
@@ -903,13 +929,13 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 MenuItem showAllWorkersTxt = displayPopupMenu.getMenu().getItem(0);
                 MenuItem showAllWorksitesTxt = displayPopupMenu.getMenu().getItem(1);
 
-                if(showAllWorkers) {
+                if (showAllWorkers) {
                     showAllWorkersTxt.setTitle(getString(R.string.display_my_workers));
                 } else {
                     showAllWorkersTxt.setTitle(getString(R.string.display_all_workers));
                 }
 
-                if(showAllWorksites) {
+                if (showAllWorksites) {
                     showAllWorksitesTxt.setTitle(getString(R.string.display_my_worksites));
                 } else {
                     showAllWorksitesTxt.setTitle(getString(R.string.display_all_worksites));
@@ -932,7 +958,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
                             case R.id.menu_display_worksites_filter:
                                 if (showAllWorksites) {
-                                    showAllWorksites= false;
+                                    showAllWorksites = false;
                                 } else {
                                     showAllWorksites = true;
                                 }
@@ -1078,7 +1104,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if(registration!=null) {
+            if (registration != null) {
                 registration.remove();
             }
             super.onBackPressed();
@@ -1105,7 +1131,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     protected void onStop() {
         super.onStop();
         // stop listening to database real time updates to protect user's device's bandwidth
-        if(registration!=null) {
+        if (registration != null) {
             registration.remove();
         }
     }

@@ -115,6 +115,8 @@ public class SiteInfoActivity extends AppCompatActivity {
         mAllDocs.clear();
         mAllDocs.addAll(documentManager.getSites());
 
+        Log.d("SITEINFO retrieveData()", "mAllDocs.size() = " + mAllDocs.size());
+
         mUserDocs.clear();
         for (DocumentSnapshot site: documentManager.getSites()) {
             for(DocumentSnapshot supervisor: documentManager.getSupervisors()) {
