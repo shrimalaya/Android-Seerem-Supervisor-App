@@ -55,17 +55,6 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
         holder.lastNameTextView.setText(curr.getString(CONSTANTS.LAST_NAME_KEY));
 
         holder.locationTextView.setText(location.toString());
-        holder.locationTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String workerID = curr.getString(CONSTANTS.ID_KEY);
-                Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(context, "WorkerInfo");
-                mapIntent.putExtra("WorkerID FROM WorkerInfoActivity", workerID);
-                mapIntent.putExtra("SHOW ALL WORKERS", WorkerInfoActivity.getShowAllWorkers());
-                context.startActivity(mapIntent);
-            }
-        });
-
         holder.skillsTextView.setText(curr.getString(CONSTANTS.SKILLS_KEY));
         holder.siteIdTextView.setText(curr.getString(CONSTANTS.WORKSITE_ID_KEY));
         holder.supervisorIdTextView.setText(curr.getString(CONSTANTS.SUPERVISOR_ID_KEY));
@@ -110,6 +99,17 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
             siteIdTextView = itemView.findViewById(R.id.workerRow_WorksiteId);
             supervisorIdTextView = itemView.findViewById(R.id.workerRow_supervisor);
             additionalInfo = itemView.findViewById(R.id.WorkerRow_fix_additionalInfo);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String workerID = workerIDTextView.getText().toString();
+                    Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(view.getContext(), "WorkerInfo");
+                    mapIntent.putExtra("WorkerID FROM WorkerInfoActivity", workerID);
+                    mapIntent.putExtra("SHOW ALL WORKERS", WorkerInfoActivity.getShowAllWorkers());
+                    view.getContext().startActivity(mapIntent);
+                }
+            });
         }
     }
 }

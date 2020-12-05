@@ -186,4 +186,9 @@
     <string name="change_password_wrong_current_password">Your input for your current password is incorrect. Please enter your correct current password.</string>
     <string name="change_password_successful_change">Your password has been successfully changed.</string>
     <string name="select_unique_day">Please select a unique day of week!</string>
+
+    <string name="log_out_title">You are about to exit the app</string>
+    <string name="log_out_message">Do you want to log out?</string>
+    <string name="log_out_dialog_positive">LOG OUT</string>
+    <string name="log_out_dialog_negative">CLOSE</string>
 </resources>

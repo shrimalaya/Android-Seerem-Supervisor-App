@@ -2,6 +2,7 @@ package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -10,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -463,6 +466,7 @@ public class SiteInfoActivity extends AppCompatActivity {
                         break;
 
                     case R.id.sidebar_log_out:
+                        launchLogOutDialog();
                         break;
                 }
                 drawer.closeDrawer(GravityCompat.START);
@@ -514,6 +518,34 @@ public class SiteInfoActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void launchLogOutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SiteInfoActivity.this,
+                R.style.AlertDialog);
+        builder.setMessage(getString(R.string.log_out_message));
+        builder.setTitle(getString(R.string.log_out_title));
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.log_out_dialog_positive),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finishAffinity();
+                        Intent intent = new Intent(SiteInfoActivity.this, LoginInfoActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        builder.setNegativeButton(getString(R.string.log_out_dialog_negative),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#B32134"));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#B32134"));
     }
 
     @Override
