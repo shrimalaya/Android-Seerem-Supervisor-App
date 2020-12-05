@@ -50,6 +50,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -108,7 +109,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     private List<DocumentSnapshot> showWorksitesDocs = new ArrayList<>();
 
     private Worker clickedWorker;
-    private HashMap<String, Marker> hashMapWorkerMarker;
+    private HashMap<String, Marker> hashMapMarker;
     private List<Marker> workerMarkers = new ArrayList<>();
     private List<Marker> worksiteMarkers = new ArrayList<>();
 
@@ -209,7 +210,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         mapSearchView = (SearchView) findViewById(R.id.sitemap_search_view);
         setupSearchView();
 
-//        hashMapWorkerMarker = new HashMap<>();
+        hashMapMarker = new HashMap<>();
 
         handler = new Handler();
         runnable = new Runnable() {
@@ -391,25 +392,13 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         for (DocumentSnapshot onlineWorker : onlineWorkersDocs) {
             if (onlineWorker.getString(CONSTANTS.ID_KEY).equals(doc.getString(CONSTANTS.ID_KEY))) {
                 Worker newWorker = createWorker(doc);
+                Marker marker = hashMapMarker.get(newWorker.getEmployeeID());
+                if (marker != null) {
+                    marker.remove();
+                }
                 displayWorkerMarker(newWorker);
             }
         }
-
-//        if (onlineWorkersDocs.contains(doc)) {
-//            Worker newWorker = createWorker(doc);
-//            Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
-//            if (marker != null) {
-//                marker.remove();
-//            }
-//            displayWorkerMarker(newWorker);
-//        } else {
-//            Worker newWorker = createWorker(doc);
-//            Marker marker = hashMapWorkerMarker.get(newWorker.getEmployeeID());
-//
-//            if (marker!= null) {
-//                marker.remove();
-//            }
-//        }
     }
 
     private void zoomCamera(LatLng latLng, float zoom) {
@@ -538,8 +527,12 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 .icon(bitmapDescriptorFromVector(this, R.drawable.ic_peg_grey));
 
         if (isOnline) {
-            worksiteMarkers.add(siteMap.addMarker(optionsOnline));
+            Marker marker = siteMap.addMarker(optionsOnline);
+            hashMapMarker.put(site.getID(), marker);
+            worksiteMarkers.add(marker);
         } else {
+            Marker marker = siteMap.addMarker(optionsOffline);
+            hashMapMarker.put(site.getID(), marker);
             worksiteMarkers.add(siteMap.addMarker(optionsOffline));
         }
 
@@ -554,14 +547,16 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         LatLng latLng = new LatLng(worker.getLocation().getLatitude(),
                 worker.getLocation().getLongitude());
 
-        // set worker's marker's color to blue
+        // set worker's marker's color to violet
         MarkerOptions options = new MarkerOptions()
                 .position(latLng)
                 .title(getResources().getString(R.string.map_info_window_worker_location_title))
                 .snippet(info)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
 
-        workerMarkers.add(siteMap.addMarker(options));
+        Marker marker = siteMap.addMarker(options);
+        hashMapMarker.put(worker.getEmployeeID(), marker);
+        workerMarkers.add(marker);
         Log.d("FROM MAP", "Marker's color is violet");
     }
 
@@ -586,7 +581,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 .snippet(getResources().getString(R.string.map_info_window_masterpoint_snippet))
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("alert_emergency_light")));
 
-        worksiteMarkers.add(siteMap.addMarker(options));
+        siteMap.addMarker(options);
         Log.d("FROM MAP", "Masterpoint custom peg");
     }
 
@@ -815,7 +810,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         DocumentSnapshot result = null;
         Pattern pattern = Pattern.compile(input, Pattern.CASE_INSENSITIVE);
 
-        for (DocumentSnapshot doc : documentManager.getSites()) {
+        for (DocumentSnapshot doc : showWorksitesDocs) {
             Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
             if (matcher.find() == true) {
                 result = doc;
@@ -834,7 +829,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         DocumentSnapshot result = null;
         Pattern pattern = Pattern.compile(input, Pattern.CASE_INSENSITIVE);
 
-        for (DocumentSnapshot doc : documentManager.getWorkers()) {
+        for (DocumentSnapshot doc : showWorkersDocs) {
             Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.ID_KEY));
             if (matcher.find() == true) {
                 result = doc;
@@ -846,6 +841,29 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             newWorker = createWorker(result);
         }
         return newWorker;
+    }
+
+    private List<DocumentSnapshot> searchGenerally(String input) {
+        List<DocumentSnapshot> result = new ArrayList<>();
+        Pattern pattern = Pattern.compile(input, Pattern.CASE_INSENSITIVE);
+
+        for (DocumentSnapshot doc : showWorkersDocs) {
+            Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.FIRST_NAME_KEY)
+                    + " " + doc.getString(CONSTANTS.LAST_NAME_KEY));
+            if (matcher.find() == true) {
+                result.add(doc);
+                break;
+            }
+        }
+
+        for (DocumentSnapshot doc : showWorksitesDocs) {
+            Matcher matcher = pattern.matcher(doc.getString(CONSTANTS.WORKSITE_NAME_KEY));
+            if (matcher.find() == true) {
+                result.add(doc);
+                break;
+            }
+        }
+        return result;
     }
 
     private void setupSearchView() {
@@ -860,6 +878,9 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         mapSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String input) {
+                mapSearchView.clearFocus();
+                mapSearchView.setQueryHint(getString(R.string.search_input_hint));
+                mapSearchView.setIconified(true);
                 return false;
             }
 
@@ -896,6 +917,56 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             mapSearchView.setQuery("", false);
                             mapSearchView.clearFocus();
                             mapSearchView.setIconified(true);
+                        }
+                    } else {
+                        List<DocumentSnapshot> result = searchGenerally(input);
+                        Log.d("FROM MAP", "search result = " + result.size());
+                        Log.d("FROM MAP", result.toString());
+
+                        if (result.size() <= 0) {
+                            Toast.makeText(getApplicationContext(), "No result found!", Toast.LENGTH_SHORT).show();
+                        } else if (result.size() == 1) {
+                            if (result.get(0).getString(CONSTANTS.ID_KEY).contains("WK")) {
+                                Worker newWorker = createWorker(result.get(0));
+                                zoomCamera(new LatLng(newWorker.getLocation().getLatitude(),
+                                                newWorker.getLocation().getLongitude()),
+                                        DEFAULT_ZOOM);
+                            } else if (result.get(0).getString(CONSTANTS.ID_KEY).contains("WS")) {
+                                Site newSite = createSite(result.get(0));
+                                if (newSite != null) {
+                                    zoomCamera(new LatLng(newSite.getLocation().getLatitude(),
+                                                    newSite.getLocation().getLongitude()),
+                                            DEFAULT_ZOOM);
+                                }
+                            }
+                            showWorkersPositions();
+                            showWorksitesLocations();
+                        } else {
+                            List<Marker> markers = new ArrayList<>();
+                            for (DocumentSnapshot doc : result) {
+                                if (doc.getString(CONSTANTS.ID_KEY).contains("WS")) {
+                                    Site newSite = createSite(doc);
+                                    Marker marker = hashMapMarker.get(newSite.getID());
+                                    markers.add(marker);
+                                } else if (doc.getString(CONSTANTS.ID_KEY).contains("WS")) {
+                                    Worker newWorker = createWorker(doc);
+                                    Marker marker = hashMapMarker.get(newWorker.getEmployeeID());
+                                    markers.add(marker);
+                                }
+                            }
+
+                            showWorkersPositions();
+                            showWorksitesLocations();
+
+                            // calculate display radius for zoom
+                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                            for (Marker marker : markers) {
+                                builder.include(marker.getPosition());
+                            }
+                            LatLngBounds bounds = builder.build();
+                            int padding = 0; // offset from edges of the map in pixels
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                            siteMap.moveCamera(cameraUpdate);
                         }
                     }
                 }
