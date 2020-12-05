@@ -303,9 +303,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_search:
-                        break;
-
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
                         startActivity(workerIntent);
@@ -313,11 +310,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                         break;
 
                     case R.id.sidebar_company:
-                        break;
-
-                    case R.id.sidebar_ui_preferences:
-                        Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(UserInfoActivity.this);
-                        startActivity(uiPrefsIntent);
+                        Intent employeeDirectoryIntent = EmployeeDirectoryActivity.launchEmployeeDirectory(UserInfoActivity.this);
+                        startActivity(employeeDirectoryIntent);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
@@ -333,6 +327,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(UserInfoActivity.this);
                         startActivity(changePasswordIntent);
+                        break;
+
+                    case R.id.sidebar_log_out:
                         break;
                 }
                 drawer.closeDrawer(GravityCompat.START);
@@ -385,7 +382,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            finish();
+            finishAffinity();
+            Intent intent = new Intent(UserInfoActivity.this, LoginInfoActivity.class);
+            startActivity(intent);
         }
     }
 

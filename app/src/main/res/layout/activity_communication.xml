@@ -9,31 +9,20 @@
     android:orientation="vertical"
     >
 
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/back_and_save_toolbar"
+        app:title="@string/worker_contact_title"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TableLayout
         android:id="@+id/userInfoInputTableLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="7">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:background="@color/seerem_logo_colour"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/communicationHeader"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:fontFamily="sans-serif-smallcaps"
-                android:gravity="center"
-                android:text="@string/communication_header"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
@@ -167,15 +156,5 @@
                 android:textSize="16sp" />
         </TableRow>
     </TableLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:itemBackground="@color/colorPrimary"
-        app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector"
-        app:menu="@menu/menu_navigation_bar" />
 
 </LinearLayout>

@@ -97,9 +97,6 @@ public class SensorsUsageActivity extends AppCompatActivity {
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_search:
-                        break;
-
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SensorsUsageActivity.this);
                         startActivity(workerIntent);
@@ -109,11 +106,6 @@ public class SensorsUsageActivity extends AppCompatActivity {
                     case R.id.sidebar_company:
                         Intent employeeDirectoryIntent = new Intent(SensorsUsageActivity.this, EmployeeDirectoryActivity.class);
                         startActivity(employeeDirectoryIntent);
-                        break;
-
-                    case R.id.sidebar_ui_preferences:
-                        Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(SensorsUsageActivity.this);
-                        startActivity(uiPrefsIntent);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
@@ -129,6 +121,9 @@ public class SensorsUsageActivity extends AppCompatActivity {
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(SensorsUsageActivity.this);
                         startActivity(changePasswordIntent);
+                        break;
+
+                    case R.id.sidebar_log_out:
                         break;
                 }
                 drawer.closeDrawer(GravityCompat.START);
@@ -188,10 +183,9 @@ public class SensorsUsageActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-//            finishAffinity();
-//            Intent intent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
-//            startActivity(intent);
-            finish();
+            finishAffinity();
+            Intent intent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
+            startActivity(intent);
         }
     }
 

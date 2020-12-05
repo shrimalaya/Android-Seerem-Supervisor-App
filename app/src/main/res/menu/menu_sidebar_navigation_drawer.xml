@@ -15,10 +15,6 @@
             android:id="@+id/sidebar_day_leave"
             android:icon="@drawable/ic_day_leave"
             android:title="@string/day_leave_sidebar_text" />
-        <item
-            android:id="@+id/sidebar_search"
-            android:icon="@drawable/ic_search"
-            android:title="@string/search_sidebar_text" />
     </group>
 
     <item android:title="@string/communication_sidebar_text">
@@ -37,10 +33,6 @@
     <item android:title="@string/settings_sidebar_text">
         <menu>
             <item
-                android:id="@+id/sidebar_ui_preferences"
-                android:icon="@drawable/ic_ui_preferences"
-                android:title="@string/ui_prefs_sidebar_text" />
-            <item
                 android:id="@+id/sidebar_light_dark_mode"
                 android:icon="@drawable/ic_light_dark_mode"
                 android:title="@string/light_dark_mode_sidebar_text" />
@@ -52,6 +44,10 @@
                 android:id="@+id/sidebar_change_password"
                 android:icon="@drawable/ic_settings"
                 android:title="@string/change_password_sidebar_text" />
+            <item
+                android:id="@+id/sidebar_log_out"
+                android:icon="@drawable/ic_log_out"
+                android:title="@string/log_out_sidebar_text" />
 
         </menu>
     </item>

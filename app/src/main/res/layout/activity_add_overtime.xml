@@ -9,14 +9,11 @@
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:id="@+id/back_and_save_toolbar"
-        app:title="@string/add_day_leave_title_toolbar"
-        android:gravity="center_horizontal"
-        app:titleTextColor="@color/white"
         android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:titleMargin="40dp" />
+        app:title="@string/add_overtime_title"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
 
     <TableLayout
@@ -24,25 +21,7 @@
         android:layout_height="0dp"
         android:layout_weight="7"
         android:orientation="vertical">
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:background="@color/seerem_logo_colour"
-            android:gravity="center">
 
-            <TextView
-                android:id="@+id/add_overtime_header"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:fontFamily="sans-serif-smallcaps"
-                android:gravity="center"
-                android:text="@string/add_overtime_header"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-        </TableRow>
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

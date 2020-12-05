@@ -436,9 +436,6 @@ public class SiteInfoActivity extends AppCompatActivity {
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_search:
-                        break;
-
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteInfoActivity.this);
                         startActivity(workerIntent);
@@ -448,11 +445,6 @@ public class SiteInfoActivity extends AppCompatActivity {
                     case R.id.sidebar_company:
                         Intent employeeDirectoryIntent = new Intent(SiteInfoActivity.this, EmployeeDirectoryActivity.class);
                         startActivity(employeeDirectoryIntent);
-                        break;
-
-                    case R.id.sidebar_ui_preferences:
-                        Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(SiteInfoActivity.this);
-                        startActivity(uiPrefsIntent);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
@@ -468,6 +460,9 @@ public class SiteInfoActivity extends AppCompatActivity {
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(SiteInfoActivity.this);
                         startActivity(changePasswordIntent);
+                        break;
+
+                    case R.id.sidebar_log_out:
                         break;
                 }
                 drawer.closeDrawer(GravityCompat.START);
@@ -527,10 +522,9 @@ public class SiteInfoActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-//            finishAffinity();
-//            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteInfoActivity.this);
-//            startActivity(intent);
-            finish();
+            finishAffinity();
+            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteInfoActivity.this);
+            startActivity(intent);
         }
     }
 

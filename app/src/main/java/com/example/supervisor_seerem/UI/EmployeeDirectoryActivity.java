@@ -1,9 +1,13 @@
 package com.example.supervisor_seerem.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.UI.util.EmployeeDirectoryAdapter;
@@ -31,10 +35,16 @@ public class EmployeeDirectoryActivity extends AppCompatActivity {
 
     private DocumentManager documentManager;
 
+    public static Intent launchEmployeeDirectory(Context context) {
+        Intent employeeDirectoryIntent = new Intent(context, EmployeeDirectoryActivity.class);
+        return employeeDirectoryIntent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_directory);
+        setupToolbar();
 
         setupRecyclerViews();
 
@@ -66,7 +76,6 @@ public class EmployeeDirectoryActivity extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     private void linkSupervisors() {
@@ -91,5 +100,17 @@ public class EmployeeDirectoryActivity extends AppCompatActivity {
     private void setupRecyclerViews() {
         workerRecycler = (RecyclerView) findViewById(R.id.directory_worker_recycler);
         supervisorRecycler = (RecyclerView) findViewById(R.id.directory_supervisor_recycler);
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.back_and_save_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }

@@ -35,7 +35,6 @@ public class DayLeaveAdapter extends RecyclerView.Adapter<DayLeaveAdapter.DayLea
 
     @Override
     public void onBindViewHolder(@NonNull DayLeaveAdapter.DayLeaveViewHolder holder, int position) {
-        //holder.dayLeaveStartTextView.setText(cur);
         final DocumentSnapshot curr = mList.get(position);
 
         holder.dayLeaveStartTextView.setText(curr.getString(CONSTANTS.DAY_LEAVE_DATE_KEY));

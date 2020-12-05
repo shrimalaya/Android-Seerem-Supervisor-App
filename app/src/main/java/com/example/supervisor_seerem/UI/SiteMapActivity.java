@@ -959,6 +959,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             showWorksitesLocations();
 
                             // calculate display radius for zoom
+                            // adapted from https://stackoverflow.com/questions/14828217/android-map-v2-zoom-to-show-all-the-markers
                             LatLngBounds.Builder builder = new LatLngBounds.Builder();
                             for (Marker marker : markers) {
                                 builder.include(marker.getPosition());
@@ -1085,9 +1086,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_search:
-                        break;
-
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteMapActivity.this);
                         startActivity(workerIntent);
@@ -1095,13 +1093,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                         break;
 
                     case R.id.sidebar_company:
-                        Intent employeeDirectoryIntent = new Intent(SiteMapActivity.this, EmployeeDirectoryActivity.class);
+                        Intent employeeDirectoryIntent = EmployeeDirectoryActivity.launchEmployeeDirectory(SiteMapActivity.this);
                         startActivity(employeeDirectoryIntent);
-                        break;
-
-                    case R.id.sidebar_ui_preferences:
-                        Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(SiteMapActivity.this);
-                        startActivity(uiPrefsIntent);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
@@ -1117,6 +1110,9 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(SiteMapActivity.this);
                         startActivity(changePasswordIntent);
+                        break;
+
+                    case R.id.sidebar_log_out:
                         break;
                 }
                 drawer.closeDrawer(GravityCompat.START);
@@ -1179,10 +1175,9 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 registration.remove();
             }
             super.onBackPressed();
-//            finishAffinity();
-//            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
-//            startActivity(intent);
-            finish();
+            finishAffinity();
+            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
+            startActivity(intent);
         }
     }
 

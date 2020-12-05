@@ -475,21 +475,13 @@ public class WorkerInfoActivity extends AppCompatActivity {
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_search:
-                        break;
-
                     case R.id.sidebar_all_workers:
                         // just close sidebar because it goes to the same activity
                         break;
 
                     case R.id.sidebar_company:
-                        Intent employeeDirectoryIntent = new Intent(WorkerInfoActivity.this, EmployeeDirectoryActivity.class);
+                        Intent employeeDirectoryIntent = EmployeeDirectoryActivity.launchEmployeeDirectory(WorkerInfoActivity.this);
                         startActivity(employeeDirectoryIntent);
-                        break;
-
-                    case R.id.sidebar_ui_preferences:
-                        Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(WorkerInfoActivity.this);
-                        startActivity(uiPrefsIntent);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
@@ -505,6 +497,9 @@ public class WorkerInfoActivity extends AppCompatActivity {
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(WorkerInfoActivity.this);
                         startActivity(changePasswordIntent);
+                        break;
+
+                    case R.id.sidebar_log_out:
                         break;
                 }
                 drawer.closeDrawer(GravityCompat.START);
@@ -564,10 +559,9 @@ public class WorkerInfoActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-//            finishAffinity();
-//            Intent intent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
-//            startActivity(intent);
-            finish();
+            finishAffinity();
+            Intent intent = UserInfoActivity.launchUserInfoIntent(WorkerInfoActivity.this);
+            startActivity(intent);
         }
     }
 

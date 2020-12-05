@@ -2,6 +2,7 @@ package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -67,9 +68,8 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_communication);
-        //List<DocumentSnapshot> contacts = manager.getContacts();
+        setupToolbar();
 
-        setupNavigationBar();
         retrieveIntent();
         setupImageIcon();
         setUpTextViews();
@@ -291,51 +291,14 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    private void setupNavigationBar() {
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-
-        navigation.setSelected(false);
-
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.back_and_save_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch(menuItem.getItemId()) {
-                    case R.id.workerNavigation:
-                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(CommunicationActivity.this);
-                        startActivity(workerIntent);
-                        overridePendingTransition(0,0);
-                        finish();
-                        return true;
-
-                    case R.id.siteNavigation:
-                        Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(CommunicationActivity.this);
-                        startActivity(siteIntent);
-                        overridePendingTransition(0,0);
-                        finish();
-                        return true;
-
-                    case R.id.mapNavigation:
-                        Intent mapIntent = SiteMapActivity.launchMapIntent(CommunicationActivity.this);
-                        startActivity(mapIntent);
-                        overridePendingTransition(0,0);
-                        finish();
-                        return true;
-
-                    case R.id.sensorNavigation:
-                        Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(CommunicationActivity.this);
-                        startActivity(sensorIntent);
-                        overridePendingTransition(0,0);
-                        finish();
-                        return true;
-
-                    case R.id.userNavigation:
-                        finishAffinity();
-                        Intent userInfoIntent = UserInfoActivity.launchUserInfoIntent(CommunicationActivity.this);
-                        startActivity(userInfoIntent);
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
+            public void onClick(View view) {
+                finish();
             }
         });
     }
