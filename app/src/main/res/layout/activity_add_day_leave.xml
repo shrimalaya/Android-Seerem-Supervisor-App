@@ -4,20 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.AddDayLeaveActivity"
+    android:focusableInTouchMode="false"
     android:orientation="vertical"
-    android:focusableInTouchMode="false">
+    tools:context=".UI.AddDayLeaveActivity">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/back_and_save_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:id="@+id/back_and_save_toolbar"
-        app:title="@string/add_day_leave_title_toolbar"
-        android:gravity="center_horizontal"
-        app:titleTextColor="@color/white"
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:titleMargin="40dp" />
+        app:title="@string/add_day_leave_title" />
 
 
     <TableLayout
@@ -25,25 +22,7 @@
         android:layout_height="0dp"
         android:layout_weight="7"
         android:orientation="vertical">
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:background="@color/seerem_logo_colour"
-            android:gravity="center">
 
-            <TextView
-                android:id="@+id/day_leave_header"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:fontFamily="sans-serif-smallcaps"
-                android:gravity="center"
-                android:text="@string/add_day_leave_title_toolbar"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-        </TableRow>
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,23 +42,24 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="@color/seerem_logo_colour"
+            android:backgroundTint="@color/white"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:backgroundTint="@color/white">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/buttonSelectDateDialog"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:backgroundTint="@color/seerem_logo_colour"
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
-                android:backgroundTint="@color/seerem_logo_colour"
                 android:text="@string/hour_exceptions_enter_date"
                 android:textColor="@color/white"
                 android:textSize="22sp"
@@ -108,42 +88,42 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-<!--            <EditText-->
-<!--                android:id="@+id/addDayLeaveMonth"-->
-<!--                android:layout_width="0dip"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:fontFamily="sans-serif-smallcaps"-->
-<!--                android:gravity="center"-->
-<!--                android:inputType="number"-->
-<!--                android:hint="@string/hour_exceptions_numerical_month_input"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="22sp"-->
-<!--                android:textStyle="bold" />-->
-<!--            <EditText-->
-<!--                android:id="@+id/addDayLeaveDay"-->
-<!--                android:layout_width="0dip"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:fontFamily="sans-serif-smallcaps"-->
-<!--                android:gravity="center"-->
-<!--                android:inputType="number"-->
-<!--                android:hint="@string/hour_exceptions_numerical_day_input"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="22sp"-->
-<!--                android:textStyle="bold" />-->
-<!--            <EditText-->
-<!--                android:id="@+id/addDayLeaveYear"-->
-<!--                android:layout_width="0dip"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="2"-->
-<!--                android:fontFamily="sans-serif-smallcaps"-->
-<!--                android:gravity="center"-->
-<!--                android:inputType="number"-->
-<!--                android:hint="@string/hour_exceptions_numerical_year_input"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="22sp"-->
-<!--                android:textStyle="bold" />-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/addDayLeaveMonth"-->
+            <!--                android:layout_width="0dip"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:fontFamily="sans-serif-smallcaps"-->
+            <!--                android:gravity="center"-->
+            <!--                android:inputType="number"-->
+            <!--                android:hint="@string/hour_exceptions_numerical_month_input"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="22sp"-->
+            <!--                android:textStyle="bold" />-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/addDayLeaveDay"-->
+            <!--                android:layout_width="0dip"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:fontFamily="sans-serif-smallcaps"-->
+            <!--                android:gravity="center"-->
+            <!--                android:inputType="number"-->
+            <!--                android:hint="@string/hour_exceptions_numerical_day_input"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="22sp"-->
+            <!--                android:textStyle="bold" />-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/addDayLeaveYear"-->
+            <!--                android:layout_width="0dip"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="2"-->
+            <!--                android:fontFamily="sans-serif-smallcaps"-->
+            <!--                android:gravity="center"-->
+            <!--                android:inputType="number"-->
+            <!--                android:hint="@string/hour_exceptions_numerical_year_input"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="22sp"-->
+            <!--                android:textStyle="bold" />-->
 
             <EditText
                 android:id="@+id/addDayLeaveDuration"
@@ -152,11 +132,12 @@
                 android:layout_weight="2"
                 android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:inputType="number"
                 android:hint="@string/add_day_leave_enter_duration"
+                android:inputType="number"
                 android:textColor="@color/seerem_logo_colour"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -170,40 +151,43 @@
                 android:layout_weight="2"
                 android:fontFamily="sans-serif"
                 android:gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:hint="@string/add_day_leave_days_explanation"
                 android:textColor="@color/seerem_logo_colour"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
         </TableRow>
-<!--        <TableRow-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0"-->
-<!--            android:background="@color/seerem_logo_colour"-->
-<!--            android:gravity="center"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:backgroundTint="@color/white">-->
+        <!--        <TableRow-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_weight="0"-->
+        <!--            android:background="@color/seerem_logo_colour"-->
+        <!--            android:gravity="center"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            android:backgroundTint="@color/white">-->
 
-<!--            <Button-->
-<!--                android:id="@+id/buttonOpenAddDayLeaveCalendar"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_weight="1"-->
-<!--                android:backgroundTint="@color/seerem_logo_colour"-->
-<!--                android:fontFamily="monospace"-->
-<!--                android:text="@string/hour_exceptions_select_dates_on_calendar"-->
-<!--                android:textColor="@color/white"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/editPassword" />-->
-<!--        </TableRow>-->
+        <!--            <Button-->
+        <!--                android:id="@+id/buttonOpenAddDayLeaveCalendar"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:backgroundTint="@color/seerem_logo_colour"-->
+        <!--                android:fontFamily="monospace"-->
+        <!--                android:text="@string/hour_exceptions_select_dates_on_calendar"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/editPassword" />-->
+        <!--        </TableRow>-->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="@color/seerem_logo_colour"
+            android:backgroundTint="@color/white"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:backgroundTint="@color/white">
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
@@ -215,14 +199,15 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="@color/seerem_logo_colour"
+            android:backgroundTint="@color/white"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:backgroundTint="@color/white">
+            android:orientation="horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -266,9 +251,9 @@
                     android:id="@+id/textView"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
                     android:layout_weight="0"
                     android:fontFamily="sans-serif-smallcaps"
                     android:text="@string/add_day_leave_date"
@@ -285,8 +270,7 @@
             android:id="@+id/day_leave_requests_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </TableLayout>
 
 </LinearLayout>

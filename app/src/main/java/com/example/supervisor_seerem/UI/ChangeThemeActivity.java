@@ -25,9 +25,6 @@ public class ChangeThemeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.back_and_save_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
-        toolbar.setTitle(R.string.change_theme_title_toolbar);
-        getSupportActionBar().setTitle(R.string.change_theme_title_toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

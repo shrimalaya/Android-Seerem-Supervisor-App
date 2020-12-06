@@ -78,7 +78,6 @@
     <string name="user_sidebar_text">Me</string>
     <string name="overtime_sidebar_text">Add overtime</string>
     <string name="day_leave_sidebar_text">Add day leave</string>
-    <string name="search_sidebar_text">Find</string>
     <string name="communication_sidebar_text">Communication</string>
     <string name="all_workers_sidebar_text">All workers</string>
     <string name="company_sidebar_text">Company</string>
@@ -87,6 +86,7 @@
     <string name="light_dark_mode_sidebar_text">Theme</string>
     <string name="languages_sidebar_text">Languages</string>
     <string name="change_password_sidebar_text">Change password</string>
+    <string name="log_out_sidebar_text">Log Out</string>
 
     <string name="map_noServices_error_message">No services available!</string>
     <string name="map_info_window_user_location_snippet">This is my current location!</string>
@@ -120,13 +120,19 @@
     <string name="install_skype_prompt">To communicate with this employee through Skype, please install the app first.</string>
     <string name="install_zoom_prompt">To communicate with this employee through Zoom, please install the app first.</string>
 
-
-    <string name="change_password_title_toolbar">Change Password</string>
-    <string name="change_language_title_toolbar">Change App Language</string>
-    <string name="change_theme_title_toolbar">Change Theme</string>
-    <string name="set_ui_prefs_title_toolbar">Set UI Preferences</string>
-    <string name="add_overtime_title_toolbar">Add overtime</string>
-    <string name="add_day_leave_title_toolbar">Add Day Leave</string>
+    <string name="change_password_title">Change Password</string>
+    <string name="change_language_title">Change App Language</string>
+    <string name="change_theme_title">Change Theme</string>
+    <string name="set_ui_prefs_title">Set UI Preferences</string>
+    <string name="add_overtime_title">Add Overtime Hours</string>
+    <string name="add_day_leave_title">Add Day Leave</string>
+    <string name="employee_directory_title">Employee Directory</string>
+    <string name="worker_details_title">Worker\'s Details</string>
+    <string name="sensor_usage_title">Ambient Temperature And Pressure</string>
+    <string name="worker_info_title">List Of Workers</string>
+    <string name="worksite_info_title">List Of Worksites</string>
+    <string name="user_info_title">My Profile</string>
+    <string name="worker_contact_title">Worker\'s Contacts</string>
 
 <!--    Used in multiple activities where entering a date is allowed-->
     <string name="hour_exceptions_numerical_month_input">mm</string>
@@ -170,7 +176,7 @@
         <item>Sunday</item>
     </string-array>
     <string name="change_password_header">Change Password</string>
-    <string name="change_password_hint">Change your locally-stored password.</string>
+    <string name="change_password_hint">Please enter the following</string>
     <string name="change_password_enter_current_password">Current Password</string>
     <string name="change_password_enter_new_password">New Password</string>
     <string name="change_password_update_password">Update Password</string>
@@ -180,4 +186,9 @@
     <string name="change_password_wrong_current_password">Your input for your current password is incorrect. Please enter your correct current password.</string>
     <string name="change_password_successful_change">Your password has been successfully changed.</string>
     <string name="select_unique_day">Please select a unique day of week!</string>
+
+    <string name="log_out_title">You are about to exit the app</string>
+    <string name="log_out_message">Do you want to log out?</string>
+    <string name="log_out_dialog_positive">LOG OUT</string>
+    <string name="log_out_dialog_negative">CLOSE</string>
 </resources>

@@ -8,13 +8,10 @@
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:id="@+id/back_and_save_toolbar"
-        app:title="@string/change_language_title_toolbar"
-        android:gravity="center_horizontal"
-        app:titleTextColor="@color/white"
+        app:title="@string/change_language_title"
         android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:titleMargin="40dp" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
 </LinearLayout>

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -56,22 +55,14 @@ public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.Worksi
         holder.siteIDTextView.setText(curr.getString(CONSTANTS.ID_KEY));
         holder.projectIDTextView.setText(curr.getString(CONSTANTS.PROJECT_ID_KEY));
         holder.locationTextView.setText(location.toString());
-        holder.locationTextView.setOnClickListener(new View.OnClickListener() {
+//        holder.masterpointButton.setText(masterpoint.toString());
+        holder.masterpointButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String siteID = curr.getString(CONSTANTS.ID_KEY);
-                Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(context, "SiteInfo");
-                mapIntent.putExtra("SITE ID FROM SiteInfoActivity", siteID);
-                mapIntent.putExtra("SHOW ALL SITES", SiteInfoActivity.getShowAllSites());
+                Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(context, "Masterpoint");
+                mapIntent.putExtra("MASTERPOINT OF SITE ID FROM SiteInfoActivity", siteID);
                 context.startActivity(mapIntent);
-            }
-        });
-
-        holder.masterpointTextView.setText(masterpoint.toString());
-        holder.masterpointTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: Launch with Masterpoint in focus
             }
         });
 
@@ -92,7 +83,7 @@ public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.Worksi
         public TextView siteIDTextView;
         public TextView projectIDTextView;
         public TextView locationTextView;
-        public TextView masterpointTextView;
+        public TextView masterpointButton;
         public TextView HSElinkTextView;
         public TextView operationHoursTextView;
         public TextView siteNameTextView;
@@ -104,10 +95,21 @@ public class WorksiteAdapter extends RecyclerView.Adapter<WorksiteAdapter.Worksi
             siteIDTextView = (TextView) itemView.findViewById(R.id.txt_siteId_worksite);
             projectIDTextView = (TextView) itemView.findViewById(R.id.txt_projectId_worksite);
             locationTextView = (TextView) itemView.findViewById(R.id.txt_location_worksite);
-            masterpointTextView = (TextView) itemView.findViewById(R.id.txt_masterpoint_worksite);
+            masterpointButton = (TextView) itemView.findViewById(R.id.btn_masterpoint_worksite);
             HSElinkTextView = (TextView) itemView.findViewById(R.id.txt_HSElink_worksite);
             operationHoursTextView = itemView.findViewById(R.id.txt_operationHours_worksite);
             siteNameTextView = itemView.findViewById(R.id.txt_siteName_worksiteRow);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String siteID = siteIDTextView.getText().toString();
+                    Intent mapIntent = SiteMapActivity.launchMapWithZoomToLocation(view.getContext(), "SiteInfo");
+                    mapIntent.putExtra("SITE ID FROM SiteInfoActivity", siteID);
+                    mapIntent.putExtra("SHOW ALL SITES", SiteInfoActivity.getShowAllSites());
+                    view.getContext().startActivity(mapIntent);
+                }
+            });
         }
     }
 }

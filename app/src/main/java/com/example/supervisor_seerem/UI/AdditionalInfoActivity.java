@@ -2,6 +2,7 @@ package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.supervisor_seerem.R;
@@ -43,7 +45,7 @@ public class AdditionalInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_additional_info);
 
-        setupNavigationBar();
+        setupToolbar();
         receiveIntent();
         populateData();
     }
@@ -241,44 +243,14 @@ public class AdditionalInfoActivity extends AppCompatActivity {
         System.out.println("TEST3> Selected worker = " + selectedWorker.getString(CONSTANTS.ID_KEY));
     }
 
-    private void setupNavigationBar() {
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-        navigation.setSelectedItemId(R.id.workerNavigation);
-
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.back_and_save_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch(menuItem.getItemId()) {
-                    case R.id.workerNavigation:
-                        // Go back to the calling activity
-                        finish();
-                        return true;
-
-                    case R.id.siteNavigation:
-                        Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(AdditionalInfoActivity.this);
-                        startActivity(siteIntent);
-                        overridePendingTransition(0,0);
-                        return true;
-
-                    case R.id.mapNavigation:
-                        Intent mapIntent = SiteMapActivity.launchMapIntent(AdditionalInfoActivity.this);
-                        startActivity(mapIntent);
-                        overridePendingTransition(0,0);
-                        return true;
-
-                    case R.id.sensorNavigation:
-                        Intent sensorIntent = SensorsUsageActivity.launchSensorUsageIntent(AdditionalInfoActivity.this);
-                        startActivity(sensorIntent);
-                        overridePendingTransition(0,0);
-                        return true;
-
-                    case R.id.userNavigation:
-                        Intent userIntent = UserInfoActivity.launchUserInfoIntent(AdditionalInfoActivity.this);
-                        startActivity(userIntent);
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
+            public void onClick(View view) {
+                finish();
             }
         });
     }

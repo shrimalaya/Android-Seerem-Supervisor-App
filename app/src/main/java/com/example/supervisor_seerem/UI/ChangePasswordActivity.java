@@ -1,16 +1,12 @@
 package com.example.supervisor_seerem.UI;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,9 +34,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
         Toolbar toolbar = findViewById(R.id.back_and_save_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
-        toolbar.setTitle(R.string.change_password_title_toolbar);
-        getSupportActionBar().setTitle(R.string.change_password_title_toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

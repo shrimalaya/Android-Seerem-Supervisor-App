@@ -7,6 +7,15 @@
     app:layout_scrollFlags="noScroll"
     tools:context=".UI.EmployeeDirectoryActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/back_and_save_toolbar"
+        app:title="@string/employee_directory_title"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
         android:id="@+id/textView17"
         android:layout_width="0dp"
@@ -23,7 +32,7 @@
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toStartOf="@+id/textView19"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/back_and_save_toolbar" />
 
     <TextView
         android:id="@+id/textView19"

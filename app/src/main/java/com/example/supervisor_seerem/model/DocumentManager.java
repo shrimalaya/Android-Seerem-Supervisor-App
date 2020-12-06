@@ -226,21 +226,21 @@ public class DocumentManager {
                     }
                 });
     }
-//
-//    private void getSitesData(final DocListCallback callback) {
-//        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
-//                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, currentUser.getCompany_id())
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isComplete()) {
-//                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
-//                            callback.onCallback(task.getResult().getDocuments());
-//                        }
-//                    }
-//                });
-//    }
+
+    private void getSitesData(final DocListCallback callback) {
+        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
+                .whereEqualTo(CONSTANTS.COMPANY_ID_KEY, currentUser.getCompany_id())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isComplete()) {
+                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
+                            callback.onCallback(task.getResult().getDocuments());
+                        }
+                    }
+                });
+    }
 
     private void getAvailabilityData(final DocListCallback callback) {
         mRef.collection(CONSTANTS.AVAILABILITY_COLLECTION)
@@ -318,21 +318,21 @@ public class DocumentManager {
                 });
     }
 
-    private void getSitesData(final DocListCallback callback) {
-        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
-                .document(currentUser.getId())
-                .collection(CONSTANTS.PENDING_DAY_LEAVE_COLLECTION)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isComplete()) {
-                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
-                            callback.onCallback(task.getResult().getDocuments());
-                        }
-                    }
-                });
-    }
+//    private void getSitesData(final DocListCallback callback) {
+//        mRef.collection(CONSTANTS.WORKSITES_COLLECTION)
+//                .document(currentUser.getId())
+//                .collection(CONSTANTS.PENDING_DAY_LEAVE_COLLECTION)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isComplete()) {
+//                            System.out.println("TEST3> Size of sites = " + task.getResult().getDocuments().size());
+//                            callback.onCallback(task.getResult().getDocuments());
+//                        }
+//                    }
+//                });
+//    }
 //
 //    private void getPendingUserHoursChangesData(final DocListCallback callback) {
 //        mRef.collection(CONSTANTS.PENDING_USER_HOURS_CHANGES_COLLECTION)

@@ -2,14 +2,17 @@ package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -97,9 +100,6 @@ public class SensorsUsageActivity extends AppCompatActivity {
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_search:
-                        break;
-
                     case R.id.sidebar_all_workers:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SensorsUsageActivity.this);
                         startActivity(workerIntent);
@@ -109,11 +109,6 @@ public class SensorsUsageActivity extends AppCompatActivity {
                     case R.id.sidebar_company:
                         Intent employeeDirectoryIntent = new Intent(SensorsUsageActivity.this, EmployeeDirectoryActivity.class);
                         startActivity(employeeDirectoryIntent);
-                        break;
-
-                    case R.id.sidebar_ui_preferences:
-                        Intent uiPrefsIntent = UIPreferencesActivity.launchUIPreferencesIntent(SensorsUsageActivity.this);
-                        startActivity(uiPrefsIntent);
                         break;
 
                     case R.id.sidebar_light_dark_mode:
@@ -129,6 +124,10 @@ public class SensorsUsageActivity extends AppCompatActivity {
                     case R.id.sidebar_change_password:
                         Intent changePasswordIntent = ChangePasswordActivity.launchChangePasswordIntent(SensorsUsageActivity.this);
                         startActivity(changePasswordIntent);
+                        break;
+
+                    case R.id.sidebar_log_out:
+                        launchLogOutDialog();
                         break;
                 }
                 drawer.closeDrawer(GravityCompat.START);
@@ -188,10 +187,9 @@ public class SensorsUsageActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-//            finishAffinity();
-//            Intent intent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
-//            startActivity(intent);
-            finish();
+            finishAffinity();
+            Intent intent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
+            startActivity(intent);
         }
     }
 
@@ -258,6 +256,34 @@ public class SensorsUsageActivity extends AppCompatActivity {
 
             }
         };
+    }
+
+    private void launchLogOutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SensorsUsageActivity.this,
+                                                            R.style.AlertDialog);
+        builder.setMessage(getString(R.string.log_out_message));
+        builder.setTitle(getString(R.string.log_out_title));
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.log_out_dialog_positive),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finishAffinity();
+                        Intent intent = new Intent(SensorsUsageActivity.this, LoginInfoActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        builder.setNegativeButton(getString(R.string.log_out_dialog_negative),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#B32134"));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#B32134"));
     }
 
     @Override

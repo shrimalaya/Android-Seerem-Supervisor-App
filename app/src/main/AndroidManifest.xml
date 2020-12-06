@@ -15,33 +15,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.EmployeeDirectoryActivity"
-            android:label="Employee Directory" ></activity>
+        <activity
+            android:name=".UI.EmployeeDirectoryActivity"
+            android:label="@string/employee_directory_title"
+            android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.ChangePasswordActivity"
+            android:label="@string/change_password_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.ChangeLanguageActivity"
+            android:label="@string/change_language_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.ChangeThemeActivity"
+            android:label="@string/change_theme_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.AddDayLeaveActivity"
+            android:label="@string/add_day_leave_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.AddOvertimeActivity"
+            android:label="@string/add_overtime_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.AdditionalInfoActivity"
-            android:label="Additional Information" />
-        <activity
-            android:name=".UI.UIPreferencesActivity"
-            android:label="UI Preferences"
+            android:label="@string/worker_details_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.SensorsUsageActivity"
-            android:label="Device Sensor Usage"
+            android:label="@string/sensor_usage_title"
             android:theme="@style/AppTheme_NoActionBar" />
 
         <meta-data
@@ -53,22 +57,22 @@
 
         <activity
             android:name=".UI.WorkerInfoActivity"
-            android:label="Worker Information"
+            android:label="@string/worker_info_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.UserInfoActivity"
-            android:label="User Information"
+            android:label="@string/user_info_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.CommunicationActivity"
-            android:label="Individual Communication"
+            android:label="@string/worker_contact_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.SiteMapActivity"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.SiteInfoActivity"
-            android:label="Worksite Information"
+            android:label="@string/worksite_info_title"
             android:theme="@style/AppTheme_NoActionBar" />
         <activity
             android:name=".UI.LoginInfoActivity"
