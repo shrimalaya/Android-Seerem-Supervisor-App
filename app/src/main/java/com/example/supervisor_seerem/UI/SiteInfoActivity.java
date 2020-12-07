@@ -55,7 +55,7 @@ public class SiteInfoActivity extends AppCompatActivity {
     WorksiteAdapter mAdapter;
 
     private static Boolean showAllSites = false;
-    private Boolean showOfflineSites = false;
+    private static Boolean showOfflineSites = false;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference mWorksitesRef = db.collection(CONSTANTS.WORKSITES_COLLECTION);
@@ -234,11 +234,18 @@ public class SiteInfoActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_site_info, menu);
 
         MenuItem showAllW = menu.getItem(2);
+        MenuItem showOfflineW = menu.getItem(3);
 
         if(showAllSites) {
             showAllW.setTitle(R.string.display_my_worksites);
         } else {
             showAllW.setTitle(R.string.display_all_worksites);
+        }
+
+        if(showOfflineSites) {
+            showOfflineW.setTitle(R.string.display_online_worksites);
+        } else {
+            showOfflineW.setTitle(R.string.display_offline_worksites);
         }
 
         /**
@@ -341,10 +348,10 @@ public class SiteInfoActivity extends AppCompatActivity {
             case (R.id.menu_display_all_user):
                 if(showAllSites) {
                     showAllSites = false;
-                    item.setTitle("Display All Worksites");
+                    item.setTitle(R.string.display_all_worksites);
                 } else {
                     showAllSites = true;
-                    item.setTitle("Display My Worksites");
+                    item.setTitle(R.string.display_my_worksites);
                 }
 
                 updateDisplaySites();
@@ -354,10 +361,10 @@ public class SiteInfoActivity extends AppCompatActivity {
                 case (R.id.menu_site_offline):
                     if (showOfflineSites) {
                         showOfflineSites = false;
-                        item.setTitle("Display Offline Sites");
+                        item.setTitle(R.string.display_offline_worksites);
                     } else {
                         showOfflineSites = true;
-                        item.setTitle("Display Online Sites");
+                        item.setTitle(R.string.display_online_worksites);
                     }
 
                     updateDisplaySites();

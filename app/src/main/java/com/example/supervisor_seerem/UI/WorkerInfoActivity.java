@@ -60,7 +60,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
     private List<DocumentSnapshot> mOfflineDocs = new ArrayList<>();
 
     private static Boolean showAllWorkers = false;
-    private Boolean showOfflineWorkers = false;
+    private static Boolean showOfflineWorkers = false;
     private String dayKey = CONSTANTS.SUNDAY_KEY;
     private Handler handler;
     private Runnable runnable;
@@ -216,11 +216,18 @@ public class WorkerInfoActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_worker_info, menu);
 
         MenuItem showAllW = menu.getItem(2);
+        MenuItem showOfflineW = menu.getItem(3);
 
         if(showAllWorkers) {
             showAllW.setTitle(R.string.display_my_workers);
         } else {
             showAllW.setTitle(R.string.display_all_workers);
+        }
+
+        if(showOfflineWorkers) {
+            showOfflineW.setTitle(R.string.display_online_workers);
+        } else {
+            showOfflineW.setTitle(R.string.display_offline_workers);
         }
 
         /**

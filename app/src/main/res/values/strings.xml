@@ -191,4 +191,6 @@
     <string name="log_out_message">Do you want to log out?</string>
     <string name="log_out_dialog_positive">LOG OUT</string>
     <string name="log_out_dialog_negative">CLOSE</string>
+    <string name="display_online_worksites">Display Online Sites</string>
+    <string name="display_offline_worksites">Display Offline Sites</string>
 </resources>
