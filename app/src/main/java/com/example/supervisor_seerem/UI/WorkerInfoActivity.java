@@ -98,10 +98,10 @@ public class WorkerInfoActivity extends AppCompatActivity {
                 updateDayOfWeek();
                 updateDisplayWorkers();
                 mAdapter.notifyDataSetChanged();
-                handler.postDelayed(this, 60000);
+                handler.postDelayed(this, 10000);
             }
         };
-        handler.postDelayed(runnable, 60000);
+        handler.postDelayed(runnable, 10000);
     }
 
     private void updateDayOfWeek() {
