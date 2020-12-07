@@ -83,12 +83,11 @@ public class SiteInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_info);
 
-        setupNavigationBar();
-        setupSidebarNavigationDrawer();
-
         mRecycler = findViewById(R.id.siteInfoRecyclerView);
 
         retrieveData();
+        setupNavigationBar();
+        setupSidebarNavigationDrawer();
 
         /**
          * Update list of sites every 1 minute to check for hours of operation
@@ -101,11 +100,11 @@ public class SiteInfoActivity extends AppCompatActivity {
                 Log.d("SITEINFO", "Curr time: " + Calendar.getInstance().getTime());
                 updateDisplaySites();
                 mAdapter.notifyDataSetChanged();
-                handler.postDelayed(this, 60000);
+                handler.postDelayed(this, 10000);
             }
         };
 
-        handler.postDelayed(runnable, 60000);
+        handler.postDelayed(runnable, 10000);
     }
 
     /**
