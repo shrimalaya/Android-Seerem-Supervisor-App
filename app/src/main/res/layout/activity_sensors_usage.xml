@@ -42,12 +42,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="30dp"
-                android:fontFamily="sans-serif-thin"
+                android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:text="@string/sensorUsageExplanationTextView"
-                android:textColor="@color/textColorPrimary"
+                android:textColor="@color/colorPrimary"
                 android:textSize="22sp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
@@ -143,6 +143,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:theme="@style/SideBarLightAndDark"
+        android:background="@color/windowBackground"
+        android:textColor="@color/textColorPrimary"
         app:headerLayout="@layout/sidebar_header"
         app:menu="@menu/menu_sidebar_navigation_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>

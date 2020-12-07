@@ -16,7 +16,7 @@
         android:background="@color/colorPrimary"
         android:theme="@style/ActionBarTitleIconConsistentColor"
         app:title="@string/add_day_leave_title"
-        app:titleTextColor="@color/textColorPrimary"/>
+        app:titleTextColor="@color/white"/>
 
     <TableLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:text="@string/add_day_leave_help"
-                android:textColor="@color/textColorPrimary"
+                android:textColor="@color/colorPrimary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </TableRow>

@@ -38,9 +38,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">@color/textColorPrimary</item>
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:actionMenuTextColor">@color/textColorPrimary</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
         <item name="android:windowBackground">@color/textColorPrimary</item>
         <item name="icon">@color/textColorPrimary</item>
     </style>
@@ -62,7 +62,7 @@
         <item name="colorControlNormal">@color/textColorPrimary</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:windowBackground">@color/windowBackground</item>
-        <item name="icon">@color/textColorPrimary</item>
+        <item name="icon">@color/white</item>
     </style>
 
     <style name="RecyclerViewLightAndDark" parent="Theme.AppCompat.DayNight.DarkActionBar">

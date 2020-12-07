@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:title="@string/worker_details_title"
         android:background="@color/colorPrimary"
-        app:titleTextColor="@color/textColorPrimary"
+        app:titleTextColor="@color/white"
         android:theme="@style/ActionBarTitleIconConsistentColor"
         app:layout_constraintTop_toTopOf="parent"/>
 

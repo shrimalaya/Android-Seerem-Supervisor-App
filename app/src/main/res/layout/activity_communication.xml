@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/back_and_save_toolbar"
         app:title="@string/worker_contact_title"
-        app:titleTextColor="@color/textColorPrimary"
+        app:titleTextColor="@color/white"
         android:background="@color/colorPrimary"
         android:theme="@style/ActionBarTitleIconConsistentColor"
         app:layout_constraintTop_toTopOf="parent"/>

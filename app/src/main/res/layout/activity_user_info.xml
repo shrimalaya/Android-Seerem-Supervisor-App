@@ -51,7 +51,7 @@
                 android:paddingStart="20dip"
                 android:paddingLeft="20dip"
                 android:text="@string/user_info_header"
-                android:textColor="@color/textColorPrimary"
+                android:textColor="@color/colorPrimary"
                 android:textSize="30sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -328,7 +328,7 @@
         android:paddingTop="2dp"
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@color/textColorPrimary"
+        app:itemTextColor="@drawable/selector"
         app:menu="@menu/menu_navigation_bar" />
 
     </LinearLayout>
