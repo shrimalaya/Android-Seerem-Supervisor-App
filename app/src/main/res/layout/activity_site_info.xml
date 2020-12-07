@@ -132,6 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="#A8A8A8"
             app:itemBackground="@color/colorPrimary"
             app:itemIconTint="@drawable/selector"
             app:itemTextColor="@color/textColorPrimary"
