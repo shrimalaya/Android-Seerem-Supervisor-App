@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="false"
     android:orientation="vertical"
+    android:background="@color/windowBackground"
     tools:context=".UI.AddDayLeaveActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -13,21 +14,22 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="@string/add_day_leave_title" />
-
+        android:theme="@style/ActionBarTitleIconConsistentColor"
+        app:title="@string/add_day_leave_title"
+        app:titleTextColor="@color/textColorPrimary"/>
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="7"
+        android:background="@color/windowBackground"
         android:orientation="vertical">
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:background="@color/seerem_logo_colour"
+            android:background="@color/windowBackground"
             android:gravity="center">
 
             <TextView
@@ -38,7 +40,7 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:text="@string/add_day_leave_help"
-                android:textColor="@color/white"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -48,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="@color/seerem_logo_colour"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/windowBackground"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -61,7 +63,7 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:text="@string/hour_exceptions_enter_date"
-                android:textColor="@color/white"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -73,7 +75,7 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:text="@string/add_day_leave_no_date_selected"
-                android:textColor="@color/seerem_logo_colour"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -84,46 +86,9 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:text="@string/add_day_leave_days_duration"
-                android:textColor="@color/seerem_logo_colour"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
-            <!--            <EditText-->
-            <!--                android:id="@+id/addDayLeaveMonth"-->
-            <!--                android:layout_width="0dip"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:fontFamily="sans-serif-smallcaps"-->
-            <!--                android:gravity="center"-->
-            <!--                android:inputType="number"-->
-            <!--                android:hint="@string/hour_exceptions_numerical_month_input"-->
-            <!--                android:textColor="@color/white"-->
-            <!--                android:textSize="22sp"-->
-            <!--                android:textStyle="bold" />-->
-            <!--            <EditText-->
-            <!--                android:id="@+id/addDayLeaveDay"-->
-            <!--                android:layout_width="0dip"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:fontFamily="sans-serif-smallcaps"-->
-            <!--                android:gravity="center"-->
-            <!--                android:inputType="number"-->
-            <!--                android:hint="@string/hour_exceptions_numerical_day_input"-->
-            <!--                android:textColor="@color/white"-->
-            <!--                android:textSize="22sp"-->
-            <!--                android:textStyle="bold" />-->
-            <!--            <EditText-->
-            <!--                android:id="@+id/addDayLeaveYear"-->
-            <!--                android:layout_width="0dip"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_weight="2"-->
-            <!--                android:fontFamily="sans-serif-smallcaps"-->
-            <!--                android:gravity="center"-->
-            <!--                android:inputType="number"-->
-            <!--                android:hint="@string/hour_exceptions_numerical_year_input"-->
-            <!--                android:textColor="@color/white"-->
-            <!--                android:textSize="22sp"-->
-            <!--                android:textStyle="bold" />-->
 
             <EditText
                 android:id="@+id/addDayLeaveDuration"
@@ -133,8 +98,9 @@
                 android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:hint="@string/add_day_leave_enter_duration"
+                android:textColorHint="@color/textColorPrimary"
                 android:inputType="number"
-                android:textColor="@color/seerem_logo_colour"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp" />
         </TableRow>
 
@@ -154,7 +120,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:hint="@string/add_day_leave_days_explanation"
-                android:textColor="@color/seerem_logo_colour"
+                android:textColorHint="@color/textColorPrimary"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp" />
         </TableRow>
         <!--        <TableRow-->
@@ -184,7 +151,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="@color/seerem_logo_colour"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/windowBackground"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -195,7 +162,7 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
                 android:text="@string/add_day_leave_requests"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -212,7 +179,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="@color/windowBackground">
 
                 <TextView
                     android:id="@+id/textView6"
@@ -225,7 +193,7 @@
                     android:layout_weight="0"
                     android:fontFamily="sans-serif-smallcaps"
                     android:text="@string/recyclerview_row_explanation"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -241,7 +209,7 @@
                     android:layout_weight="0"
                     android:fontFamily="sans-serif-smallcaps"
                     android:text="@string/add_day_leave_days"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView"
@@ -257,7 +225,7 @@
                     android:layout_weight="0"
                     android:fontFamily="sans-serif-smallcaps"
                     android:text="@string/add_day_leave_date"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"

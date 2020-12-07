@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#bf1e2e</color>
+    <color name="colorPrimaryDark">#991825</color>
+    <color name="colorAccent">#5a3dff</color>
+    <color name="windowBackground">#121212</color>
+    <color name="textColorPrimary">@color/white</color>
+    <color name="statusBarColor">#991825</color>
+    <color name="navigationBarColor">#404040</color>
+
+    <color name="seerem_logo_colour">#bf1e2e</color>
+<!--    <color name="seerem_logo_lighter">#bf1e2e</color>r>-->
+    <color name="white">#FFFFFF</color>
+    <color name="turquoise">#308270</color>
+    <color name="lilac">#5a3dff</color>
+    <color name="cyan">#2f92ad</color>
+    <color name="cerulean">#3280c9</color>
+    <color name="grey">#A5A5A5</color>
+</resources>

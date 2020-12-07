@@ -6,20 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:scrollbarSize="1dp"
-    android:scrollbars="none">
+    android:scrollbars="none"
+    android:theme="@style/RowLightAndDark">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/RowLightAndDark">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:scrollbarSize="1dp">
+            android:scrollbarSize="1dp"
+            android:theme="@style/RowLightAndDark">
 
             <TextView
                 android:id="@+id/workerRow_ID"
@@ -30,7 +33,7 @@
                 android:layout_marginTop="6dp"
                 android:scrollbarSize="7dp"
                 android:text="ID"
-                android:textColor="#000000"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold|italic"
                 app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +46,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:text="First Name"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_ID"
                 app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
@@ -54,6 +58,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:text="Last Name"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_FirstName"
                 app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
@@ -65,7 +70,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:text="W. Site"
-                android:textColor="#000000"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_LastName"
@@ -78,6 +83,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:text="-122.8479, -122.8479"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_supervisor"
                 app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
@@ -90,6 +96,7 @@
                 android:layout_marginLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="Skills"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="italic"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_Location"
@@ -103,6 +110,7 @@
                 android:layout_marginLeft="8dp"
                 android:gravity="center"
                 android:text="SUP ID"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_WorksiteId"
                 app:layout_constraintTop_toTopOf="@+id/workerRow_WorksiteId" />

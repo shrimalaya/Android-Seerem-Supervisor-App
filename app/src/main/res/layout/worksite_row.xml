@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/worksite_recycler_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:theme="@style/RowLightAndDark">
 
     <TextView
         android:id="@+id/fixHSE"
@@ -27,7 +28,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginTop="8dp"
         android:text="Site id"
-        android:textColor="#000000"
+        android:textColor="@color/textColorPrimary"
         android:textSize="17sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/txt_projectId_worksite"
@@ -41,6 +42,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
         android:text="Project Id"
+        android:textColor="@color/textColorPrimary"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/txt_location_worksite"
         app:layout_constraintStart_toEndOf="@+id/txt_siteId_worksite"
@@ -54,6 +56,7 @@
         android:layout_marginLeft="4dp"
         android:text="Location"
         android:textSize="16sp"
+        android:textColor="@color/textColorPrimary"
         app:layout_constraintEnd_toStartOf="@+id/txt_operationHours_worksite"
         app:layout_constraintStart_toEndOf="@+id/txt_projectId_worksite"
         app:layout_constraintTop_toTopOf="@+id/txt_siteId_worksite" />
@@ -63,6 +66,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Masterpoint"
+        android:textColor="@color/textColorPrimary"
+        android:background="@color/colorPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginTop="9dp"
@@ -79,6 +84,7 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="12dp"
         android:text="HSE links"
+        android:textColor="@color/textColorPrimary"
         android:autoLink="web"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -95,6 +101,7 @@
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
         android:text="Op Hrs"
+        android:textColor="@color/textColorPrimary"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txt_location_worksite"
@@ -108,6 +115,7 @@
         android:text="Site Name:"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:textColor="@color/textColorPrimary"
         app:layout_constraintStart_toStartOf="@+id/fixHSE"
         app:layout_constraintTop_toBottomOf="@+id/txt_location_worksite" />
 
@@ -118,9 +126,9 @@
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
         android:text="Site name"
-        android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:textColor="@color/textColorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fix_siteName_worksiteRow"
         app:layout_constraintTop_toTopOf="@+id/fix_siteName_worksiteRow" />

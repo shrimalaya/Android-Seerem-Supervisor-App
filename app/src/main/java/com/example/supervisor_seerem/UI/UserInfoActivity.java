@@ -268,6 +268,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         // customized toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_for_sidebar);
         setSupportActionBar(toolbar);
+        //toolbar.getContext().setTheme(R.style.);
 
         // toggle to open/close the sidebar
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
