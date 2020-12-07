@@ -400,7 +400,10 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void zoomCamera(LatLng latLng, float zoom) {
         // zoom to the specific latLng
-        siteMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        CameraUpdate location = CameraUpdateFactory.
+                newLatLngZoom(latLng, zoom);
+        siteMap.animateCamera(location);
+
         siteMap.setInfoWindowAdapter(new MapInfoWindowAdapter(SiteMapActivity.this));
 
         hideSoftKeyboard();
@@ -959,7 +962,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             LatLngBounds bounds = builder.build();
                             int padding = 0; // offset from edges of the map in pixels
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                            siteMap.moveCamera(cameraUpdate);
+                            siteMap.animateCamera(cameraUpdate);
                         }
                     }
                 }

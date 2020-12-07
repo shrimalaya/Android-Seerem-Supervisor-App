@@ -557,7 +557,9 @@ public class SiteInfoActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            finish();
+            finishAffinity();
+            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteInfoActivity.this);
+            startActivity(intent);
         }
     }
 
