@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,7 +68,7 @@ public class LoginInfoActivity extends AppCompatActivity {
             public void onCallback(List<DocumentSnapshot> docs) {
                 allSupervisors.clear();
                 allSupervisors.addAll(docs);
-                System.out.println("TEST3> Size of allSupervisors = " + allSupervisors.size());
+                Log.d("LOGININFO", "Size of allSupervisors = " + allSupervisors.size());
 
                 buttonLogin.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -130,10 +131,6 @@ public class LoginInfoActivity extends AppCompatActivity {
                             @Override
                             public void onCallback(Boolean result) {
                                 if(result) {
-                                    System.out.println("TEST3> RESULT = " + result);
-                                    System.out.println("TEST3> NEW user id: " + manager.getCurrentUser().getId());
-
-                                    System.out.println("TEST3> UserInfo Activity started");
                                     progressDialog.dismiss();
                                     startActivity(toUserInfo);
                                     finish();
@@ -165,10 +162,6 @@ public class LoginInfoActivity extends AppCompatActivity {
                                 @Override
                                 public void onCallback(Boolean result) {
                                     if(result) {
-                                        System.out.println("TEST3> RESULT = " + result);
-                                        System.out.println("TEST3> curr user id: " + manager.getCurrentUser().getId());
-
-                                        System.out.println("TEST3> UserInfo Activity started");
                                         progressDialog.dismiss();
                                         startActivity(toUserInfo);
                                         finish();
@@ -194,9 +187,6 @@ public class LoginInfoActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()) {
-
-                            System.out.println("TEST3> Size of allSupervisors = " + task.getResult().getDocuments().size());
-
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
