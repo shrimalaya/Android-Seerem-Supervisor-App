@@ -46,8 +46,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.widget.Toast.LENGTH_SHORT;
-
 public class SiteInfoActivity extends AppCompatActivity {
 
     // We don't need to display the COMPANY_ID for the sites since only a supervisor belonging to the company can see it
@@ -57,7 +55,7 @@ public class SiteInfoActivity extends AppCompatActivity {
     WorksiteAdapter mAdapter;
 
     private static Boolean showAllSites = false;
-    private Boolean showOfflineSites = false;
+    private static Boolean showOfflineSites = false;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference mWorksitesRef = db.collection(CONSTANTS.WORKSITES_COLLECTION);
@@ -85,12 +83,11 @@ public class SiteInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_info);
 
-        setupNavigationBar();
-        setupSidebarNavigationDrawer();
-
         mRecycler = findViewById(R.id.siteInfoRecyclerView);
 
         retrieveData();
+        setupNavigationBar();
+        setupSidebarNavigationDrawer();
 
         /**
          * Update list of sites every 1 minute to check for hours of operation
@@ -100,14 +97,14 @@ public class SiteInfoActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(SiteInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                Log.d("SITEINFO", "Curr time: " + Calendar.getInstance().getTime());
                 updateDisplaySites();
                 mAdapter.notifyDataSetChanged();
-                handler.postDelayed(this, 60000);
+                handler.postDelayed(this, 10000);
             }
         };
 
-        handler.postDelayed(runnable, 60000);
+        handler.postDelayed(runnable, 10000);
     }
 
     /**
@@ -235,6 +232,21 @@ public class SiteInfoActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_site_info, menu);
 
+        MenuItem showAllW = menu.getItem(2);
+        MenuItem showOfflineW = menu.getItem(3);
+
+        if(showAllSites) {
+            showAllW.setTitle(R.string.display_my_worksites);
+        } else {
+            showAllW.setTitle(R.string.display_all_worksites);
+        }
+
+        if(showOfflineSites) {
+            showOfflineW.setTitle(R.string.display_online_worksites);
+        } else {
+            showOfflineW.setTitle(R.string.display_offline_worksites);
+        }
+
         /**
          * Search layout referenced from: https://www.youtube.com/watch?v=pM1fAmUQn8g&ab_channel=CodinginFlow
          */
@@ -335,10 +347,10 @@ public class SiteInfoActivity extends AppCompatActivity {
             case (R.id.menu_display_all_user):
                 if(showAllSites) {
                     showAllSites = false;
-                    item.setTitle("Display All Worksites");
+                    item.setTitle(R.string.display_all_worksites);
                 } else {
                     showAllSites = true;
-                    item.setTitle("Display My Worksites");
+                    item.setTitle(R.string.display_my_worksites);
                 }
 
                 updateDisplaySites();
@@ -348,10 +360,10 @@ public class SiteInfoActivity extends AppCompatActivity {
                 case (R.id.menu_site_offline):
                     if (showOfflineSites) {
                         showOfflineSites = false;
-                        item.setTitle("Display Offline Sites");
+                        item.setTitle(R.string.display_offline_worksites);
                     } else {
                         showOfflineSites = true;
-                        item.setTitle("Display Online Sites");
+                        item.setTitle(R.string.display_online_worksites);
                     }
 
                     updateDisplaySites();
@@ -378,16 +390,13 @@ public class SiteInfoActivity extends AppCompatActivity {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         Date d1 = dateFormat.parse(arr[0]);
         Date d2 = dateFormat.parse(arr[1]);
+
         String currTime = dateFormat.format(Calendar.getInstance().getTime());
-        Log.d("SITEINFO", "TEST4> Curr time: " + currTime);
         Date current = dateFormat.parse(currTime);
-        Log.d("SITEINFO","TEST4> Curr time in Date format: " + current);
-        Log.d("SITEINFO","TEST4> d1 time: " + d1);
-        Log.d("SITEINFO","TEST4> d2 time: " + d2);
 
         Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
 
-        Log.d("SITEINFO","TEST4> Within op hours: " + withinOpHrs);
+        Log.d("SITEINFO",operation + "- within op hours: " + withinOpHrs);
 
         return withinOpHrs;
     }

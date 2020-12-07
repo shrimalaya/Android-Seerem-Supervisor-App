@@ -92,10 +92,6 @@ public class CommunicationActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-//    private interface DocListCallback{
-//        void onCallback(List<DocumentSnapshot> docs);
-//    }
-
     private void parseEmployeeLinkType(String employeeLink) {
         if(employeeLink.equals(" - ")) {
             // No link provided

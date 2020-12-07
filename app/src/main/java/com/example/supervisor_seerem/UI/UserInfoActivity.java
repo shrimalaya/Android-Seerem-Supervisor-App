@@ -87,12 +87,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         setupInterface();
         populateData();
         setupNavigationBar();
+        setupSidebarNavigationDrawer();
         hideSoftKeyboard();
     }
 
     private void setupInterface() {
-        setupSidebarNavigationDrawer();
-
         navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
         navigation.setSelectedItemId(R.id.userNavigation);
 
@@ -416,8 +415,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         } else {
             super.onBackPressed();
             finishAffinity();
-            Intent intent = new Intent(UserInfoActivity.this, LoginInfoActivity.class);
-            startActivity(intent);
         }
     }
 
