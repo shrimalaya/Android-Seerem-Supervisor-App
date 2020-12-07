@@ -52,7 +52,8 @@ public class LoginInfoActivity extends AppCompatActivity {
 
     //Apply theme from startup. This will affect the rest of the app.
     private void applyTheme(){
-        savedTheme = sharedPreferences.getString("theme",
+        SharedPreferences themePrefs = getSharedPreferences("ThemeData", Context.MODE_PRIVATE);
+        savedTheme = themePrefs.getString("theme",
                 getString(R.string.light_mode_radio_button));
         switch(savedTheme){
             case "light":
