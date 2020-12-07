@@ -94,7 +94,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(WorkerInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                Log.d("WORKERINFO", "Curr time: " + Calendar.getInstance().getTime());
                 updateDayOfWeek();
                 updateDisplayWorkers();
                 mAdapter.notifyDataSetChanged();
@@ -214,6 +214,14 @@ public class WorkerInfoActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_worker_info, menu);
+
+        MenuItem showAllW = menu.getItem(2);
+
+        if(showAllWorkers) {
+            showAllW.setTitle(R.string.display_my_workers);
+        } else {
+            showAllW.setTitle(R.string.display_all_workers);
+        }
 
         /**
          * Search layout referenced from: https://www.youtube.com/watch?v=pM1fAmUQn8g&ab_channel=CodinginFlow
@@ -404,15 +412,11 @@ public class WorkerInfoActivity extends AppCompatActivity {
         Date d1 = dateFormat.parse(arr[0]);
         Date d2 = dateFormat.parse(arr[1]);
         String currTime = dateFormat.format(Calendar.getInstance().getTime());
-        Log.d("WORKERINFO", "TEST4> Curr time: " + currTime);
         Date current = dateFormat.parse(currTime);
-        Log.d("WORKERINFO", "TEST4> Curr time in Date format: " + current);
-        Log.d("WORKERINFO", "TEST4> d1 time: " + d1);
-        Log.d("WORKERINFO", "TEST4> d2 time: " + d2);
 
         Boolean withinOpHrs = (current.getTime() >= d1.getTime()) && (d2.getTime() >= current.getTime());
 
-        Log.d("WORKERINFO", "TEST4> Within op hours: " + withinOpHrs);
+        Log.d("WORKERINFO", availability + "- available: " + withinOpHrs);
 
         return withinOpHrs;
     }
