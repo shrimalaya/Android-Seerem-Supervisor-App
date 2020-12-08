@@ -20,7 +20,8 @@
             android:background="@color/colorPrimary"
             android:elevation="4dp"
             android:theme="@style/ActionBarTitleIconConsistentColor"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:title="@string/sensor_usage_title"/>
 
         <LinearLayout
             android:id="@+id/sensorLinearLayout"

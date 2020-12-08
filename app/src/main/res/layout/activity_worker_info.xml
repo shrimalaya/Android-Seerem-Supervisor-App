@@ -22,7 +22,8 @@
             android:elevation="4dp"
             android:theme="@style/ActionBarTitleIconConsistentColor"
             app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:title="@string/worker_info_title"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationBar"
