@@ -97,5 +97,13 @@
         <item name="icon">@color/textColorPrimary</item>
     </style>
 
-
+    <style name="SideBarConsistentLightAndDark." parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/textColorPrimary</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:windowBackground">@color/textColorPrimary</item>
+        <item name="icon">@color/textColorPrimary</item>
+    </style>
 </resources>

@@ -58,8 +58,7 @@
                 android:layout_weight="2"
                 android:background="@color/colorPrimary"
                 android:theme="@style/SpinnerLightAndDark"
-                android:backgroundTint="@color/colorPrimary"
-
+                android:textColor="@color/textColorPrimary"
                 android:fontFamily="sans-serif-smallcaps"
                 android:textSize="20sp" />
 
@@ -74,43 +73,6 @@
                 android:textColor="@color/textColorPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
-            <!--            <EditText-->
-            <!--                android:id="@+id/addDayLeaveMonth"-->
-            <!--                android:layout_width="0dip"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:fontFamily="sans-serif-smallcaps"-->
-            <!--                android:gravity="center"-->
-            <!--                android:inputType="number"-->
-            <!--                android:hint="@string/hour_exceptions_numerical_month_input"-->
-            <!--                android:textColor="@color/white"-->
-            <!--                android:textSize="22sp"-->
-            <!--                android:textStyle="bold" />-->
-            <!--            <EditText-->
-            <!--                android:id="@+id/addDayLeaveDay"-->
-            <!--                android:layout_width="0dip"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:fontFamily="sans-serif-smallcaps"-->
-            <!--                android:gravity="center"-->
-            <!--                android:inputType="number"-->
-            <!--                android:hint="@string/hour_exceptions_numerical_day_input"-->
-            <!--                android:textColor="@color/white"-->
-            <!--                android:textSize="22sp"-->
-            <!--                android:textStyle="bold" />-->
-            <!--            <EditText-->
-            <!--                android:id="@+id/addDayLeaveYear"-->
-            <!--                android:layout_width="0dip"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_weight="2"-->
-            <!--                android:fontFamily="sans-serif-smallcaps"-->
-            <!--                android:gravity="center"-->
-            <!--                android:inputType="number"-->
-            <!--                android:hint="@string/hour_exceptions_numerical_year_input"-->
-            <!--                android:textColor="@color/white"-->
-            <!--                android:textSize="22sp"-->
-            <!--                android:textStyle="bold" />-->
 
             <EditText
                 android:id="@+id/add_overtime_hours"
@@ -142,7 +104,7 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/add_overtime_explanation"
                 android:textColorHint="@color/textColorPrimary"
-                android:textColor="@color/seerem_logo_colour"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="22sp" />
         </TableRow>
         <TableRow
