@@ -28,7 +28,6 @@ import android.widget.Toast;
 import com.example.supervisor_seerem.R;
 import com.example.supervisor_seerem.model.CONSTANTS;
 import com.example.supervisor_seerem.model.DocumentManager;
-import com.example.supervisor_seerem.model.Worker;
 import com.example.supervisor_seerem.UI.util.WorkerAdapter;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -183,12 +182,12 @@ public class WorkerInfoActivity extends AppCompatActivity {
         if (showOfflineWorkers) {
             mShowDocs.addAll(mOfflineDocs);
             if (mOfflineDocs.isEmpty()) {
-                Toast.makeText(this, "No Offline Workers!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.no_offline_workers), Toast.LENGTH_LONG).show();
             }
         } else {
             mShowDocs.addAll(mOnlineDocs);
             if (mOnlineDocs.isEmpty()) {
-                Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.no_online_workers), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -237,7 +236,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
         final MenuItem clear = menu.findItem(R.id.menu_worker_clear);
 
         final SearchView searchView = (SearchView) search.getActionView();
-        searchView.setQueryHint("Search Here!");
+        searchView.setQueryHint(getString(R.string.search_here));
 
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
@@ -263,14 +262,14 @@ public class WorkerInfoActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
-                currentlyDisplaying.setText("Search Results: All workers");
+                currentlyDisplaying.setText(getString(R.string.search_result_all_workers));
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
-                currentlyDisplaying.setText("Search: All workers");
+                currentlyDisplaying.setText(getString(R.string.search_display_all_workers));
                 search(newText);
                 return true;
             }
@@ -288,8 +287,8 @@ public class WorkerInfoActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case (R.id.menu_worker_refresh):
                 final ProgressDialog progressDialog = new ProgressDialog(WorkerInfoActivity.this);
-                progressDialog.setMessage("Refreshing All Data!");
-                progressDialog.setTitle("Please wait");
+                progressDialog.setMessage(getString(R.string.refresh_all_data));
+                progressDialog.setTitle(getString(R.string.please_wait));
                 progressDialog.setCancelable(false);
                 progressDialog.setIndeterminate(true);
                 progressDialog.show();
@@ -432,13 +431,13 @@ public class WorkerInfoActivity extends AppCompatActivity {
         TextView currentlyDisplaying = findViewById(R.id.fix_workerInfo_currentlyDisplaying);
 
         if (showOfflineWorkers && showAllWorkers) {
-            currentlyDisplaying.setText("Offline Company Workers");
+            currentlyDisplaying.setText(getString(R.string.company_offline_workers));
         } else if (showOfflineWorkers && !showAllWorkers) {
-            currentlyDisplaying.setText("Offline Assigned Workers");
+            currentlyDisplaying.setText(getString(R.string.my_offline_workers));
         } else if (!showOfflineWorkers && showAllWorkers) {
-            currentlyDisplaying.setText("Online Company Workers");
+            currentlyDisplaying.setText(getString(R.string.company_online_workers));
         } else {
-            currentlyDisplaying.setText("Online Assigned Workers");
+            currentlyDisplaying.setText(getString(R.string.my_online_workers));
         }
     }
 
@@ -487,6 +486,10 @@ public class WorkerInfoActivity extends AppCompatActivity {
                     case R.id.sidebar_day_leave:
                         Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(WorkerInfoActivity.this);
                         startActivity(dayLeaveIntent);
+                        break;
+
+                    case R.id.sidebar_all_workers:
+                        // just close sidebar because it goes to the same activity
                         break;
 
                     case R.id.sidebar_company:

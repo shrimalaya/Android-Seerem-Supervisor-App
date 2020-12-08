@@ -211,7 +211,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (userEmergencyInfo == null) {
-            Toast.makeText(getApplicationContext(), "Fill in emergency information!",
+            Toast.makeText(getApplicationContext(), getString(R.string.fill_in_emergency_info),
                     Toast.LENGTH_LONG).show();
         } else {
             String savedFirstName = documentManager.getCurrentUser().getFirstName();
@@ -286,6 +286,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                     case R.id.sidebar_day_leave:
                         Intent dayLeaveIntent = AddDayLeaveActivity.launchAddDayLeaveIntent(UserInfoActivity.this);
                         startActivity(dayLeaveIntent);
+                        break;
+
+                    case R.id.sidebar_all_workers:
+                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
+                        startActivity(workerIntent);
+                        finish();
                         break;
 
                     case R.id.sidebar_company:

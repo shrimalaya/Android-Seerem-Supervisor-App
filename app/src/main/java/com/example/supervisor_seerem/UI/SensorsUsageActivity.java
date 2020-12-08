@@ -53,6 +53,99 @@ public class SensorsUsageActivity extends AppCompatActivity {
         return sensorIntent;
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sensors_usage);
+        setupNavigationBar();
+        setupSidebarNavigationDrawer();
+
+        temperatureTextView = (TextView) findViewById(R.id.temperatureTextView);
+        temperatureTextView.setText(R.string.temperatureTextView);
+        temperatureValueTextView = (TextView) findViewById(R.id.temperatureValueTextView);
+        pressureTextView = (TextView) findViewById(R.id.pressureTextView);
+        pressureTextView.setText(R.string.pressureTextView);
+        pressureValueTextView = (TextView) findViewById(R.id.pressureValueTextView);
+
+        mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        // Perform check for Temperature and Pressure sensors
+        if (mySensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null) {
+            setupTemperatureSensor();
+        } else {
+            temperatureValueTextView.setText(R.string.noTemperatureSensorTextView);
+        }
+
+        if (mySensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
+            setupPressureSensor();
+        } else {
+            pressureValueTextView.setText(R.string.noPressureSensorTextView);
+        }
+        setupPressureSensor();
+    }
+
+    private void setupTemperatureSensor() {
+        temperatureSensor = mySensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        temperatureEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                float temperature = sensorEvent.values[0];
+                //temperatureValueTextView.setText("" + temperature);
+                temperatureValueTextView.setText(getString(R.string.temperatureUnitsTextView, temperature));
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
+            }
+        };
+    }
+
+    private void setupPressureSensor() {
+        pressureSensor = mySensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        pressureEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                float pressure = sensorEvent.values[0];
+                //pressureValueTextView.setText("" + pressure);
+                pressureValueTextView.setText(getString(R.string.pressureUnitsTextView, pressure));
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
+            }
+        };
+    }
+
+    private void launchLogOutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SensorsUsageActivity.this,
+                R.style.AlertDialog);
+        builder.setMessage(getString(R.string.log_out_message));
+        builder.setTitle(getString(R.string.log_out_title));
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.log_out_dialog_positive),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finishAffinity();
+                        Intent intent = new Intent(SensorsUsageActivity.this, LoginInfoActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        builder.setNegativeButton(getString(R.string.log_out_dialog_negative),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#B32134"));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#B32134"));
+    }
+
     private void setupSidebarNavigationDrawer() {
         drawer = findViewById(R.id.sidebar_drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
@@ -100,6 +193,12 @@ public class SensorsUsageActivity extends AppCompatActivity {
                         startActivity(dayLeaveIntent);
                         break;
 
+                    case R.id.sidebar_all_workers:
+                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SensorsUsageActivity.this);
+                        startActivity(workerIntent);
+                        finish();
+                        break;
+
                     case R.id.sidebar_company:
                         Intent employeeDirectoryIntent = new Intent(SensorsUsageActivity.this, EmployeeDirectoryActivity.class);
                         startActivity(employeeDirectoryIntent);
@@ -137,26 +236,26 @@ public class SensorsUsageActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch(menuItem.getItemId()) {
+                switch (menuItem.getItemId()) {
                     case R.id.workerNavigation:
                         Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SensorsUsageActivity.this);
                         startActivity(workerIntent);
                         finish();
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
 
                     case R.id.siteNavigation:
                         Intent siteIntent = SiteInfoActivity.launchSiteInfoIntent(SensorsUsageActivity.this);
                         startActivity(siteIntent);
                         finish();
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
 
                     case R.id.mapNavigation:
                         Intent mapIntent = SiteMapActivity.launchMapIntent(SensorsUsageActivity.this);
                         startActivity(mapIntent);
                         finish();
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
 
                     case R.id.sensorNavigation:
@@ -167,7 +266,7 @@ public class SensorsUsageActivity extends AppCompatActivity {
                         Intent userIntent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
                         startActivity(userIntent);
                         finish();
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -185,99 +284,6 @@ public class SensorsUsageActivity extends AppCompatActivity {
             Intent intent = UserInfoActivity.launchUserInfoIntent(SensorsUsageActivity.this);
             startActivity(intent);
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sensors_usage);
-        setupNavigationBar();
-        setupSidebarNavigationDrawer();
-
-        temperatureTextView = (TextView) findViewById(R.id.temperatureTextView);
-        temperatureTextView.setText(R.string.temperatureTextView);
-        temperatureValueTextView = (TextView) findViewById(R.id.temperatureValueTextView);
-        pressureTextView = (TextView) findViewById(R.id.pressureTextView);
-        pressureTextView.setText(R.string.pressureTextView);
-        pressureValueTextView = (TextView) findViewById(R.id.pressureValueTextView);
-
-        mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
-        // Perform check for Temperature and Pressure sensors
-        if (mySensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null) {
-            setupTemperatureSensor();
-        } else {
-            temperatureValueTextView.setText(R.string.noTemperatureSensorTextView);
-        }
-
-        if (mySensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
-            setupPressureSensor();
-        } else{
-            pressureValueTextView.setText(R.string.noPressureSensorTextView);
-        }
-        setupPressureSensor();
-    }
-
-    private void setupTemperatureSensor() {
-        temperatureSensor = mySensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-        temperatureEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                float temperature = sensorEvent.values[0];
-                //temperatureValueTextView.setText("" + temperature);
-                temperatureValueTextView.setText(getString(R.string.temperatureUnitsTextView, temperature));
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-
-            }
-        };
-    }
-
-    private void setupPressureSensor() {
-        pressureSensor = mySensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
-        pressureEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                float pressure = sensorEvent.values[0];
-                //pressureValueTextView.setText("" + pressure);
-                pressureValueTextView.setText( getString(R.string.pressureUnitsTextView, pressure));
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-
-            }
-        };
-    }
-
-    private void launchLogOutDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(SensorsUsageActivity.this,
-                                                            R.style.AlertDialog);
-        builder.setMessage(getString(R.string.log_out_message));
-        builder.setTitle(getString(R.string.log_out_title));
-        builder.setCancelable(false);
-        builder.setPositiveButton(getString(R.string.log_out_dialog_positive),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finishAffinity();
-                        Intent intent = new Intent(SensorsUsageActivity.this, LoginInfoActivity.class);
-                        startActivity(intent);
-                    }
-                });
-        builder.setNegativeButton(getString(R.string.log_out_dialog_negative),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#B32134"));
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#B32134"));
     }
 
     @Override
