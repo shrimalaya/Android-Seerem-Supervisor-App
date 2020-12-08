@@ -146,7 +146,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
+        Log.d("MAPINFO", "Map is ready!");
         siteMap = googleMap;
         siteMap.setMaxZoomPreference(MAX_ZOOM);
         siteMap.getUiSettings().setZoomControlsEnabled(true);
@@ -162,7 +162,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             siteMap.setMyLocationEnabled(true);
             siteMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            Log.d("FROM MAP: ", "previousActivity is: " + previousActivity);
+            Log.d("FROM MAP", "previousActivity is: " + previousActivity);
             if (previousActivity != null && previousActivity.equals("SiteInfo")) { // if the user clicks on a site from the list of worksites
                 zoomToSiteLocation();
             } else if (previousActivity != null && previousActivity.equals("WorkerInfo")) { // if the user clicks on a worker from the list of workers
@@ -171,7 +171,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 zoomToMasterPoint();
             } else {
                 // otherwise, just show my current location and all workers' and worksites' locations
-//                Toast.makeText(SiteMapActivity.this, "Current time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+                Log.d("MAPINFO", "Curr time: " + Calendar.getInstance().getTime());
                 getDeviceLocation();
             }
         }
@@ -219,6 +219,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         runnable = new Runnable() {
             @Override
             public void run() {
+                Log.d("MAPINFO", "Curr time: " + Calendar.getInstance().getTime());
                 updateDisplayWorkers();
                 updateDisplayWorksites();
                 handler.postDelayed(this, 10000);
@@ -255,7 +256,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         }
 
         updateDayOfWeek();
-        System.out.println("TEST6> Day of week = " + dayKey);
     }
 
     private void checkGooglePlayServicesAvailable() {
@@ -331,7 +331,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             Location currentLocation = (Location) task.getResult();
                             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             zoomCamera(latLng, DEFAULT_ZOOM);
-                            displayUserMarker(latLng);
                         } else {
                             Toast.makeText(SiteMapActivity.this,
                                     getString(R.string.unable_getting_current_location),
@@ -381,7 +380,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                     System.err.println("Listen failed: " + error);
                 }
 
-                System.out.println("TEST6> Size of snapshot for workers = " + snapshots.getDocuments().size());
                 for (DocumentSnapshot doc : snapshots) {
                     checkOnline(doc);
                 }
@@ -390,10 +388,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void checkOnline(DocumentSnapshot doc) {
-        System.out.println("TEST6> online? " + onlineWorkersDocs.contains(doc));
-        System.out.println("TEST6> ID: " + doc.getString(CONSTANTS.ID_KEY));
-        System.out.println("TEST6> CHECK no of online workers = " + onlineWorkersDocs.size());
-
         for (DocumentSnapshot onlineWorker : onlineWorkersDocs) {
             if (onlineWorker.getString(CONSTANTS.ID_KEY).equals(doc.getString(CONSTANTS.ID_KEY))) {
                 Worker newWorker = createWorker(doc);
@@ -408,7 +402,10 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void zoomCamera(LatLng latLng, float zoom) {
         // zoom to the specific latLng
-        siteMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        CameraUpdate location = CameraUpdateFactory.
+                newLatLngZoom(latLng, zoom);
+        siteMap.animateCamera(location);
+
         siteMap.setInfoWindowAdapter(new MapInfoWindowAdapter(SiteMapActivity.this));
 
         hideSoftKeyboard();
@@ -433,7 +430,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
         if (currentSite != null) {
             clickedSite = createSite(currentSite);
-            System.out.println(clickedSite.toString());
             zoomCamera(new LatLng(clickedSite.getLocation().getLatitude(),
                             clickedSite.getLocation().getLongitude()),
                     DEFAULT_ZOOM);
@@ -462,7 +458,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
         if (currentWorker != null) {
             clickedWorker = createWorker(currentWorker);
-            System.out.println(clickedWorker.toString());
             zoomCamera(new LatLng(clickedWorker.getLocation().getLatitude(),
                             clickedWorker.getLocation().getLongitude()),
                     DEFAULT_ZOOM);
@@ -706,9 +701,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
         }
 
         Boolean listChanged = !tempOnline.equals(onlineWorkersDocs);
-
-        System.out.println("TEST6> listChanged = " + listChanged);
-        System.out.println("TEST6> Size of online workers = " + tempOnline.size());
 
         if (listChanged) {
             onlineWorkersDocs.clear();
@@ -972,7 +964,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             LatLngBounds bounds = builder.build();
                             int padding = 0; // offset from edges of the map in pixels
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                            siteMap.moveCamera(cameraUpdate);
+                            siteMap.animateCamera(cameraUpdate);
                         }
                     }
                 }
@@ -992,6 +984,8 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 Log.d("FROM MAP", "Clear map and go to my location!");
 
                 getDeviceLocation();
+                showWorksitesLocations();
+                showWorkersPositions();
             }
         });
     }

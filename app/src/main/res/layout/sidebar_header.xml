@@ -7,7 +7,9 @@
     android:background="#B32134"
     android:gravity="bottom"
     android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/HeaderLightAndDark"
+
+    >
 
     <ImageView
         android:layout_width="wrap_content"

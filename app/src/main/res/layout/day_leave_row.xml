@@ -33,6 +33,7 @@
                 android:scrollbarSize="7dp"
                 android:text="@string/add_day_leave_date"
                 android:textSize="18sp"
+                android:textColor="@color/textColorPrimary"
                 android:textStyle="italic|bold"
                 app:layout_constraintStart_toEndOf="@+id/workerRow_ID"
                 app:layout_constraintTop_toTopOf="@+id/workerRow_ID" />
@@ -46,6 +47,7 @@
                 android:layout_marginLeft="8dp"
                 android:text="@string/add_day_leave_days"
                 android:textSize="18sp"
+                android:textColor="@color/textColorPrimary"
                 app:layout_constraintStart_toEndOf="@+id/day_leave_row_date"
                 app:layout_constraintTop_toTopOf="@+id/day_leave_row_date" />
 
@@ -60,6 +62,7 @@
                 android:layout_weight="0"
                 android:text="@string/recyclerview_row_explanation"
                 android:textSize="18sp"
+                android:textColor="@color/textColorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/day_leave_row_duration"
                 app:layout_constraintTop_toTopOf="@+id/day_leave_row_duration" />

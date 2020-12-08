@@ -87,12 +87,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         setupInterface();
         populateData();
         setupNavigationBar();
+        setupSidebarNavigationDrawer();
         hideSoftKeyboard();
     }
 
     private void setupInterface() {
-        setupSidebarNavigationDrawer();
-
         navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
         navigation.setSelectedItemId(R.id.userNavigation);
 
@@ -117,13 +116,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
         firebaseAuthentication = FirebaseAuth.getInstance();
 
-        Button goToUIPreferences = (Button) findViewById(R.id.buttonUIPreferences);
         Button saveUserInfo = (Button) findViewById(R.id.buttonSaveUserInfo);
-        Button goToWorkSite = (Button) findViewById(R.id.buttonSiteMap);
 
-        goToUIPreferences.setOnClickListener(this);
         saveUserInfo.setOnClickListener(this);
-        goToWorkSite.setOnClickListener(this);
 
         emergencyContactTypes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -202,22 +197,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     // Changed settings will not be saved unless the user clicks the save button
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.buttonUIPreferences){
-            //Passing of intents should go in the code for the Button going to CommunicationActivity
-            //Testing... why do t
-//            Intent intent = new Intent(UserInfoActivity.this, CommunicationActivity.class);
-//            intent.putExtra( "EMPLOYEE_FIRST_NAME", "Beep");
-//            intent.putExtra("EMPLOYEE_LAST_NAME","Boop");
-//            intent.putExtra("EMPLOYEE_ZOOM", "https://zoom.us/");
-//            intent.putExtra("EMPLOYEE_PHONE_NUMBER", "1234567890");
-//            intent.putExtra("EMPLOYEE_EMAIL", "test@gmail.com");
-//            intent.putExtra("EMPLOYEE_MEETS", "A google meets link");
-//            intent.putExtra("EMPLOYEE_TEAMS", "A team");
-//            startActivity(intent);
-        }else if(view.getId() == R.id.buttonSaveUserInfo){
+    if(view.getId() == R.id.buttonSaveUserInfo){
             storeInputs();
-        }else if(view.getId() == R.id.buttonSiteMap){
-            startActivity(new Intent(getBaseContext(), SiteInfoActivity.class));
         }
     }
 
@@ -268,6 +249,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         // customized toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_for_sidebar);
         setSupportActionBar(toolbar);
+        //toolbar.getContext().setTheme(R.style.);
 
         // toggle to open/close the sidebar
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -415,8 +397,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         } else {
             super.onBackPressed();
             finishAffinity();
-            Intent intent = new Intent(UserInfoActivity.this, LoginInfoActivity.class);
-            startActivity(intent);
         }
     }
 

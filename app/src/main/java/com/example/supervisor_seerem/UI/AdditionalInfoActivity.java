@@ -110,12 +110,11 @@ public class AdditionalInfoActivity extends AppCompatActivity {
             try {
                 hrs = timeParser(availablity.getString(CONSTANTS.MONDAY_KEY));
                 total += hrs;
-                System.out.println("TEST4> Time difference M: " + hrs);
                 if(hrs > 8) {
                     overtime+=(hrs-8);
                 }
             } catch (ParseException e) {
-                System.out.println("TEST4> Parse Exception: " + e.toString());
+                Log.d("ADDITIONALINFO", "MONDAY Parse Exception: " + e.toString());
             }
 
             tuesday = findViewById(R.id.txt_tuesday);
@@ -123,12 +122,11 @@ public class AdditionalInfoActivity extends AppCompatActivity {
             try {
                 hrs = timeParser(availablity.getString(CONSTANTS.TUESDAY_KEY));
                 total += hrs;
-                System.out.println("TEST4> Time difference T: " + hrs);
                 if(hrs > 8) {
                     overtime+=(hrs-8);
                 }
             } catch (ParseException e) {
-                System.out.println("TEST4> Parse Exception: " + e.toString());
+                Log.d("ADDITIONALINFO", "TUESDAY Parse Exception: " + e.toString());
             }
 
             wednesday = findViewById(R.id.txt_wednesday);
@@ -136,12 +134,11 @@ public class AdditionalInfoActivity extends AppCompatActivity {
             try {
                 hrs = timeParser(availablity.getString(CONSTANTS.WEDNESDAY_KEY));
                 total += hrs;
-                System.out.println("TEST4> Time difference W: " + hrs);
                 if(hrs > 8) {
                     overtime+=(hrs-8);
                 }
             } catch (ParseException e) {
-                System.out.println("TEST4> Parse Exception: " + e.toString());
+                Log.d("ADDITIONALINFO", "WEDNESDAY Parse Exception: " + e.toString());
             }
 
             thursday = findViewById(R.id.txt_thursday);
@@ -149,12 +146,11 @@ public class AdditionalInfoActivity extends AppCompatActivity {
             try {
                 hrs = timeParser(availablity.getString(CONSTANTS.THURSDAY_KEY));
                 total += hrs;
-                System.out.println("TEST4> Time difference T: " + hrs);
                 if(hrs > 8) {
                     overtime+=(hrs-8);
                 }
             } catch (ParseException e) {
-                System.out.println("TEST4> Parse Exception: " + e.toString());
+                Log.d("ADDITIONALINFO", "THURSDAY Parse Exception: " + e.toString());
             }
 
             friday = findViewById(R.id.txt_friday);
@@ -162,12 +158,11 @@ public class AdditionalInfoActivity extends AppCompatActivity {
             try {
                 hrs = timeParser(availablity.getString(CONSTANTS.FRIDAY_KEY));
                 total += hrs;
-                System.out.println("TEST4> Time difference F: " + hrs);
                 if(hrs > 8) {
                     overtime+=(hrs-8);
                 }
             } catch (ParseException e) {
-                System.out.println("TEST4> Parse Exception: " + e.toString());
+                Log.d("ADDITIONALINFO", "FRIDAY Parse Exception: " + e.toString());
             }
 
             saturday = findViewById(R.id.txt_saturday);
@@ -175,12 +170,11 @@ public class AdditionalInfoActivity extends AppCompatActivity {
             try {
                 hrs = timeParser(availablity.getString(CONSTANTS.SATURDAY_KEY));
                 total += hrs;
-                System.out.println("TEST4> Time difference in hours: " + hrs);
                 if(hrs > 8) {
                     overtime+=(hrs-8);
                 }
             } catch (ParseException e) {
-                System.out.println("TEST4> Parse Exception Saturday: " + e.toString());
+                Log.d("ADDITIONALINFO", "SATURDAY Parse Exception: " + e.toString());
             }
 
             sunday = findViewById(R.id.txt_sunday);
@@ -188,12 +182,11 @@ public class AdditionalInfoActivity extends AppCompatActivity {
             try {
                 hrs = timeParser(availablity.getString(CONSTANTS.SUNDAY_KEY));
                 total += hrs;
-                System.out.println("TEST4> Time difference in hours: " + hrs);
                 if(hrs > 8) {
                     overtime+=(hrs-8);
                 }
             } catch (ParseException e) {
-                System.out.println("TEST4> Parse Exception Sunday: " + e.toString());
+                Log.d("ADDITIONALINFO", "SUNDAY Parse Exception: " + e.toString());
             }
 
             totalHrs = findViewById(R.id.txt_additional_totalHrs);
@@ -240,7 +233,7 @@ public class AdditionalInfoActivity extends AppCompatActivity {
                 break;
             }
         }
-        System.out.println("TEST3> Selected worker = " + selectedWorker.getString(CONSTANTS.ID_KEY));
+        Log.d("ADDITIONALINFO", "Selected worker = " + selectedWorker.getString(CONSTANTS.ID_KEY));
     }
 
     private void setupToolbar() {

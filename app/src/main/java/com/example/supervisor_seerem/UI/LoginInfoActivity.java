@@ -2,12 +2,15 @@ package com.example.supervisor_seerem.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,18 +47,35 @@ public class LoginInfoActivity extends AppCompatActivity {
     List<DocumentSnapshot> allSupervisors = new ArrayList<>();
 
     DocumentManager manager;
-    SharedPreferences loginSharedPreferences;
+    SharedPreferences sharedPreferences;
+    String savedTheme;
 
+    //Apply theme from startup. This will affect the rest of the app.
+    private void applyTheme(){
+        SharedPreferences themePrefs = getSharedPreferences("ThemeData", Context.MODE_PRIVATE);
+        savedTheme = themePrefs.getString("theme",
+                getString(R.string.light_mode_radio_button));
+        switch(savedTheme){
+            case "light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_info);
         manager = DocumentManager.getInstance();
-        loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
+        applyTheme();
+
 
         usernameInput = findViewById(R.id.editUsername);
-        if (loginSharedPreferences.getString("username", null) != null) {
-            usernameInput.setText(loginSharedPreferences.getString("username", null));
+        if(sharedPreferences.getString("username", null) != null) {
+            usernameInput.setText(sharedPreferences.getString("username", null));
         }
 
         passwordInput = findViewById(R.id.editPassword);
@@ -67,7 +87,7 @@ public class LoginInfoActivity extends AppCompatActivity {
             public void onCallback(List<DocumentSnapshot> docs) {
                 allSupervisors.clear();
                 allSupervisors.addAll(docs);
-                System.out.println("TEST3> Size of allSupervisors = " + allSupervisors.size());
+                Log.d("LOGININFO", "Size of allSupervisors = " + allSupervisors.size());
 
                 buttonLogin.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -106,8 +126,8 @@ public class LoginInfoActivity extends AppCompatActivity {
 //            Intent siteInfoIntent = SiteInfoActivity.launchSiteInfoIntent(LoginInfoActivity.this);
 
 
-            String savedUsername = loginSharedPreferences.getString("username", null);
-            String savedpassword = loginSharedPreferences.getString("password", null);
+            String savedUsername = sharedPreferences.getString("username", null);
+            String savedpassword = sharedPreferences.getString("password", null);
 
             if ((savedUsername == null && savedpassword == null) || // If no Username and Password have been added to the device
                     (!savedUsername.equals(usernameToCheck))) {// A new Username denotes a different (and new) account
@@ -116,7 +136,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                 for (DocumentSnapshot doc : allSupervisors) {
                     if (doc.get(CONSTANTS.ID_KEY).equals(usernameToCheck)) {
                         user = doc;
-                        SharedPreferences.Editor editor = loginSharedPreferences.edit();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
                         // API suggested apply() instead of commit() to do this storage in the background
                         // instead of immediately.
                         editor.putString("username", usernameToCheck);
@@ -129,11 +149,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                         manager.retrieveAllData(new DocumentManager.RetrieveCallback() {
                             @Override
                             public void onCallback(Boolean result) {
-                                if (result) {
-                                    System.out.println("TEST3> RESULT = " + result);
-                                    System.out.println("TEST3> NEW user id: " + manager.getCurrentUser().getId());
-
-                                    System.out.println("TEST3> UserInfo Activity started");
+                                if(result) {
                                     progressDialog.dismiss();
                                     startActivity(toUserInfo);
                                     finish();
@@ -164,11 +180,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                             manager.retrieveAllData(new DocumentManager.RetrieveCallback() {
                                 @Override
                                 public void onCallback(Boolean result) {
-                                    if (result) {
-                                        System.out.println("TEST3> RESULT = " + result);
-                                        System.out.println("TEST3> curr user id: " + manager.getCurrentUser().getId());
-
-                                        System.out.println("TEST3> UserInfo Activity started");
+                                    if(result) {
                                         progressDialog.dismiss();
                                         startActivity(toUserInfo);
                                         finish();
@@ -193,10 +205,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isComplete()) {
-
-                            System.out.println("TEST3> Size of allSupervisors = " + task.getResult().getDocuments().size());
-
+                        if(task.isComplete()) {
                             callback.onCallback(task.getResult().getDocuments());
                         }
                     }
