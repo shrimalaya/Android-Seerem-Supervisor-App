@@ -71,7 +71,7 @@ public class LoginInfoActivity extends AppCompatActivity {
 
     private void changeLocale() {
         SharedPreferences languagePrefs = getSharedPreferences("LanguageChoice", Context.MODE_PRIVATE);
-        String language = languagePrefs.getString("language", "");
+        String language = languagePrefs.getString("language", "en");
         Locale newLocale = new Locale(language);
         Resources resources = getResources();
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();
@@ -91,8 +91,8 @@ public class LoginInfoActivity extends AppCompatActivity {
 
 
         usernameInput = findViewById(R.id.editUsername);
-        if(sharedPreferences.getString("username", "") != null) {
-            usernameInput.setText(sharedPreferences.getString("username", ""));
+        if(sharedPreferences.getString("username", null) != null) {
+            usernameInput.setText(sharedPreferences.getString("username", null));
         }
 
         passwordInput = findViewById(R.id.editPassword);
@@ -143,8 +143,8 @@ public class LoginInfoActivity extends AppCompatActivity {
 //            Intent siteInfoIntent = SiteInfoActivity.launchSiteInfoIntent(LoginInfoActivity.this);
 
 
-            String savedUsername = sharedPreferences.getString("username", "");
-            String savedpassword = sharedPreferences.getString("password", "");
+            String savedUsername = sharedPreferences.getString("username", null);
+            String savedpassword = sharedPreferences.getString("password", null);
 
             if ((savedUsername == null && savedpassword == null) || // If no Username and Password have been added to the device
                     (!savedUsername.equals(usernameToCheck))) {// A new Username denotes a different (and new) account
