@@ -26,7 +26,8 @@
             android:background="@color/colorPrimary"
             android:elevation="4dp"
             android:theme="@style/ActionBarTitleIconConsistentColor"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:title="@string/user_info_title"/>
 
         <TableLayout
             android:id="@+id/userInfoInputTableLayout"

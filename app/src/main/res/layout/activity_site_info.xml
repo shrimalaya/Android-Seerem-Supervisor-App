@@ -22,7 +22,8 @@
             android:elevation="4dp"
             android:theme="@style/ActionBarTitleIconConsistentColor"
             app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:title="@string/worksite_info_title"/>
 
         <TextView
             android:id="@+id/txtAllOrSelectedSites"
