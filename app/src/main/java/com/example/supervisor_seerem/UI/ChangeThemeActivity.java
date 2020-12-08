@@ -129,6 +129,11 @@ public class ChangeThemeActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        if (modeSwitch.isChecked()) {
+                            modeSwitch.setChecked(false);
+                        } else {
+                            modeSwitch.setChecked(true);
+                        }
                         dialogInterface.cancel();
                     }
                 });
