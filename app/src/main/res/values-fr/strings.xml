@@ -1,0 +1,279 @@
+<resources>
+    <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
+    <string name="app_name">SeeRem: Superviseur</string>
+    <string name="welcome_text">Superviseur</string>
+
+    <string name="login_help">Veuillez entrer votre nom d\'utilisateur et votre mot de passe s\'il vous plaît</string>
+    <string name="username_entry">Nom d\'utilisateur:</string>
+    <string name="password_entry">Mot de passe:</string>
+    <string name="login_button">Connexion</string>
+    <string name="error_no_username">veuillez entrer un nom d\'utilisateur.</string>
+    <string name="error_no_password">Veuillez entrer un mot de passe.</string>
+    <string name="error_wrong_password">Mot de passe incorrect pour ce nom d\'utilisateur.</string>
+    <string name="login_no_username_found">Nom d\'utilisateur introuvable dans la base de données du superviseur!</string>
+    <string name="fetching_data_message">Téléchargement de vos données…</string>
+    <string name="logging_in_title">Connexion</string>
+
+    <string name="user_info_header">Informations Utilisateur</string>
+    <string name="fill_in_emergency_info">Remplissez les informations d\'urgence!</string>
+    <string name="name_entry">Prénom et nom</string>
+    <string name="first_name_entry">Prénom</string>
+    <string name="last_name_entry">Nom</string>
+    <string name="id_entry">ID (permis de conduire ou identifiant d\'entreprise)</string>
+    <string name="medical_considerations_entry">Considérations médicales</string>
+    <string name="emergency_contact_entry">Contact D\'urgence</string>
+    <string name="emergency_contact_name_entry">Nom</string>
+    <string name="emergency_contact_number_entryy">Numéro De Téléphone</string>
+    <string name="emergency_contact_type_family">Famille</string>
+    <string name="emergency_contact_type_friend">Ami</string>
+    <string name="go_to_ui_preferences_button">Préférences De L\'interface Utilisateur</string>
+    <string name="go_to_worksite">Chantier (s) de travail</string>
+    <string name="save_user_info_button">Enregistrer Les Informations Utilisateur</string>
+    <string name="error_userinfo_incomplete">Toutes les parties de vos informations de profil doivent être remplies.</string>
+    <string name="user_info_save_success">Vos paramètres ont été enregistrés avec succès.</string>
+    <string name="user_info_save_fail">Échec de l\'enregistrement de vos paramètres.</string>
+    <string name="new_user_prompt">Bienvenue! Veuillez saisir et soumettre les informations ici pour l\'utilisation à SEEDA.</string>
+
+    <string name="map_noServices_error_message">Aucun service disponible!</string>
+    <string name="unable_getting_current_location">Impossible d\'obtenir votre position actuelle!</string>
+    <string name="map_info_window_user_location_snippet">Ceci est ma position actuelle!</string>
+    <string name="map_info_window_user_location_title">Ma Position</string>
+    <string name="map_info_window_site_location_title">Emplacement Du Site</string>
+    <string name="map_info_window_worker_location_title">Emplacement Des Travailleurs</string>
+    <string name="map_info_window_masterpoint_title">Master Point</string>
+    <string name="map_info_window_masterpoint_snippet">Allez ici en cas d\'urgence!</string>
+    <string name="map_info_window_siteName">Nom du Site: </string>
+    <string name="map_info_window_siteID">ID du Site: </string>
+    <string name="map_info_window_projectID">Project ID: </string>
+    <string name="map_info_window_hours">Heures: </string>
+    <string name="map_info_window_hse">Lien(s) de l\'environnement de sécurité sanitaire: </string>
+    <string name="map_info_window_employeeID">ID de l\'employé(e): </string>
+    <string name="map_info_window_fullName">Nom et prénom:</string>
+    <string name="map_info_window_companyID">L\'entreprise: </string>
+    <string name="map_info_window_supervisorID">Superviseur: </string>
+
+    <string name="fixed_siteID">ID Du Site</string>
+    <string name="fixed_projectID">ID Du Projet</string>
+    <string name="fixed_location">L\'emplacement</string>
+    <string name="fixed_operationHours">Heures:</string>
+    <string name="fixed_displaying_header">Affichage:</string>
+    <string name="fixed_workerID">ID Du L\'employé(e)</string>
+    <string name="fixed_firstName">Prénom</string>
+    <string name="fixed_lastName">Nom</string>
+    <string name="fixed_worksite">Chantier</string>
+    <string name="fixed_skills">Compétences</string>
+    <string name="fixed_supervisor">Superviseur</string>
+    <string name="fixed_employeeID">ID</string>
+    <string name="fixed_additionalInfo">Informations Complémentaires></string>
+    <string name="fixed_hseLink">Lien(s) de l\'environnement de sécurité sanitaire:</string>
+    <string name="fixed_masterPoint">Point Maître</string>
+    <string name="fixed_siteName">Nom Du Site:</string>
+
+    <string name="fixed_availability">Disponibilité</string>
+    <string name="fixed_additional_info_for">Informations complémentaires pour:</string>
+    <string name="fixed_monday">Lundi</string>
+    <string name="fixed_tuesday">Mardi</string>
+    <string name="fixed_wednesday">Mercredi</string>
+    <string name="fixed_thursday">Jeudi</string>
+    <string name="fixed_friday">Vendredi</string>
+    <string name="fixed_saturday">Samedi</string>
+    <string name="fixed_sunday">Dimanche</string>
+    <string name="dash"> - </string>
+    <string name="fixed_total_hours">Heures Totales:</string>
+    <string name="fixed_overtime_hours">Heures Supplémentaires:</string>
+    <string name="fixed_emergency_info">Informations D\'urgence</string>
+    <string name="fixed_blood_group">Groupe Sanguin:</string>
+    <string name="fixed_medical_condition">Condition Médicale:</string>
+    <string name="fixed_contact_person">Personne à Contacter:</string>
+    <string name="fixed_contact_number">Numéro De Contact:</string>
+    <string name="fixed_relationship">Relation:</string>
+
+    <string name="search_input_hint_map">Recherche de travailleurs ou de sites</string>
+    <string name="search_here">Cherche ici!</string>
+    <string name="clear_search_input_hint">Effacer la recherche</string>
+    <string name="search_result_all_workers">Résultats De La Recherche: Tous Les Travailleurs</string>
+    <string name="search_display_all_workers">Recherche: Tous Les Travailleurs</string>
+    <string name="search_result_all_worksites">Résultats De La Recherche: Tous Les Chantiers</string>
+    <string name="search_display_all_worksites">Recherche: Tous Les Travailleurs</string>
+    <string name="no_worksites_found">Aucun Site De Travail Trouvé!</string>
+    <string name="no_workers_found">Aucun Travailleur Trouvé!</string>
+    <string name="no_result_found">Aucun Résultat Trouvé!</string>
+
+    <string name="communication_header">La Communication</string>
+    <string name="communication_help">Sélectionnez la méthode de communication pour:</string>
+    <string name="employee_last_name_first_name">%1$s , %2$s</string>
+    <string name="communication_no_employee">Canaux De Communication Généraux De L\'entreprise</string>
+    <string name="communication_phone">TÉLÉPHONE</string>
+    <string name="communication_no_phone">(Pas De Téléphone)</string>
+    <string name="communication_email">EMAIL</string>
+    <string name="communication_no_email">(Pas De Courriel)</string>
+
+    <string name="communication_other_link">AUCUN LIEN</string>
+    <string name="communication_no_link">(Aucun lien de communication disponible)</string>
+    <string name="communication_google_meet">Google MEET</string>
+    <string name="communication_no_google_meet">(Pas de contact MEET)</string>
+    <string name="communication_google_meet_exists">MEET lié</string>
+
+    <string name="communication_microsoft_teams">Microsoft TEAMS</string>
+    <string name="communication_no_microsoft_teams">(Pas de contact TEAMS)</string>
+    <string name="communication_microsoft_teams_exists">ÉQUIPES liées</string>
+
+    <string name="communications_skype">Skype</string>
+    <string name="communications_no_skype">(Pas de contact Skype)</string>
+    <string name="communications_skype_exists">Skype lié</string>
+
+    <string name="communication_zoom">Zoom</string>
+    <string name="communication_no_zoom">(Pas de lien Zoom)</string>
+    <string name="communication_zoom_exists">Le lien de zoom existe</string>
+
+    <string name="worker_navigation_bar_text">Travailleur</string>
+    <string name="site_navigation_bar_text">Sites</string>
+    <string name="map_navigation_bar_text">Carte</string>
+    <string name="sensor_navigation_bar_text">Capteurs</string>
+    <string name="user_navigation_bar_text">Moi</string>
+
+    <string name="refresh_all_data">Actualisation De Toutes Les Données!</string>
+    <string name="please_wait">S\'il Vous Plaît, Attendez!</string>
+
+    <string name="refresh">Rafraîchir</string>
+    <string name="display_all_workers">Afficher Tous Les Travailleurs</string>
+    <string name="display_my_workers">Afficher Mes Travailleurs</string>
+    <string name="display_all_worksites">Afficher Tous Les Chantiers</string>
+    <string name="display_my_worksites">Afficher Mes Sites De Travail</string>
+    <string name="display_offline_workers">Afficher Les Travailleurs Hors Ligne</string>
+    <string name="display_online_workers">Afficher Les Travailleurs En Ligne</string>
+    <string name="display_offline_worksites">Afficher Les Sites De Travail Hors Ligne</string>
+    <string name="display_online_worksites">Afficher Les Sites De Travail En Ligne</string>
+    <string name="no_offline_workers">Aucun Travailleur Hors Ligne</string>
+    <string name="no_online_workers">Aucun Travailleur En Ligne</string>
+    <string name="no_offline_worksites">Pas De Sites De Travail Hors Ligne</string>
+    <string name="no_online_worksites">Aucun Site De Travail En Ligne</string>
+    <string name="company_offline_workers">Travailleurs Hors Ligne De L\'entreprise</string>
+    <string name="my_offline_workers">Mes Travailleurs Hors Ligne</string>
+    <string name="company_online_workers">Travailleurs En Ligne De L\'entreprise</string>
+    <string name="my_online_workers">Mes Travailleurs En Ligne</string>
+    <string name="company_offline_worksites">Sites De Travail Hors Ligne De L\'entreprise</string>
+    <string name="my_offline_worksites">Mes Sites De Travail Hors Ligne</string>
+    <string name="company_online_worksites">Sites De Travail En Ligne De L\'entreprise</string>
+    <string name="my_online_worksites">Mes Sites De Travail En Ligne</string>
+    <string name="all_company_worksites">Tous Les Chantiers De L\'entreprise</string>
+    <string name="all_my_worksites">Tous Mes Chantiers</string>
+
+    <string name="sidebar_navigation_open">Ouvrir le tiroir de navigation de la barre latérale</string>
+    <string name="sidebar_navigation_close">Fermer le tiroir de navigation de la barre latérale</string>
+    <string name="user_sidebar_text">Moi</string>
+    <string name="overtime_sidebar_text">Ajouter des heures supplémentaires</string>
+    <string name="day_leave_sidebar_text">Ajouter un jour de congé</string>
+    <string name="communication_sidebar_text">Communication</string>
+    <string name="all_workers_sidebar_text">Tous les travailleurs</string>
+    <string name="company_sidebar_text">Société</string>
+    <string name="settings_sidebar_text">Paramètres</string>
+    <string name="ui_prefs_sidebar_text">Préférences De L\'interface Utilisateur</string>
+    <string name="light_dark_mode_sidebar_text">Thème</string>
+    <string name="languages_sidebar_text">Langues</string>
+    <string name="change_password_sidebar_text">Changer le mot de passe</string>
+    <string name="log_out_sidebar_text">Déconnexion</string>
+
+    <string name="sensorsUsageTextView">Valeurs Des Capteurs De L\'appareil</string>
+    <string name="sensorUsageExplanationTextView">Les valeurs actuelles de température et de pression ambiantes détectées par votre appareil sont:</string>
+    <string name="temperatureTextView">Température</string>
+    <string name="noTemperatureSensorTextView">(Aucun capteur de température trouvé)</string>
+    <string name="pressureTextView">Pression</string>
+    <string name="noPressureSensorTextView">(Aucun capteur de pression trouvé)</string>
+    <string name="temperatureUnitsTextView">% 1 $ .2f ° C (degrés Celsius)</string>
+    <string name="pressureUnitsTextView">% 1 $ .2f hPA (hectopascal)</string>
+
+    <string name="install_meets_prompt">Veuillez d\'abord installer Google MEETS!</string>
+    <string name="install_teams_prompt">Veuillez d\'abord installer Microsoft TEAM!</string>
+    <string name="install_skype_prompt">Veuillez d\'abord installer Skype!</string>
+    <string name="install_zoom_prompt">Veuillez d\'abord installer Zoom!</string>
+
+    <string name="change_password_title">Changer Le Mot De Passe</string>
+    <string name="change_language_title">Changer La Langue De L\'application</string>
+    <string name="change_theme_title">Changer Le Thème</string>
+    <string name="add_overtime_title">Ajouter Des Heures Supplémentaires</string>
+    <string name="add_day_leave_title">Ajouter Un Congé Journalier</string>
+    <string name="employee_directory_title">Annuaire Des Employés</string>
+    <string name="worker_details_title">Détails Du Travailleur</string>
+    <string name="sensor_usage_title">Température Et Pression Ambiantes</string>
+    <string name="worker_info_title">Liste Des Travailleurs</string>
+    <string name="worksite_info_title">Liste Des Chantiers</string>
+    <string name="user_info_title">Mon Profil</string>
+    <string name="worker_contact_title">Contacts Des Travailleurs</string>
+
+    <!--    Used in multiple activities where entering a date is allowed-->
+    <string name="hour_exceptions_numerical_month_input">mm</string>
+    <string name="hour_exceptions_numerical_day_input">jj</string>
+    <string name="hour_exceptions_numerical_year_input">aaaa</string>
+    <string name="hour_exceptions_enter_date">Choisissez La Date</string>
+    <string name="hour_exceptions_select_dates_on_calendar">Sélectionnez sur le calendrier</string>
+    <string name="hour_exceptions_submit_request">Soumettre la demande</string>
+    <string name="error_request_info_incomplete">Veuillez saisir tous les détails requis de votre demande avant de soumettre.</string>
+    <string name="recyclerview_row_explanation">Explication</string>
+
+    <string name="add_day_leave_help">Ajoutez le nombre de jours de congé que l\'administration doit vérifier et valider</string>
+    <string name="add_day_leave_enter_duration"># de jours</string>
+    <string name="add_day_leave_no_date_selected">(Aucune date sélectionnée)</string>
+    <string name="add_day_leave_requests">Vos Demandes De Congé</string>
+    <string name="add_day_leave_date">Date</string>
+    <string name="add_day_leave_days_duration">Durée (jours):</string>
+    <string name="add_day_leave_days">Jours</string>
+    <string name="add_day_leave_days_explanation">(Optionnel) Expliquez brièvement pourquoi vous demandez une période de congé</string>
+    <string name="add_day_leave_save_success">Votre demande de congé journalier a été envoyée avec succès.</string>
+    <string name="add_day_leave_save_fail">Échec de l\'envoi de votre demande de congé.</string>
+
+    <string name= "add_overtime_header">Ajouter Des Heures Supplémentaires</string>
+    <string name="select_unique_day">Veuillez sélectionner un jour!</string>
+    <string name= "add_overtime_help">Spécifiez les jours de travail supplémentaire que l\'Administration doit vérifier et valider.</string>
+    <string name= "add_overtime_header_">Sélectionnez le jour:</string>
+    <string name= "add_overtime_duration">Heures</string>
+    <string name= "add_overtime_hours">Heures (supplémentaires):</string>
+    <string name= "add_overtime_explanation">(Optionnel) Expliquez brièvement pourquoi vous demandez des heures supplémentaires.</string>
+    <string name= "add_overtime_requests">Vos demandes d\'heures supplémentaires</string>
+    <string name= "add_overtime_success">Votre demande d\'heures supplémentaires a été envoyée avec succès.</string>
+    <string name= "add_overtime_fail">Échec de l\'envoi de votre demande d\'heures supplémentaires.</string>
+    <string name= "add_overtime_day">Jour</string>
+
+    <string-array name="days_of_week">
+        <item>Lundi</item>
+        <item>Mardi</item>
+        <item>Mercredi</item>
+        <item>Jeudi</item>
+        <item>Vendredi</item>
+        <item>Samedi</item>
+        <item>Dimanche</item>
+    </string-array>
+    <string name="change_password_header">Changer De Mot De Passe</string>
+    <string name="change_password_hint">Veuillez saisir les informations suivantes:</string>
+    <string name="change_password_enter_current_password">Mot De Passe Actuel</string>
+    <string name="change_password_enter_new_password">Nouveau Mot De Passe</string>
+    <string name="change_password_update_password">Mettre à Jour Le Mot De Passe</string>
+    <string name="change_password_current_empty">Veuillez saisir votre mot de passe actuel.</string>
+    <string name="change_password_new_empty">Veuillez saisir votre nouveau mot de passe.</string>
+    <string name="change_password_current_and_new_are_same">Votre nouveau mot de passe ne peut pas être le même que votre mot de passe actuel.</string>
+    <string name="change_password_wrong_current_password">Mot de passe incorrect! Veuillez saisir à nouveau votre mot de passe actuel.</string>
+    <string name="change_password_successful_change">Votre mot de passe a été changé avec succès.</string>
+
+    <string name="directory_employeeID">ID De L\'employé(e)</string>
+    <string name="directory_firstName">Prénom</string>
+    <string name="directory_lastName">Nom</string>
+    <string name="directory_supervisors">Superviseurs</string>
+    <string name="directory_workers">Employé(e)s</string>
+
+    <string name="english_language">Anglais</string>
+    <string name="french_language">Français</string>
+    <string name="restart_app_title">La relance de l\'application est requise.</string>
+    <string name="restart_app_message">Voulez-vous relancer l\'application?</string>
+    <string name="restart_app_dialog_positive">RELANCER</string>
+    <string name="restart_app_dialog_negative">ANNULER</string>
+
+    <string name="light_mode_radio_button">Mode Clair</string>
+    <string name="dark_mode_radio_button">Mode Sombre</string>
+    <string name="light_mode_switch">Clair</string>
+    <string name="dark_mode_switch">Sombre</string>
+
+    <string name="log_out_title">Quitter l\'application</string>
+    <string name="log_out_message">Voulez-vous vous déconnecter?</string>
+    <string name="log_out_dialog_positive">DÉCONNEXION</string>
+    <string name="log_out_dialog_negative">ANNULER</string>
+</resources>

@@ -8,65 +8,67 @@
     tools:context=".UI.ChangeLanguageActivity">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/back_and_save_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/back_and_save_toolbar"
-        app:title="@string/change_language_title"
         android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="@string/change_language_title" />
 
-        <RadioGroup
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/image_english_language"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/uk_flag" />
+
+            <ImageView
+                android:id="@+id/image_french_language"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/france_flag"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+        <RadioGroup
             android:id="@+id/language_radio_group"
-            android:layout_marginTop="20dp">
-            <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/english_radio_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/image_english_language"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/uk_flag"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginStart="20dp" />
-                <RadioButton
-                    android:id="@+id/english_radio_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/english_language"
-                    android:textSize="20sp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp" />
-            </LinearLayout>
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="@string/english_language"
+                android:textSize="20sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <RadioButton
+                android:id="@+id/french_radio_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/image_french_language"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/france_flag"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginStart="20dp" />
-                <RadioButton
-                    android:id="@+id/french_radio_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/french_language"
-                    android:textSize="20sp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp" />
-            </LinearLayout>
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="@string/french_language"
+                android:textSize="20sp"/>
+        </RadioGroup>
 
-        </RadioGroup>>
-
+    </LinearLayout>
 </LinearLayout>
