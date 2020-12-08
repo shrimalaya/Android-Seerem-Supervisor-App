@@ -27,7 +27,7 @@ import java.util.Locale;
 
 public class ChangeLanguageActivity extends AppCompatActivity {
 
-    private String languageChoice = "en";
+    private String languageChoice;
     private SharedPreferences languageSharedPrefs;
 
     public static Intent launchChangeLanguageIntent(Context context) {

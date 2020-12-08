@@ -83,8 +83,8 @@ public class LoginInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_info);
         changeLocale();
+        setContentView(R.layout.activity_login_info);
         manager = DocumentManager.getInstance();
         sharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
         applyTheme();
