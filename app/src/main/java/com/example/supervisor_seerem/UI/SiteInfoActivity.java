@@ -448,12 +448,6 @@ public class SiteInfoActivity extends AppCompatActivity {
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_all_workers:
-                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteInfoActivity.this);
-                        startActivity(workerIntent);
-                        finish();
-                        break;
-
                     case R.id.sidebar_company:
                         Intent employeeDirectoryIntent = new Intent(SiteInfoActivity.this, EmployeeDirectoryActivity.class);
                         startActivity(employeeDirectoryIntent);
