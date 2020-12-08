@@ -166,7 +166,7 @@
     <string name="day_leave_sidebar_text">Ajouter un jour de congé</string>
     <string name="communication_sidebar_text">Communication</string>
     <string name="all_workers_sidebar_text">Tous les travailleurs</string>
-    <string name="company_sidebar_text">Société</string>
+    <string name="company_sidebar_text">Mon entreprise</string>
     <string name="settings_sidebar_text">Paramètres</string>
     <string name="ui_prefs_sidebar_text">Préférences De L\'interface Utilisateur</string>
     <string name="light_dark_mode_sidebar_text">Thème</string>
