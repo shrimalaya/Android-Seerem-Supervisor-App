@@ -851,6 +851,13 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 result.add(doc);
                 break;
             }
+
+            // Look for matching Skills
+            matcher = pattern.matcher(doc.getString(CONSTANTS.SKILLS_KEY));
+            if (matcher.find()) {
+                result.add(doc);
+                break;
+            }
         }
 
         for (DocumentSnapshot doc : showWorksitesDocs) {
