@@ -1197,9 +1197,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                 registration.remove();
             }
             super.onBackPressed();
-            finishAffinity();
-            Intent intent = UserInfoActivity.launchUserInfoIntent(SiteMapActivity.this);
-            startActivity(intent);
+            finish();
         }
     }
 
