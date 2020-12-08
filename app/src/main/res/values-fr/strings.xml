@@ -54,8 +54,8 @@
 
     <string name="fixed_siteID">ID Du Site</string>
     <string name="fixed_projectID">ID Du Projet</string>
-    <string name="fixed_location">L\'emplacement</string>
-    <string name="fixed_operationHours">Heures:</string>
+    <string name="fixed_location">l\'emplacement</string>
+    <string name="fixed_operationHours">Heures</string>
     <string name="fixed_displaying_header">Affichage:</string>
     <string name="fixed_workerID">ID Du L\'employé(e)</string>
     <string name="fixed_firstName">Prénom</string>
@@ -175,7 +175,6 @@
     <string name="log_out_sidebar_text">Déconnexion</string>
 
     <string name="sensorsUsageTextView">Valeurs Des Capteurs De L\'appareil</string>
-    <string name="sensorUsageExplanationTextView">Les valeurs actuelles de température et de pression ambiantes détectées par votre appareil sont:</string>
     <string name="temperatureTextView">Température</string>
     <string name="noTemperatureSensorTextView">(Aucun capteur de température trouvé)</string>
     <string name="pressureTextView">Pression</string>
@@ -278,4 +277,5 @@
     <string name="log_out_message">Voulez-vous vous déconnecter?</string>
     <string name="log_out_dialog_positive">DÉCONNEXION</string>
     <string name="log_out_dialog_negative">ANNULER</string>
+    <string name="sensorUsageExplanationTextView">Les valeurs actuelles de température ambiante et de pression détectées par votre appareil sont:</string>
 </resources>
