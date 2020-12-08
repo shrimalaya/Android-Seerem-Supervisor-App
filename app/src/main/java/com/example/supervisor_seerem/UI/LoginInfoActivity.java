@@ -9,7 +9,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +35,7 @@ import org.json.JSONArray;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * This class is meant to be the first one the user sees upon launching the app.
@@ -64,9 +68,22 @@ public class LoginInfoActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    private void changeLocale() {
+        SharedPreferences languagePrefs = getSharedPreferences("LanguageChoice", Context.MODE_PRIVATE);
+        String language = languagePrefs.getString("language", null);
+        Locale newLocale = new Locale(language);
+        Resources resources = getResources();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = newLocale;
+        resources.updateConfiguration(configuration, displayMetrics);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeLocale();
         setContentView(R.layout.activity_login_info);
         manager = DocumentManager.getInstance();
         sharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);

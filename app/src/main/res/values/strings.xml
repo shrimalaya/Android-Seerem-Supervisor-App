@@ -15,7 +15,6 @@
     <string name="logging_in_title">Logging In</string>
 
     <string name="user_info_header">User Info</string>
-    <string name="user_info_help">Edit personal information here. </string>
     <string name="fill_in_emergency_info">Fill in emergency information!</string>
     <string name="name_entry">First and Last name</string>
     <string name="first_name_entry">First name</string>
@@ -212,7 +211,7 @@
     <string name="error_request_info_incomplete">Please enter all required details of your request before submitting.</string>
     <string name="recyclerview_row_explanation">Explanation</string>
 
-    <string name="add_day_leave_help">Add day leaves you wish to request Administration for, which they must verify and allow to put into effect.</string>
+    <string name="add_day_leave_help">Add number of day leaves for the Administration to verify and validate.</string>
     <string name="add_day_leave_enter_duration"># of days</string>
     <string name="add_day_leave_no_date_selected">(No date selected)</string>
     <string name="add_day_leave_requests">Your Day Leave Requests</string>
@@ -225,14 +224,14 @@
 
     <string name= "add_overtime_header">Add Overtime Hours</string>
     <string name="select_unique_day">Please select a day!</string>
-    <string name= "add_overtime_help">Request days in the week from Administration when you will work overtime, which they must verify and allow to put into effect.</string>
+    <string name= "add_overtime_help">Specify the days you work overtime for the Administration to verify and validate.</string>
     <string name= "add_overtime_header_">Select day:</string>
     <string name= "add_overtime_duration">Hrs</string>
     <string name= "add_overtime_hours">Overtime (Hours):</string>
     <string name= "add_overtime_explanation">(Optional) Briefly explain why you are requesting Overtime.</string>
     <string name= "add_overtime_requests">Your Overtime Requests</string>
     <string name= "add_overtime_success">Your Overtime request was sent successfully.</string>
-    <string name= "add_overtime_fail">Your Overtime request was not sent successfully.</string>
+    <string name= "add_overtime_fail">Failed to send your Overtime request.</string>
     <string name= "add_overtime_day">Day</string>
 
     <string-array name="days_of_week">
@@ -263,6 +262,10 @@
 
     <string name="english_language">English</string>
     <string name="french_language">French</string>
+    <string name="restart_app_title">App relaunching required</string>
+    <string name="restart_app_message">Do you want to relaunch the app?</string>
+    <string name="restart_app_dialog_positive">RELAUNCH</string>
+    <string name="restart_app_dialog_negative">CANCEL</string>
 
     <string name="light_mode_radio_button">Light Mode</string>
     <string name="dark_mode_radio_button">Dark Mode</string>
@@ -272,5 +275,5 @@
     <string name="log_out_title">You are about to exit the app</string>
     <string name="log_out_message">Do you want to log out?</string>
     <string name="log_out_dialog_positive">LOG OUT</string>
-    <string name="log_out_dialog_negative">CLOSE</string>
+    <string name="log_out_dialog_negative">CANCEL</string>
 </resources>

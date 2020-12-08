@@ -280,7 +280,6 @@ public class AddDayLeaveActivity extends AppCompatActivity implements View.OnCli
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.checkmark:
-                //Toast.makeText(this, "Need to save changes", Toast.LENGTH_SHORT).show();
                 storeInputs();
                 refreshDayLeaveData();
                 hideSoftKeyboard();

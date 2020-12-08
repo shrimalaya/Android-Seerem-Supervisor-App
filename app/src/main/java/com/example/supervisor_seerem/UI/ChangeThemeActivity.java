@@ -1,6 +1,5 @@
 package com.example.supervisor_seerem.UI;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
@@ -8,12 +7,10 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.DragEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -22,6 +19,8 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
+
+import java.util.Locale;
 
 public class ChangeThemeActivity extends AppCompatActivity{
 
@@ -62,7 +61,7 @@ public class ChangeThemeActivity extends AppCompatActivity{
         toolbar.getContext().setTheme(R.style.AppTheme);
     }
 
-    private void applySelectedRadioButton(){
+    private void switchMode(){
     sharedPreferences = getSharedPreferences("ThemeData", Context.MODE_PRIVATE);
         // Default to Light theme if for whatever reason nothing has been saved
         savedTheme = sharedPreferences.getString("theme", "light");
@@ -80,6 +79,7 @@ public class ChangeThemeActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_theme);
+        setupToolbar();
 
         modeSwitch = findViewById(R.id.switch1);
 
@@ -101,11 +101,21 @@ public class ChangeThemeActivity extends AppCompatActivity{
                     editor.putString("theme", "light");
                     editor.apply();
                 }
+                changeLocale();
             }
         });
+        switchMode();
+    }
 
-        applySelectedRadioButton();
-        setupToolbar();
-
+    private void changeLocale() {
+        SharedPreferences languagePrefs = getSharedPreferences("LanguageChoice", Context.MODE_PRIVATE);
+        String language = languagePrefs.getString("language", null);
+        Locale newLocale = new Locale(language);
+        Toast.makeText(this, "language = " + language, Toast.LENGTH_SHORT).show();
+        Resources resources = getResources();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = newLocale;
+        resources.updateConfiguration(configuration, displayMetrics);
     }
 }
