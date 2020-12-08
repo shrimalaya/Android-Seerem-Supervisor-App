@@ -3,7 +3,7 @@
     <string name="app_name">SeeRem: Superviseur</string>
     <string name="welcome_text">Superviseur</string>
 
-    <string name="login_help">Veuillez entrer votre nom d\'utilisateur et votre mot de passe s\'il vous plaît</string>
+    <string name="login_help">Entrez votre nom d\'utilisateur et votre mot de passe</string>
     <string name="username_entry">Nom d\'utilisateur:</string>
     <string name="password_entry">Mot de passe:</string>
     <string name="login_button">Connexion</string>
@@ -65,7 +65,7 @@
     <string name="fixed_supervisor">Superviseur</string>
     <string name="fixed_employeeID">ID</string>
     <string name="fixed_additionalInfo">Informations Complémentaires></string>
-    <string name="fixed_hseLink">Lien(s) de l\'environnement de sécurité sanitaire:</string>
+    <string name="fixed_hseLink">Santé et sécurité:</string>
     <string name="fixed_masterPoint">Point Maître</string>
     <string name="fixed_siteName">Nom Du Site:</string>
 
@@ -180,8 +180,8 @@
     <string name="noTemperatureSensorTextView">(Aucun capteur de température trouvé)</string>
     <string name="pressureTextView">Pression</string>
     <string name="noPressureSensorTextView">(Aucun capteur de pression trouvé)</string>
-    <string name="temperatureUnitsTextView">% 1 $ .2f ° C (degrés Celsius)</string>
-    <string name="pressureUnitsTextView">% 1 $ .2f hPA (hectopascal)</string>
+    <string name="temperatureUnitsTextView">%1$.2f°C (degrés Celsius)</string>
+    <string name="pressureUnitsTextView">%1$.2f hPA (hectopascal)</string>
 
     <string name="install_meets_prompt">Veuillez d\'abord installer Google MEETS!</string>
     <string name="install_teams_prompt">Veuillez d\'abord installer Microsoft TEAM!</string>

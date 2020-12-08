@@ -119,7 +119,7 @@ public class ChangeLanguageActivity extends AppCompatActivity {
 
     private void launchRestartAppDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ChangeLanguageActivity.this,
-                R.style.AlertDialog);
+                android.R.style.Theme_Material_Light_Dialog_Alert);
         builder.setMessage(getString(R.string.restart_app_message));
         builder.setTitle(getString(R.string.restart_app_title));
         builder.setCancelable(false);

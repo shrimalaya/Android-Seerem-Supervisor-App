@@ -565,7 +565,7 @@ public class WorkerInfoActivity extends AppCompatActivity {
 
     private void launchLogOutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(WorkerInfoActivity.this,
-                R.style.AlertDialog);
+                android.R.style.Theme_Material_Light_Dialog_Alert);
         builder.setMessage(getString(R.string.log_out_message));
         builder.setTitle(getString(R.string.log_out_title));
         builder.setCancelable(false);
