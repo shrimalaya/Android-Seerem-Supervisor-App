@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".UI.ChangeThemeActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -12,6 +13,59 @@
         android:id="@+id/back_and_save_toolbar"
         app:title="@string/change_theme_title"
         android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:theme="@style/ActionBarTitleIconConsistentColor" />
 
+<!--    <TableLayout-->
+<!--        android:id="@+id/tableLayout"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dip"-->
+<!--        android:layout_weight="7"-->
+<!--        android:background="@color/windowBackground">-->
+<!--        <TableRow-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="0"-->
+<!--            android:gravity="center"-->
+<!--            android:background="@color/windowBackground">-->
+
+    <RadioGroup
+        android:id="@+id/radioTheme"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/textColorPrimary"
+        android:textColor="@color/textColorPrimary">
+
+
+        <RadioButton
+            android:id="@+id/radio_button_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-smallcaps"
+            android:text="@string/light_mode_radio_button"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="40dp" />
+
+        <RadioButton
+            android:id="@+id/radio_button_dark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-smallcaps"
+            android:text="@string/dark_mode_radio_button"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="40dp" />
+    </RadioGroup>
+    <!--        </TableRow>-->
+<!--        <TableRow-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="0"-->
+<!--            android:gravity="center"-->
+<!--            android:background="@color/windowBackground">-->
+
+<!--        </TableRow>-->
+<!--    </TableLayout>-->
 </LinearLayout>

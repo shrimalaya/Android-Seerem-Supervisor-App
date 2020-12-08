@@ -176,7 +176,7 @@
         <item>Sunday</item>
     </string-array>
     <string name="change_password_header">Change Password</string>
-    <string name="change_password_hint">Please enter the following</string>
+    <string name="change_password_hint">Please enter the following:</string>
     <string name="change_password_enter_current_password">Current Password</string>
     <string name="change_password_enter_new_password">New Password</string>
     <string name="change_password_update_password">Update Password</string>
@@ -193,4 +193,7 @@
     <string name="log_out_dialog_negative">CLOSE</string>
     <string name="display_online_worksites">Display Online Sites</string>
     <string name="display_offline_worksites">Display Offline Sites</string>
+
+    <string name="light_mode_radio_button">Light Mode</string>
+    <string name="dark_mode_radio_button">Dark Mode</string>
 </resources>

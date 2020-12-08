@@ -22,7 +22,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:theme="@style/ActionBarTitleIconConsistentColor"
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -48,7 +48,8 @@
             android:layout_marginLeft="4dp"
             android:layout_marginTop="5dp"
             android:text="Displaying:"
-            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:textColor="@color/textColorPrimary"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_for_sidebar" />
@@ -60,7 +61,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
             android:text="Assigned Workers"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold|italic"
             app:layout_constraintStart_toEndOf="@+id/fix_workerInfo_displayingText"
@@ -78,7 +79,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                >
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/workerInfoRecycler"
@@ -99,7 +101,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginLeft="5dp"
                     android:text="Worker ID"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="16dp"
                     android:textStyle="bold|italic"
                     app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +114,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="First Name"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/fix_workerId_workerInfo"
@@ -125,7 +127,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="Last Name"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/fix_Fname_workerInfo"
@@ -138,7 +140,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="Worksite"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView7"
@@ -151,7 +153,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="Location"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView9"
@@ -165,7 +167,7 @@
                     android:layout_marginLeft="4dp"
                     android:gravity="left"
                     android:text="Skills"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView10"
@@ -178,7 +180,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="Supervisor"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView8"
@@ -193,7 +195,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/windowBackground"
+        android:textColor="@color/textColorPrimary"
         app:headerLayout="@layout/sidebar_header"
-        app:menu="@menu/menu_sidebar_navigation_drawer" />
+        app:menu="@menu/menu_sidebar_navigation_drawer"
+        android:theme="@style/SideBarLightAndDark"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

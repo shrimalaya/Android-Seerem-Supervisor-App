@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/sidebar_drawer_layout"
+    android:background="@color/windowBackground"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -19,7 +20,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:theme="@style/ActionBarTitleIconConsistentColor"
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -30,7 +31,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
             android:text="Online Assigned Worksites"
-            android:textColor="#000000"
+            android:textColor="@color/textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="@+id/fixHeadingDisplaying"
@@ -45,7 +46,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
             android:text="Site ID"
-            android:textColor="#000000"
+            android:textColor="@color/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/fixProjectId"
@@ -59,7 +60,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
             android:text="Project Id"
-            android:textColor="#000000"
+            android:textColor="@color/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/fixSiteId"
@@ -74,7 +75,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
             android:text="Location"
-            android:textColor="#000000"
+            android:textColor="@color/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/fixSiteId"
@@ -91,7 +92,7 @@
             android:layout_marginEnd="4dp"
             android:layout_marginRight="4dp"
             android:text="OP Hours"
-            android:textColor="#000000"
+            android:textColor="@color/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/fixSiteId"
@@ -103,12 +104,14 @@
             android:id="@+id/siteInfoRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@color/windowBackground"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/bottomNavigationBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fixSiteId" />
+            app:layout_constraintTop_toBottomOf="@+id/fixSiteId"
+            android:theme="@style/RecyclerViewLightAndDark"/>
 
         <TextView
             android:id="@+id/fixHeadingDisplaying"
@@ -118,6 +121,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginTop="6dp"
             android:text="Displaying:"
+            android:textColor="@color/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -128,9 +132,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="#A8A8A8"
             app:itemBackground="@color/colorPrimary"
             app:itemIconTint="@drawable/selector"
-            app:itemTextColor="@color/white"
+            app:itemTextColor="@drawable/selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -144,7 +149,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/windowBackground"
+        android:textColor="@color/textColorPrimary"
         app:headerLayout="@layout/sidebar_header"
-        app:menu="@menu/menu_sidebar_navigation_drawer" />
+        app:menu="@menu/menu_sidebar_navigation_drawer"
+        android:theme="@style/SideBarLightAndDark"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
