@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/textView17"
+        android:id="@+id/directory_employeeID"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -27,16 +27,16 @@
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="ID"
+        android:text="@string/directory_employeeID"
         android:textColor="@color/textColorPrimary"
         android:textSize="20sp"
         android:textStyle="bold|italic"
-        app:layout_constraintEnd_toStartOf="@+id/textView19"
+        app:layout_constraintEnd_toStartOf="@+id/directory_firstName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/back_and_save_toolbar" />
 
     <TextView
-        android:id="@+id/textView19"
+        android:id="@+id/directory_firstName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -44,16 +44,16 @@
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="First Name"
+        android:text="@string/directory_firstName"
         android:textColor="@color/textColorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/textView20"
-        app:layout_constraintStart_toEndOf="@+id/textView17"
-        app:layout_constraintTop_toTopOf="@+id/textView17" />
+        app:layout_constraintEnd_toStartOf="@+id/directory_lastName"
+        app:layout_constraintStart_toEndOf="@+id/directory_employeeID"
+        app:layout_constraintTop_toTopOf="@+id/directory_employeeID" />
 
     <TextView
-        android:id="@+id/textView20"
+        android:id="@+id/directory_lastName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -61,13 +61,13 @@
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="Last Name"
+        android:text="@string/directory_lastName"
         android:textColor="@color/textColorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView19"
-        app:layout_constraintTop_toTopOf="@+id/textView17" />
+        app:layout_constraintStart_toEndOf="@+id/directory_firstName"
+        app:layout_constraintTop_toTopOf="@+id/directory_employeeID" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -76,7 +76,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView17">
+        app:layout_constraintTop_toBottomOf="@+id/directory_employeeID">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:fontFamily="sans-serif-smallcaps"
-                android:text="Supervisors"
+                android:text="@string/directory_supervisors"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -131,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif-smallcaps"
-                android:text="Workers"
+                android:text="@string/directory_workers"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"

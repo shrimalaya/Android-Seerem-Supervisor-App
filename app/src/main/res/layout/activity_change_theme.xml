@@ -8,32 +8,19 @@
     tools:context=".UI.ChangeThemeActivity">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/back_and_save_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:id="@+id/back_and_save_toolbar"
-        app:title="@string/change_theme_title"
         android:background="@color/colorPrimary"
-        android:theme="@style/ActionBarTitleIconConsistentColor" />
-
-<!--    <TableLayout-->
-<!--        android:id="@+id/tableLayout"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dip"-->
-<!--        android:layout_weight="7"-->
-<!--        android:background="@color/windowBackground">-->
-<!--        <TableRow-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="0"-->
-<!--            android:gravity="center"-->
-<!--            android:background="@color/windowBackground">-->
+        android:theme="@style/ActionBarTitleIconConsistentColor"
+        app:title="@string/change_theme_title" />
 
     <RadioGroup
         android:id="@+id/radioTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0"
         android:layout_gravity="center"
+        android:layout_weight="0"
         android:backgroundTint="@color/textColorPrimary"
         android:textColor="@color/textColorPrimary">
 
@@ -58,14 +45,4 @@
             android:textColor="@color/textColorPrimary"
             android:textSize="40dp" />
     </RadioGroup>
-    <!--        </TableRow>-->
-<!--        <TableRow-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="0"-->
-<!--            android:gravity="center"-->
-<!--            android:background="@color/windowBackground">-->
-
-<!--        </TableRow>-->
-<!--    </TableLayout>-->
 </LinearLayout>

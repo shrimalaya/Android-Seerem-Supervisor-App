@@ -162,7 +162,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             siteMap.setMyLocationEnabled(true);
             siteMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            Log.d("FROM MAP: ", "previousActivity is: " + previousActivity);
+            Log.d("FROM MAP", "previousActivity is: " + previousActivity);
             if (previousActivity != null && previousActivity.equals("SiteInfo")) { // if the user clicks on a site from the list of worksites
                 zoomToSiteLocation();
             } else if (previousActivity != null && previousActivity.equals("WorkerInfo")) { // if the user clicks on a worker from the list of workers
@@ -332,7 +332,9 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             zoomCamera(latLng, DEFAULT_ZOOM);
                         } else {
-                            Toast.makeText(SiteMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SiteMapActivity.this,
+                                    getString(R.string.unable_getting_current_location),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -708,7 +710,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             showWorkersDocs.addAll(onlineWorkersDocs);
 
             if (onlineWorkersDocs.isEmpty()) {
-                Toast.makeText(this, "No Online Workers!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.no_online_workers), Toast.LENGTH_LONG).show();
             }
 
             showWorkersPositions();
@@ -862,7 +864,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void setupSearchView() {
-        mapSearchView.setQueryHint(getString(R.string.search_input_hint));
+        mapSearchView.setQueryHint(getString(R.string.search_input_hint_map));
         mapSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -874,7 +876,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public boolean onQueryTextSubmit(String input) {
                 mapSearchView.clearFocus();
-                mapSearchView.setQueryHint(getString(R.string.search_input_hint));
+                mapSearchView.setQueryHint(getString(R.string.search_input_hint_map));
                 mapSearchView.setIconified(true);
                 return false;
             }
@@ -882,7 +884,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public boolean onQueryTextChange(String input) {
                 if (input.equals("")) {
-                    mapSearchView.setQueryHint(getString(R.string.search_input_hint));
+                    mapSearchView.setQueryHint(getString(R.string.search_input_hint_map));
                 } else {
                     mapSearchView.setQueryHint(getString(R.string.clear_search_input_hint));
                     if (input.contains("WS")) {
@@ -894,7 +896,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             showWorkersPositions();
                             showWorksitesLocations();
                         } else {
-                            Toast.makeText(getApplicationContext(), "No work sites found!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.no_worksites_found), Toast.LENGTH_SHORT).show();
                             mapSearchView.setQuery("", false);
                             mapSearchView.clearFocus();
                             mapSearchView.setIconified(true);
@@ -908,7 +910,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                             showWorkersPositions();
                             showWorksitesLocations();
                         } else {
-                            Toast.makeText(getApplicationContext(), "No worker found!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.no_workers_found), Toast.LENGTH_SHORT).show();
                             mapSearchView.setQuery("", false);
                             mapSearchView.clearFocus();
                             mapSearchView.setIconified(true);
@@ -919,7 +921,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                         Log.d("FROM MAP", result.toString());
 
                         if (result.size() <= 0) {
-                            Toast.makeText(getApplicationContext(), "No result found!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.no_result_found), Toast.LENGTH_SHORT).show();
                         } else if (result.size() == 1) {
                             if (result.get(0).getString(CONSTANTS.ID_KEY).contains("WK")) {
                                 Worker newWorker = createWorker(result.get(0));
