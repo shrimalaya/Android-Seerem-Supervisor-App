@@ -58,6 +58,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:text="@string/english_language"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -67,6 +68,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:text="@string/french_language"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="20sp"/>
         </RadioGroup>
 
