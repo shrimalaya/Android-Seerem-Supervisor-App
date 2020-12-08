@@ -95,7 +95,7 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:text="@string/communication_no_phone"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
         </TableRow>
 
         <TableRow
@@ -126,7 +126,7 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:text="@string/communication_no_email"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
         </TableRow>
 
         <TableRow
@@ -151,12 +151,12 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
+                android:autoLink="web"
                 android:ems="10"
                 android:fontFamily="serif"
                 android:text="@string/communication_no_link"
-                android:autoLink="web"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
         </TableRow>
     </TableLayout>
 
