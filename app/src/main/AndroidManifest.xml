@@ -18,35 +18,43 @@
         <activity
             android:name=".UI.EmployeeDirectoryActivity"
             android:label="@string/employee_directory_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.ChangePasswordActivity"
             android:label="@string/change_password_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.ChangeLanguageActivity"
             android:label="@string/change_language_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.ChangeThemeActivity"
             android:label="@string/change_theme_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.AddDayLeaveActivity"
             android:label="@string/add_day_leave_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.AddOvertimeActivity"
             android:label="@string/add_overtime_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.AdditionalInfoActivity"
             android:label="@string/worker_details_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.SensorsUsageActivity"
             android:label="@string/sensor_usage_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -58,25 +66,31 @@
         <activity
             android:name=".UI.WorkerInfoActivity"
             android:label="@string/worker_info_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.UserInfoActivity"
             android:label="@string/user_info_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.CommunicationActivity"
             android:label="@string/worker_contact_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.SiteMapActivity"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.SiteInfoActivity"
             android:label="@string/worksite_info_title"
-            android:theme="@style/AppTheme_NoActionBar" />
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.LoginInfoActivity"
-            android:theme="@style/AppTheme_NoActionBar">
+            android:theme="@style/AppTheme_NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
