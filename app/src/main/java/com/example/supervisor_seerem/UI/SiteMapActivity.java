@@ -1083,12 +1083,6 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_all_workers:
-                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SiteMapActivity.this);
-                        startActivity(workerIntent);
-                        finish();
-                        break;
-
                     case R.id.sidebar_company:
                         Intent employeeDirectoryIntent = EmployeeDirectoryActivity.launchEmployeeDirectory(SiteMapActivity.this);
                         startActivity(employeeDirectoryIntent);

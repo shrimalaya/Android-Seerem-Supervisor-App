@@ -100,12 +100,6 @@ public class SensorsUsageActivity extends AppCompatActivity {
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_all_workers:
-                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(SensorsUsageActivity.this);
-                        startActivity(workerIntent);
-                        finish();
-                        break;
-
                     case R.id.sidebar_company:
                         Intent employeeDirectoryIntent = new Intent(SensorsUsageActivity.this, EmployeeDirectoryActivity.class);
                         startActivity(employeeDirectoryIntent);

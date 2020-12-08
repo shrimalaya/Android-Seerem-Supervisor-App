@@ -489,10 +489,6 @@ public class WorkerInfoActivity extends AppCompatActivity {
                         startActivity(dayLeaveIntent);
                         break;
 
-                    case R.id.sidebar_all_workers:
-                        // just close sidebar because it goes to the same activity
-                        break;
-
                     case R.id.sidebar_company:
                         Intent employeeDirectoryIntent = EmployeeDirectoryActivity.launchEmployeeDirectory(WorkerInfoActivity.this);
                         startActivity(employeeDirectoryIntent);
