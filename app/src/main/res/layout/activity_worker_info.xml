@@ -8,17 +8,6 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/sidebar_navigation_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/windowBackground"
-        android:textColor="@color/textColorPrimary"
-        android:theme="@style/SideBarLightAndDark"
-        app:headerLayout="@layout/sidebar_header"
-        app:menu="@menu/menu_sidebar_navigation_drawer" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/base_constraint_worker_info"
         android:layout_width="match_parent"
@@ -184,5 +173,16 @@
         </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/sidebar_navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/windowBackground"
+        android:textColor="@color/textColorPrimary"
+        app:headerLayout="@layout/sidebar_header"
+        app:menu="@menu/menu_sidebar_navigation_drawer"
+        android:theme="@style/SideBarLightAndDark"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
