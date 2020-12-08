@@ -35,6 +35,7 @@
                 android:id="@+id/overtime_help"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_weight="2"
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
@@ -43,13 +44,15 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="18dp"
             android:layout_weight="0"
+            android:backgroundTint="@color/windowBackground"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:backgroundTint="@color/windowBackground">
+            android:orientation="horizontal">
 
             <Spinner
                 android:id="@+id/days_spinner"
@@ -57,10 +60,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="@color/colorPrimary"
-                android:theme="@style/SpinnerLightAndDark"
-                android:textColor="@color/textColorPrimary"
                 android:fontFamily="sans-serif-smallcaps"
-                android:textSize="20sp" />
+                android:textColor="@color/textColorPrimary"
+                android:textSize="20sp"
+                android:theme="@style/SpinnerLightAndDark" />
 
             <TextView
                 android:id="@+id/overtime_hours"
@@ -79,13 +82,13 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:fontFamily="sans-serif"
                 android:backgroundTint="@color/colorPrimary"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:inputType="number"
                 android:hint="@string/add_overtime_duration"
-                android:textColorHint="@color/textColorPrimary"
+                android:inputType="number"
                 android:textColor="@color/textColorPrimary"
+                android:textColorHint="@color/textColorPrimary"
                 android:textSize="22sp" />
         </TableRow>
         <TableRow
@@ -98,34 +101,37 @@
                 android:id="@+id/add_overtime_explanation"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="2"
+                android:backgroundTint="@color/colorPrimary"
                 android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/add_overtime_explanation"
-                android:textColorHint="@color/textColorPrimary"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="22sp" />
+                android:textColorHint="@color/textColorPrimary"
+                android:textSize="18sp" />
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_weight="0"
             android:background="@color/seerem_logo_colour"
+            android:backgroundTint="@color/white"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:backgroundTint="@color/white">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/overtime_requests_header"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:background="@color/windowBackground"
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center"
-                android:background="@color/windowBackground"
                 android:text="@string/add_overtime_requests"
-                android:textColor="@color/textColorPrimary"
+                android:textColor="@color/colorPrimary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -133,11 +139,12 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_weight="0"
             android:background="@color/seerem_logo_colour"
+            android:backgroundTint="@color/windowBackground"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:backgroundTint="@color/windowBackground">
+            android:orientation="horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -153,10 +160,10 @@
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
                     android:layout_weight="0"
-                    android:fontFamily="sans-serif-smallcaps"
                     android:background="@color/windowBackground"
+                    android:fontFamily="sans-serif-smallcaps"
                     android:text="@string/recyclerview_row_explanation"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -170,10 +177,10 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_weight="0"
-                    android:fontFamily="sans-serif-smallcaps"
                     android:background="@color/windowBackground"
+                    android:fontFamily="sans-serif-smallcaps"
                     android:text="@string/add_overtime_duration"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView"
@@ -187,10 +194,10 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="0"
+                    android:background="@color/windowBackground"
                     android:fontFamily="sans-serif-smallcaps"
                     android:text="@string/add_overtime_day"
-                    android:background="@color/windowBackground"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
