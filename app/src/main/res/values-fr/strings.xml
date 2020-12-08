@@ -271,6 +271,8 @@
     <string name="dark_mode_radio_button">Mode Sombre</string>
     <string name="light_mode_switch">Clair</string>
     <string name="dark_mode_switch">Sombre</string>
+    <string name="toggle_theme_from_two_modes">Basculer le thème entre deux modes</string>
+    <string name="toggle_language_from_two_modes">Choisissez entre deux langues</string>
 
     <string name="log_out_title">Quitter l\'application</string>
     <string name="log_out_message">Voulez-vous vous déconnecter?</string>
