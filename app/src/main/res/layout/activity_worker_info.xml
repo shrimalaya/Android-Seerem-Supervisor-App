@@ -58,13 +58,14 @@
             android:id="@+id/fix_workerInfo_currentlyDisplaying"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
             android:text="@string/my_online_workers"
             android:textColor="@color/textColorPrimary"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold|italic"
             app:layout_constraintStart_toEndOf="@+id/fix_workerInfo_displayingText"
+            app:layout_constraintBottom_toBottomOf="@id/fix_workerInfo_displayingText"
             app:layout_constraintTop_toTopOf="@+id/fix_workerInfo_displayingText" />
 
         <HorizontalScrollView

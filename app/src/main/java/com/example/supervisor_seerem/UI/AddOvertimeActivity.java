@@ -219,11 +219,15 @@ public class AddOvertimeActivity extends AppCompatActivity implements AdapterVie
     }
 
     private void setUpComponents(){
+
         editTextOvertimeHours = findViewById(R.id.add_overtime_hours);
         editTextOvertimeExplanation = findViewById(R.id.add_overtime_explanation);
         spinner = (Spinner)findViewById(R.id.days_spinner);
+
+        // User a custom spinner with text coloured to match Light/Dark theme.
+        // Code adapted from: https://www.tutorialspoint.com/how-to-change-spinner-text-size-and-text-color-in-android-app-using-kotlin
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.days_of_week,
-                android.R.layout.simple_spinner_item);
+                R.layout.spinner_overtime);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);

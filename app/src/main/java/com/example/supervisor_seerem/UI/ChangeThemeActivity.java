@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -80,9 +82,14 @@ public class ChangeThemeActivity extends AppCompatActivity{
         setContentView(R.layout.activity_change_theme);
 
         modeSwitch = findViewById(R.id.switch1);
-        modeSwitch.setOnClickListener(new View.OnClickListener() {
+
+        // According to https://stackoverflow.com/a/11278528 setOnCheckedChangeListener()
+        // Should be used to check for both switch touches and drags + releases.
+        // Using setOnClickListener() will only check for switch touches, meaning drags + releases
+        // won't run the desired code.
+        modeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (modeSwitch.isChecked()) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -97,12 +104,28 @@ public class ChangeThemeActivity extends AppCompatActivity{
             }
         });
 
-        modeSwitch.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                return false;
-            }
-        });
+//        modeSwitch.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                return event.getActionMasked() == MotionEvent.ACTION_MOVE;
+//            }
+//
+//            @Override
+//            public boolean performClick() {
+//                super.performClick();
+//                doSomething();
+//                return true;
+//            }
+//
+//
+//        });
+//        modeSwitch.setOnDragListener(new View.OnDragListener() {
+//            @Override
+//            public boolean onDrag(View v, DragEvent event) {
+//
+//                return false;
+//            }
+//        });
 
         applySelectedRadioButton();
         setupToolbar();

@@ -40,6 +40,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/english_language"
                     android:textSize="20sp"
+                    android:textColor="@color/textColorPrimary"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp" />
             </LinearLayout>
@@ -63,6 +64,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/french_language"
                     android:textSize="20sp"
+                    android:textColor="@color/textColorPrimary"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp" />
             </LinearLayout>
