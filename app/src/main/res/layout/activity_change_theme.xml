@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,12 +8,15 @@
     tools:context=".UI.ChangeThemeActivity">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/back_and_save_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:id="@+id/back_and_save_toolbar"
-        app:title="@string/change_theme_title"
         android:background="@color/colorPrimary"
-        android:theme="@style/ActionBarTitleIconConsistentColor" />
+        android:theme="@style/ActionBarTitleIconConsistentColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/change_theme_title" />
 
 <!--    <TableLayout-->
 <!--        android:id="@+id/tableLayout"-->
@@ -30,34 +33,41 @@
 
     <RadioGroup
         android:id="@+id/radioTheme"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="1dp"
         android:backgroundTint="@color/textColorPrimary"
-        android:textColor="@color/textColorPrimary">
+        android:textColor="@color/textColorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_and_save_toolbar">
 
 
         <RadioButton
             android:id="@+id/radio_button_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_margin="6dp"
             android:fontFamily="sans-serif-smallcaps"
             android:text="@string/light_mode_radio_button"
             android:textColor="@color/textColorPrimary"
-            android:textSize="40dp" />
+            android:textSize="40dp"
+            android:textStyle="bold" />
 
         <RadioButton
             android:id="@+id/radio_button_dark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_margin="6dp"
             android:fontFamily="sans-serif-smallcaps"
             android:text="@string/dark_mode_radio_button"
             android:textColor="@color/textColorPrimary"
-            android:textSize="40dp" />
+            android:textSize="40dp"
+            android:textStyle="bold" />
     </RadioGroup>
+
     <!--        </TableRow>-->
 <!--        <TableRow-->
 <!--            android:layout_width="match_parent"-->
@@ -68,4 +78,4 @@
 
 <!--        </TableRow>-->
 <!--    </TableLayout>-->
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
