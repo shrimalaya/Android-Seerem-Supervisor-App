@@ -3,7 +3,7 @@
     <string name="app_name">SeeRem: Supervisor</string>
     <string name="welcome_text">Supervisor</string>
 
-    <string name="login_help">Please enter your Username and Password.</string>
+    <string name="login_help">Please enter your Username and Password</string>
     <string name="username_entry">Username:</string>
     <string name="password_entry">Password:</string>
     <string name="login_button">Login</string>
@@ -65,7 +65,7 @@
     <string name="fixed_supervisor">Supervisor</string>
     <string name="fixed_employeeID">ID</string>
     <string name="fixed_additionalInfo">Additional Information ></string>
-    <string name="fixed_hseLink">HSE Link(s):</string>
+    <string name="fixed_hseLink">HSE Link:</string>
     <string name="fixed_masterPoint">Master Point</string>
     <string name="fixed_siteName">Site Name:</string>
 
