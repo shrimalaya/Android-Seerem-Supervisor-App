@@ -83,8 +83,8 @@
             android:layout_marginEnd="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="108dp"
-            app:backgroundTint="@color/white"
-            app:srcCompat="@drawable/ic_my_location" />
+            app:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_my_location_2" />
 
     </RelativeLayout>
 
