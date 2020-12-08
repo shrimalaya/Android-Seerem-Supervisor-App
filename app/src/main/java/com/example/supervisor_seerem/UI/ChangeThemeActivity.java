@@ -77,9 +77,8 @@ public class ChangeThemeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_theme);
         setupToolbar();
-        changeLocale();
+
         modeSwitch = findViewById(R.id.switch1);
-        switchMode();
 
         // According to https://stackoverflow.com/a/11278528 setOnCheckedChangeListener()
         // Should be used to check for both switch touches and drags + releases.
@@ -99,15 +98,17 @@ public class ChangeThemeActivity extends AppCompatActivity {
                     editor.putString("theme", "light");
                     editor.apply();
                 }
+                changeLocale();
             }
         });
-
+        switchMode();
     }
 
     private void changeLocale() {
         SharedPreferences languagePrefs = getSharedPreferences("LanguageChoice", Context.MODE_PRIVATE);
-        String language = languagePrefs.getString("language", "en");
+        String language = languagePrefs.getString("language", "");
         Locale newLocale = new Locale(language);
+//        Toast.makeText(this, "language = " + language, Toast.LENGTH_SHORT).show();
         Resources resources = getResources();
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();
         Configuration configuration = resources.getConfiguration();

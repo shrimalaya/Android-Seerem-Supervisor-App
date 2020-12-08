@@ -358,7 +358,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void launchLogOutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(UserInfoActivity.this,
-                R.style.AlertDialog);
+                android.R.style.Theme_Material_Light_Dialog_Alert);
         builder.setMessage(getString(R.string.log_out_message));
         builder.setTitle(getString(R.string.log_out_title));
         builder.setCancelable(false);

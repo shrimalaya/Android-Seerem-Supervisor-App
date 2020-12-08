@@ -1162,7 +1162,7 @@ public class SiteMapActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void launchLogOutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(SiteMapActivity.this,
-                R.style.AlertDialog);
+                android.R.style.Theme_Material_Light_Dialog_Alert);
         builder.setMessage(getString(R.string.log_out_message));
         builder.setTitle(getString(R.string.log_out_title));
         builder.setCancelable(false);
