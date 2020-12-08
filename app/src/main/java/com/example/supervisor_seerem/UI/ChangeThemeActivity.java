@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
@@ -27,6 +26,7 @@ public class ChangeThemeActivity extends AppCompatActivity implements RadioGroup
     private RadioButton darkMode;
     private String savedTheme;
     SharedPreferences sharedPreferences;
+
 
     public static Intent launchChangeThemeIntent(Context context) {
         Intent changeThemeIntent = new Intent(context, ChangeThemeActivity.class);

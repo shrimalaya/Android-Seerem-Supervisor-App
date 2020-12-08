@@ -288,6 +288,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                         startActivity(dayLeaveIntent);
                         break;
 
+                    case R.id.sidebar_all_workers:
+                        Intent workerIntent = WorkerInfoActivity.launchWorkerInfoIntent(UserInfoActivity.this);
+                        startActivity(workerIntent);
+                        finish();
+                        break;
+
                     case R.id.sidebar_company:
                         Intent employeeDirectoryIntent = EmployeeDirectoryActivity.launchEmployeeDirectory(UserInfoActivity.this);
                         startActivity(employeeDirectoryIntent);
