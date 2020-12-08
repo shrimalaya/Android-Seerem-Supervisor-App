@@ -10,16 +10,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
 
-public class ChangeThemeActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener{
+public class ChangeThemeActivity extends AppCompatActivity{
 
     private RadioGroup themes;
     private RadioButton lightMode;
@@ -27,6 +29,7 @@ public class ChangeThemeActivity extends AppCompatActivity implements RadioGroup
     private String savedTheme;
     SharedPreferences sharedPreferences;
 
+    Switch modeSwitch;
 
     public static Intent launchChangeThemeIntent(Context context) {
         Intent changeThemeIntent = new Intent(context, ChangeThemeActivity.class);
@@ -62,15 +65,12 @@ public class ChangeThemeActivity extends AppCompatActivity implements RadioGroup
         // Default to Light theme if for whatever reason nothing has been saved
         savedTheme = sharedPreferences.getString("theme", "light");
 
-        //Toast.makeText(getApplicationContext(), "MADE IT TO LIGHT!", Toast.LENGTH_SHORT).show();
         if(savedTheme.equals("light")){
-            //Toast.makeText(getApplicationContext(), "MADE IT TO LIGHT!", Toast.LENGTH_SHORT).show();
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            lightMode.setChecked(true);
+            modeSwitch.setChecked(false);
         } else if (savedTheme.equals("dark")){
-            //Toast.makeText(getApplicationContext(), "MADE IT TO DARK!!", Toast.LENGTH_SHORT).show();
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            darkMode.setChecked(true);
+            modeSwitch.setChecked(true);
         }
     }
 
@@ -78,36 +78,34 @@ public class ChangeThemeActivity extends AppCompatActivity implements RadioGroup
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_theme);
-        themes = findViewById(R.id.radioTheme);
-        lightMode = findViewById(R.id.radio_button_light);
-        darkMode = findViewById(R.id.radio_button_dark);
 
-        themes.setOnCheckedChangeListener(this);
+        modeSwitch = findViewById(R.id.switch1);
+        modeSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (modeSwitch.isChecked()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("theme", "dark");
+                    editor.apply();
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("theme", "light");
+                    editor.apply();
+                }
+            }
+        });
+
+        modeSwitch.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                return false;
+            }
+        });
+
         applySelectedRadioButton();
         setupToolbar();
 
     }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-            RadioButton selectedTheme = (RadioButton) group.findViewById(checkedId);
-            String stringTheme = selectedTheme.getText().toString();
-
-            //Toast.makeText(getApplicationContext(), "Changed to: " + stringTheme, Toast.LENGTH_SHORT).show();
-
-            // Edit value in Shared Preferences once the mode is selected.
-            if(stringTheme.equals(getString(R.string.light_mode_radio_button))){
-                //Toast.makeText(getApplicationContext(), "LIGHT!", Toast.LENGTH_SHORT).show();
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("theme", "light");
-                editor.apply();
-            }else if (stringTheme.equals(getString(R.string.dark_mode_radio_button))){
-                //Toast.makeText(getApplicationContext(), "DARK!", Toast.LENGTH_SHORT).show();
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("theme", "dark");
-                editor.apply();
-            }
-        }
-    }
+}
