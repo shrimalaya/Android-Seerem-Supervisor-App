@@ -8,9 +8,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/base_constraint_worker_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,47 +39,32 @@
             app:menu="@menu/menu_navigation_bar" />
 
         <TextView
-            android:id="@+id/fix_workerInfo_displayingText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="5dp"
-            android:textStyle="bold"
-            android:textColor="@color/textColorPrimary"
-            android:text="@string/fixed_displaying_header"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_for_sidebar" />
-
-        <TextView
             android:id="@+id/fix_workerInfo_currentlyDisplaying"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="sans-serif-smallcaps"
             android:text="@string/my_online_workers"
-            android:textColor="@color/textColorPrimary"
-            android:textSize="18sp"
-            android:textStyle="bold|italic"
-            app:layout_constraintStart_toEndOf="@+id/fix_workerInfo_displayingText"
-            app:layout_constraintBottom_toBottomOf="@id/fix_workerInfo_displayingText"
-            app:layout_constraintTop_toTopOf="@+id/fix_workerInfo_displayingText" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_for_sidebar" />
 
         <HorizontalScrollView
             android:id="@+id/horizontalScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toTopOf="@+id/bottomNavigationBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fix_workerInfo_displayingText">
+            app:layout_constraintTop_toBottomOf="@+id/fix_workerInfo_currentlyDisplaying">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/workerInfoRecycler"
@@ -102,7 +85,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginLeft="5dp"
                     android:text="@string/fixed_workerID"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="16dp"
                     android:textStyle="bold|italic"
                     app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +98,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="@string/fixed_firstName"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/fix_workerId_workerInfo"
@@ -128,7 +111,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="@string/fixed_lastName"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/fix_Fname_workerInfo"
@@ -141,7 +124,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="@string/fixed_worksite"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView7"
@@ -154,7 +137,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="@string/fixed_location"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView9"
@@ -168,7 +151,7 @@
                     android:layout_marginLeft="4dp"
                     android:gravity="start"
                     android:text="@string/fixed_skills"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView10"
@@ -181,7 +164,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="@string/fixed_supervisor"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView8"

@@ -124,7 +124,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="6dp"
                 android:text="@string/fixed_additionalInfo"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorAccentDarkTheme"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/workerRow_ID"
