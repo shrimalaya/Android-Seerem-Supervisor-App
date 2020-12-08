@@ -196,4 +196,6 @@
 
     <string name="light_mode_radio_button">Light Mode</string>
     <string name="dark_mode_radio_button">Dark Mode</string>
+    <string name="light_mode_switch">Light</string>
+    <string name="dark_mode_switch">Dark</string>
 </resources>

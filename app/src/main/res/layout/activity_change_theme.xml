@@ -7,6 +7,22 @@
     android:orientation="vertical"
     tools:context=".UI.ChangeThemeActivity">
 
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:scaleX="2.0"
+        android:scaleY="2.0"
+        android:switchMinWidth="50dp"
+        android:textOff="@string/light_mode_radio_button"
+        android:textOn="@string/dark_mode_radio_button"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_and_save_toolbar" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/back_and_save_toolbar"
         android:layout_width="match_parent"
@@ -31,42 +47,31 @@
 <!--            android:gravity="center"-->
 <!--            android:background="@color/windowBackground">-->
 
-    <RadioGroup
-        android:id="@+id/radioTheme"
+    <TextView
+        android:id="@+id/txt_light_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="1dp"
-        android:backgroundTint="@color/textColorPrimary"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="@string/light_mode_switch"
         android:textColor="@color/textColorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_and_save_toolbar">
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/switch1"
+        app:layout_constraintEnd_toStartOf="@+id/switch1"
+        app:layout_constraintTop_toTopOf="@+id/switch1" />
 
-
-        <RadioButton
-            android:id="@+id/radio_button_light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="@string/light_mode_radio_button"
-            android:textColor="@color/textColorPrimary"
-            android:textSize="40dp"
-            android:textStyle="bold" />
-
-        <RadioButton
-            android:id="@+id/radio_button_dark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="@string/dark_mode_radio_button"
-            android:textColor="@color/textColorPrimary"
-            android:textSize="40dp"
-            android:textStyle="bold" />
-    </RadioGroup>
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:text="@string/dark_mode_switch"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/switch1"
+        app:layout_constraintStart_toEndOf="@+id/switch1"
+        app:layout_constraintTop_toTopOf="@+id/switch1" />
 
     <!--        </TableRow>-->
 <!--        <TableRow-->
