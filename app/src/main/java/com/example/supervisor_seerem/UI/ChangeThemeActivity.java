@@ -104,29 +104,6 @@ public class ChangeThemeActivity extends AppCompatActivity{
             }
         });
 
-//        modeSwitch.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return event.getActionMasked() == MotionEvent.ACTION_MOVE;
-//            }
-//
-//            @Override
-//            public boolean performClick() {
-//                super.performClick();
-//                doSomething();
-//                return true;
-//            }
-//
-//
-//        });
-//        modeSwitch.setOnDragListener(new View.OnDragListener() {
-//            @Override
-//            public boolean onDrag(View v, DragEvent event) {
-//
-//                return false;
-//            }
-//        });
-
         applySelectedRadioButton();
         setupToolbar();
 
