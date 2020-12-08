@@ -400,6 +400,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:text="@string/dash"
+        android:autoLink="phone"
         android:textColor="@color/textColorPrimary"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/textView38"
