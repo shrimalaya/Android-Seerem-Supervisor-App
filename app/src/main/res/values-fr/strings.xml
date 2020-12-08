@@ -223,7 +223,7 @@
     <string name="add_day_leave_save_fail">Échec de l\'envoi de votre demande de congé.</string>
 
     <string name= "add_overtime_header">Ajouter Des Heures Supplémentaires</string>
-    <string name="select_unique_day">Veuillez sélectionner un jour!</string>
+    <string name="select_unique_day">Vous avez déjà fait une demande pour ce jour!</string>
     <string name= "add_overtime_help">Spécifiez les jours de travail supplémentaire que l\'Administration doit vérifier et valider.</string>
     <string name= "add_overtime_header_">Sélectionnez le jour:</string>
     <string name= "add_overtime_duration">Heures</string>

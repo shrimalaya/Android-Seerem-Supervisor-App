@@ -1,14 +1,17 @@
 package com.example.supervisor_seerem.UI;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -87,32 +90,51 @@ public class ChangeThemeActivity extends AppCompatActivity {
         modeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (modeSwitch.isChecked()) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("theme", "dark");
-                    editor.apply();
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("theme", "light");
-                    editor.apply();
+                if (buttonView.isPressed()) {
+                    launchRestartAppDialog();
                 }
-                changeLocale();
             }
         });
         switchMode();
     }
 
-    private void changeLocale() {
-        SharedPreferences languagePrefs = getSharedPreferences("LanguageChoice", Context.MODE_PRIVATE);
-        String language = languagePrefs.getString("language", "");
-        Locale newLocale = new Locale(language);
-//        Toast.makeText(this, "language = " + language, Toast.LENGTH_SHORT).show();
-        Resources resources = getResources();
-        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = newLocale;
-        resources.updateConfiguration(configuration, displayMetrics);
+    private void launchRestartAppDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChangeThemeActivity.this,
+                android.R.style.Theme_Material_Light_Dialog_Alert);
+        builder.setMessage(getString(R.string.restart_app_message));
+        builder.setTitle(getString(R.string.restart_app_title));
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.restart_app_dialog_positive),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (modeSwitch.isChecked()) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("theme", "dark");
+                            editor.apply();
+                        } else {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("theme", "light");
+                            editor.apply();
+                        }
+
+                        finishAffinity();
+                        Intent intent = new Intent(ChangeThemeActivity.this, LoginInfoActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        builder.setNegativeButton(getString(R.string.restart_app_dialog_negative),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#B32134"));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#B32134"));
     }
 }
