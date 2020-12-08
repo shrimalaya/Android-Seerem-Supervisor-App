@@ -54,7 +54,7 @@ public class LoginInfoActivity extends AppCompatActivity {
         loginSharedPreferences = getSharedPreferences("LoginData", Context.MODE_PRIVATE);
 
         usernameInput = findViewById(R.id.editUsername);
-        if(loginSharedPreferences.getString("username", null) != null) {
+        if (loginSharedPreferences.getString("username", null) != null) {
             usernameInput.setText(loginSharedPreferences.getString("username", null));
         }
 
@@ -81,8 +81,8 @@ public class LoginInfoActivity extends AppCompatActivity {
 
     private void checkInputs() {
         final ProgressDialog progressDialog = new ProgressDialog(LoginInfoActivity.this);
-        progressDialog.setMessage("Fetching data relevant to you!");
-        progressDialog.setTitle("Logging In");
+        progressDialog.setMessage(getString(R.string.fetching_data_message));
+        progressDialog.setTitle(getString(R.string.logging_in_title));
         progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(true);
         progressDialog.show();
@@ -113,8 +113,8 @@ public class LoginInfoActivity extends AppCompatActivity {
                     (!savedUsername.equals(usernameToCheck))) {// A new Username denotes a different (and new) account
 
                 DocumentSnapshot user = null;
-                for(DocumentSnapshot doc: allSupervisors) {
-                    if(doc.get(CONSTANTS.ID_KEY).equals(usernameToCheck)) {
+                for (DocumentSnapshot doc : allSupervisors) {
+                    if (doc.get(CONSTANTS.ID_KEY).equals(usernameToCheck)) {
                         user = doc;
                         SharedPreferences.Editor editor = loginSharedPreferences.edit();
                         // API suggested apply() instead of commit() to do this storage in the background
@@ -129,7 +129,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                         manager.retrieveAllData(new DocumentManager.RetrieveCallback() {
                             @Override
                             public void onCallback(Boolean result) {
-                                if(result) {
+                                if (result) {
                                     System.out.println("TEST3> RESULT = " + result);
                                     System.out.println("TEST3> NEW user id: " + manager.getCurrentUser().getId());
 
@@ -143,18 +143,18 @@ public class LoginInfoActivity extends AppCompatActivity {
                     }
                 }
 
-                if(user == null) {
-                    Toast.makeText(this, "Username not found in Supervisor database!", Toast.LENGTH_LONG).show();
+                if (user == null) {
+                    Toast.makeText(this, getString(R.string.login_no_username_found), Toast.LENGTH_LONG).show();
                 }
 
             } else {// The Username has been stored but the Password is wrong.
-                if (savedUsername.equals(usernameToCheck) && !savedpassword.equals(passwordToCheck)){
+                if (savedUsername.equals(usernameToCheck) && !savedpassword.equals(passwordToCheck)) {
                     Toast.makeText(getApplicationContext(),
                             getString(R.string.error_wrong_password), Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
                 } else if (savedUsername.equals(usernameToCheck) && savedpassword.equals(passwordToCheck)) {
                     DocumentSnapshot user = null;
-                    for(DocumentSnapshot doc: allSupervisors) {
+                    for (DocumentSnapshot doc : allSupervisors) {
                         if (doc.get(CONSTANTS.ID_KEY).equals(usernameToCheck)) {
                             user = doc;
 
@@ -164,7 +164,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                             manager.retrieveAllData(new DocumentManager.RetrieveCallback() {
                                 @Override
                                 public void onCallback(Boolean result) {
-                                    if(result) {
+                                    if (result) {
                                         System.out.println("TEST3> RESULT = " + result);
                                         System.out.println("TEST3> curr user id: " + manager.getCurrentUser().getId());
 
@@ -183,7 +183,7 @@ public class LoginInfoActivity extends AppCompatActivity {
     }
 
 
-    private interface DocListCallback{
+    private interface DocListCallback {
         void onCallback(List<DocumentSnapshot> docs);
     }
 
@@ -193,7 +193,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isComplete()) {
+                        if (task.isComplete()) {
 
                             System.out.println("TEST3> Size of allSupervisors = " + task.getResult().getDocuments().size());
 

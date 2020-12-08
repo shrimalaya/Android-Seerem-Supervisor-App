@@ -1,16 +1,22 @@
 <resources>
+    <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
     <string name="app_name">SeeRem: Supervisor</string>
     <string name="welcome_text">Supervisor</string>
-    <string name="login_help">Please input your Username and Password.</string>
+
+    <string name="login_help">Please enter your Username and Password.</string>
     <string name="username_entry">Username:</string>
     <string name="password_entry">Password:</string>
     <string name="login_button">Login</string>
-    <string name="error_no_username">Please input a Username.</string>
-    <string name="error_no_password">Please input a Password.</string>
-    <string name="error_wrong_password">The Password you entered is not associated with the Username you entered. Please enter the correct Password.</string>
+    <string name="error_no_username">Please enter a Username.</string>
+    <string name="error_no_password">Please enter a Password.</string>
+    <string name="error_wrong_password">Incorrect password for this username.</string>
+    <string name="login_no_username_found">Username not found in Supervisor database!</string>
+    <string name="fetching_data_message">Downloading your data…</string>
+    <string name="logging_in_title">Logging In</string>
 
     <string name="user_info_header">User Info</string>
-    <string name="user_info_help">Edit personal information and UI settings here. </string>
+    <string name="user_info_help">Edit personal information here. </string>
+    <string name="fill_in_emergency_info">Fill in emergency information!</string>
     <string name="name_entry">First and Last name</string>
     <string name="first_name_entry">First name</string>
     <string name="last_name_entry">Last name</string>
@@ -24,13 +30,75 @@
     <string name="go_to_ui_preferences_button">UI Preferences</string>
     <string name="go_to_worksite">Worksite(s)</string>
     <string name="save_user_info_button">Save User Info</string>
-    <string name="error_userinfo_incomplete">All parts of your User Info must be filled before they can be saved.</string>
-    <string name="user_info_save_success">Your User Info Settings have been successfully saved.</string>
-    <string name="user_info_save_fail">Your User Info Settings have not been successfully saved.</string>
-    <string name="new_user_prompt">Welcome! Please input and submit the information described here for use at SEEDA.</string>
-    <string name="maps_api_key">AIzaSyBHDRUTnuExNg59HWsGYUSK0BS9zBTVKjM</string>
-    <string name="search_input_hint">Enter ID of worker or site</string>
+    <string name="error_userinfo_incomplete">All parts of your profile information must be filled.</string>
+    <string name="user_info_save_success">Your settings have been successfully saved.</string>
+    <string name="user_info_save_fail">Failed to save your settings.</string>
+    <string name="new_user_prompt">Welcome! Please enter and submit the information here for use at SEEDA.</string>
+
+    <string name="map_noServices_error_message">No services available!</string>
+    <string name="unable_getting_current_location">Unable to get your current location!</string>
+    <string name="map_info_window_user_location_snippet">This is my current location!</string>
+    <string name="map_info_window_user_location_title">My Location</string>
+    <string name="map_info_window_site_location_title">Site Location</string>
+    <string name="map_info_window_worker_location_title">Worker Location</string>
+    <string name="map_info_window_masterpoint_title">Master Point</string>
+    <string name="map_info_window_masterpoint_snippet">Go here in case of emergency!</string>
+    <string name="map_info_window_siteName">Site Name: </string>
+    <string name="map_info_window_siteID">Site ID: </string>
+    <string name="map_info_window_projectID">Project ID: </string>
+    <string name="map_info_window_hours">Hours: </string>
+    <string name="map_info_window_hse">HSE Link: </string>
+    <string name="map_info_window_employeeID">Employee ID: </string>
+    <string name="map_info_window_fullName">Full name:</string>
+    <string name="map_info_window_companyID">Company: </string>
+    <string name="map_info_window_supervisorID">Supervisor: </string>
+
+    <string name="fixed_siteID">Site ID</string>
+    <string name="fixed_projectID">Project ID</string>
+    <string name="fixed_location">Location</string>
+    <string name="fixed_operationHours">Hours</string>
+    <string name="fixed_displaying_header">Displaying:</string>
+    <string name="fixed_workerID">Worker ID</string>
+    <string name="fixed_firstName">First Name</string>
+    <string name="fixed_lastName">Last Name</string>
+    <string name="fixed_worksite">Worksite</string>
+    <string name="fixed_skills">Skills</string>
+    <string name="fixed_supervisor">Supervisor</string>
+    <string name="fixed_employeeID">ID</string>
+    <string name="fixed_additionalInfo">Additional Information ></string>
+    <string name="fixed_hseLink">HSE Link(s):</string>
+    <string name="fixed_masterPoint">Master Point</string>
+    <string name="fixed_siteName">Site Name:</string>
+
+    <string name="fixed_availability">Availability</string>
+    <string name="fixed_additional_info_for">Additional Information for:</string>
+    <string name="fixed_monday">Monday</string>
+    <string name="fixed_tuesday">Tuesday</string>
+    <string name="fixed_wednesday">Wednesday</string>
+    <string name="fixed_thursday">Thursday</string>
+    <string name="fixed_friday">Friday</string>
+    <string name="fixed_saturday">Saturday</string>
+    <string name="fixed_sunday">Sunday</string>
+    <string name="dash"> - </string>
+    <string name="fixed_total_hours">Total Hours:</string>
+    <string name="fixed_overtime_hours">Overtime Hours:</string>
+    <string name="fixed_emergency_info">Emergency Info</string>
+    <string name="fixed_blood_group">Blood Group:</string>
+    <string name="fixed_medical_condition">Medical Condition:</string>
+    <string name="fixed_contact_person">Contact Person:</string>
+    <string name="fixed_contact_number">Contact Number:</string>
+    <string name="fixed_relationship">Relationship:</string>
+
+    <string name="search_input_hint_map">Search for workers or sites</string>
+    <string name="search_here">Search here!</string>
     <string name="clear_search_input_hint">Clear search</string>
+    <string name="search_result_all_workers">Search Results: All Workers</string>
+    <string name="search_display_all_workers">Search: All Workers</string>
+    <string name="search_result_all_worksites">Search Results: All Worksites</string>
+    <string name="search_display_all_worksites">Search: All Workers</string>
+    <string name="no_worksites_found">No Worksites Found!</string>
+    <string name="no_workers_found">No Workers Found!</string>
+    <string name="no_result_found">No Results Found!</string>
 
     <string name="communication_header">Communication</string>
     <string name="communication_help">Select communication method for:</string>
@@ -65,13 +133,32 @@
     <string name="sensor_navigation_bar_text">Sensors</string>
     <string name="user_navigation_bar_text">Me</string>
 
+    <string name="refresh_all_data">Refreshing All Data!</string>
+    <string name="please_wait">Please Wait!</string>
+
+    <string name="refresh">Refresh</string>
+    <string name="display_all_workers">Display All Workers</string>
+    <string name="display_my_workers">Display My Workers</string>
     <string name="display_all_worksites">Display All Worksites</string>
     <string name="display_my_worksites">Display My Worksites</string>
-    <string name="display_all_workers">Display All Workers</string>
-    <string name="refresh">Refresh</string>
     <string name="display_offline_workers">Display Offline Workers</string>
     <string name="display_online_workers">Display Online Workers</string>
-    <string name="display_my_workers">Display My Workers</string>
+    <string name="display_offline_worksites">Display Offline Worksites</string>
+    <string name="display_online_worksites">Display Online Worksites</string>
+    <string name="no_offline_workers">No Offline Workers</string>
+    <string name="no_online_workers">No Online Workers</string>
+    <string name="no_offline_worksites">No Offline Worksites</string>
+    <string name="no_online_worksites">No Online Worksites</string>
+    <string name="company_offline_workers">Company Offline Workers</string>
+    <string name="my_offline_workers">My Offline Workers</string>
+    <string name="company_online_workers">Company Online Workers</string>
+    <string name="my_online_workers">My Online Workers</string>
+    <string name="company_offline_worksites">Company Offline Worksites</string>
+    <string name="my_offline_worksites">My Offline Worksites</string>
+    <string name="company_online_worksites">Company Online Worksites</string>
+    <string name="my_online_worksites">My Online Worksites</string>
+    <string name="all_company_worksites">All Company Worksites</string>
+    <string name="all_my_worksites">All My Worksites</string>
 
     <string name="sidebar_navigation_open">Open sidebar navigation drawer</string>
     <string name="sidebar_navigation_close">Close sidebar navigation drawer</string>
@@ -88,26 +175,8 @@
     <string name="change_password_sidebar_text">Change password</string>
     <string name="log_out_sidebar_text">Log Out</string>
 
-    <string name="map_noServices_error_message">No services available!</string>
-    <string name="map_info_window_user_location_snippet">This is my current location!</string>
-    <string name="map_info_window_user_location_title">My Location</string>
-    <string name="map_info_window_site_location_title">Site Location</string>
-    <string name="map_info_window_worker_location_title">Worker Location</string>
-    <string name="map_info_window_masterpoint_title">Master point</string>
-    <string name="map_info_window_masterpoint_snippet">Go here in case of emergency!</string>
-    <string name="map_info_siteName">Site Name: </string>
-    <string name="map_info_siteID">Site ID: </string>
-    <string name="map_info_projectID">Project ID: </string>
-    <string name="map_info_hours">Hours: </string>
-    <string name="map_info_hse">HSE Link: </string>
-    <string name="map_info_employeeID">Employee ID: </string>
-    <string name="map_info_fullName">Full name:</string>
-    <string name="map_info_companyID">Company: </string>
-    <string name="map_info_supervisorID">Supervisor: </string>
-    <string name="map_info_window_image_description">Default image for map info window</string>
-
     <string name="sensorsUsageTextView">Device Sensor Values</string>
-    <string name="sensorUsageExplanationTextView">The following are the current Temperature and Pressure values for this device as read by any applicable built-in sensors.</string>
+    <string name="sensorUsageExplanationTextView">The current Ambient Temperature and Pressure values detected by your device is:</string>
     <string name="temperatureTextView">Temperature</string>
     <string name="noTemperatureSensorTextView">(No Temperature sensor found)</string>
     <string name="pressureTextView">Pressure</string>
@@ -115,15 +184,14 @@
     <string name="temperatureUnitsTextView">%1$f°C (Degrees Celsius)</string>
     <string name="pressureUnitsTextView">%1$fhPA (Hectopascal)</string>
 
-    <string name="install_meets_prompt">To communicate with this employee through Google MEETS, please install the app first.</string>
-    <string name="install_teams_prompt">To communicate with this employee through Microsoft TEAMs, please install the app first.</string>
-    <string name="install_skype_prompt">To communicate with this employee through Skype, please install the app first.</string>
-    <string name="install_zoom_prompt">To communicate with this employee through Zoom, please install the app first.</string>
+    <string name="install_meets_prompt">Please install Google MEETS first!</string>
+    <string name="install_teams_prompt">Please install Microsoft TEAMs first!</string>
+    <string name="install_skype_prompt">Please install Skype first!</string>
+    <string name="install_zoom_prompt">Please install Zoom first!</string>
 
     <string name="change_password_title">Change Password</string>
     <string name="change_language_title">Change App Language</string>
     <string name="change_theme_title">Change Theme</string>
-    <string name="set_ui_prefs_title">Set UI Preferences</string>
     <string name="add_overtime_title">Add Overtime Hours</string>
     <string name="add_day_leave_title">Add Day Leave</string>
     <string name="employee_directory_title">Employee Directory</string>
@@ -141,7 +209,7 @@
     <string name="hour_exceptions_enter_date">Pick Date</string>
     <string name="hour_exceptions_select_dates_on_calendar">Select on Calendar</string>
     <string name="hour_exceptions_submit_request">Submit request</string>
-    <string name="error_request_info_incomplete">Please input all required details of your request to submit it.</string>
+    <string name="error_request_info_incomplete">Please enter all required details of your request before submitting.</string>
     <string name="recyclerview_row_explanation">Explanation</string>
 
     <string name="add_day_leave_help">Add day leaves you wish to request Administration for, which they must verify and allow to put into effect.</string>
@@ -153,9 +221,10 @@
     <string name="add_day_leave_days">Days</string>
     <string name="add_day_leave_days_explanation">(Optional) Briefly explain why you are requesting a day leave period.</string>
     <string name="add_day_leave_save_success">Your day leave request was sent successfully.</string>
-    <string name="add_day_leave_save_fail">Your day leave request was not sent successfully.</string>
+    <string name="add_day_leave_save_fail">Failed to send your day leave request.</string>
 
     <string name= "add_overtime_header">Add Overtime Hours</string>
+    <string name="select_unique_day">Please select a day!</string>
     <string name= "add_overtime_help">Request days in the week from Administration when you will work overtime, which they must verify and allow to put into effect.</string>
     <string name= "add_overtime_header_">Select day:</string>
     <string name= "add_overtime_duration">Hrs</string>
@@ -182,10 +251,15 @@
     <string name="change_password_update_password">Update Password</string>
     <string name="change_password_current_empty">Please enter your current password.</string>
     <string name="change_password_new_empty">Please enter your new password.</string>
-    <string name="change_password_current_and_new_are_same">Your selected new password is the same as your old password. Please enter a different new password.</string>
-    <string name="change_password_wrong_current_password">Your input for your current password is incorrect. Please enter your correct current password.</string>
+    <string name="change_password_current_and_new_are_same">Your new password cannot be the same as your current password.</string>
+    <string name="change_password_wrong_current_password">Incorrect password! Please re-enter your current password.</string>
     <string name="change_password_successful_change">Your password has been successfully changed.</string>
-    <string name="select_unique_day">Please select a unique day of week!</string>
+
+    <string name="directory_employeeID">Employee ID</string>
+    <string name="directory_firstName">First Name</string>
+    <string name="directory_lastName">Last Name</string>
+    <string name="directory_supervisors">Supervisors</string>
+    <string name="directory_workers">Workers</string>
 
     <string name="log_out_title">You are about to exit the app</string>
     <string name="log_out_message">Do you want to log out?</string>

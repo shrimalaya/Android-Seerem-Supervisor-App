@@ -47,7 +47,7 @@
                 android:text="@string/sensorUsageExplanationTextView"
                 android:textColor="@color/seerem_logo_colour"
                 android:textSize="22sp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout

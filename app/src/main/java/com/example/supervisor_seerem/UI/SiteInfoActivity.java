@@ -100,7 +100,7 @@ public class SiteInfoActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(SiteInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(SiteInfoActivity.this, "Curr time: " + Calendar.getInstance().getTime(), Toast.LENGTH_LONG).show();
                 updateDisplaySites();
                 mAdapter.notifyDataSetChanged();
                 handler.postDelayed(this, 60000);
@@ -135,13 +135,13 @@ public class SiteInfoActivity extends AppCompatActivity {
         TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
 
         if(showOfflineSites && showAllSites) {
-            displayAllOrSelectedSites.setText("Offline Company Worksites");
+            displayAllOrSelectedSites.setText(getString(R.string.company_offline_worksites));
         } else if (showOfflineSites && !showAllSites) {
-            displayAllOrSelectedSites.setText("Offline Assigned Worksites");
+            displayAllOrSelectedSites.setText(getString(R.string.my_offline_worksites));
         } else if (!showOfflineSites && showAllSites) {
-            displayAllOrSelectedSites.setText("Online Company Worksites");
+            displayAllOrSelectedSites.setText(getString(R.string.company_online_worksites));
         } else {
-            displayAllOrSelectedSites.setText("Online Assigned Worksites");
+            displayAllOrSelectedSites.setText(getString(R.string.my_online_worksites));
         }
     }
 
@@ -177,12 +177,12 @@ public class SiteInfoActivity extends AppCompatActivity {
         if(showOfflineSites) {
             mShowDocs.addAll(mOfflineDocs);
             if(mOfflineDocs.isEmpty()) {
-                Toast.makeText(this, "No Offline Sites!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.no_offline_worksites), Toast.LENGTH_LONG).show();
             }
         } else {
             mShowDocs.addAll(mOnlineDocs);
             if(mOnlineDocs.isEmpty()) {
-                Toast.makeText(this, "No Online Sites!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.no_online_worksites), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -242,7 +242,7 @@ public class SiteInfoActivity extends AppCompatActivity {
         final MenuItem clear = menu.findItem(R.id.menu_site_clear);
 
         final SearchView searchView = (SearchView) search.getActionView();
-        searchView.setQueryHint("Search Here!");
+        searchView.setQueryHint(getString(R.string.search_here));
 
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
@@ -259,9 +259,9 @@ public class SiteInfoActivity extends AppCompatActivity {
 
                 TextView displayAllOrSelectedSites = findViewById(R.id.txtAllOrSelectedSites);
                 if(showAllSites) {
-                    displayAllOrSelectedSites.setText("All Company Worksites");
+                    displayAllOrSelectedSites.setText(getString(R.string.all_company_worksites));
                 } else {
-                    displayAllOrSelectedSites.setText("Assigned Worksites");
+                    displayAllOrSelectedSites.setText(getString(R.string.all_my_worksites));
                 }
 
                 updateDisplaySites();
@@ -275,14 +275,14 @@ public class SiteInfoActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 TextView currentlyDisplaying = findViewById(R.id.txtAllOrSelectedSites);
-                currentlyDisplaying.setText("Search Results: All Sites");
+                currentlyDisplaying.setText(getString(R.string.search_result_all_worksites));
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 TextView currentlyDisplaying = findViewById(R.id.txtAllOrSelectedSites);
-                currentlyDisplaying.setText("Search: All Sites");
+                currentlyDisplaying.setText(getString(R.string.search_display_all_worksites));
                 search(newText);
                 return true;
             }
@@ -300,8 +300,8 @@ public class SiteInfoActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case (R.id.refresh_site_info):
                 final ProgressDialog progressDialog = new ProgressDialog(SiteInfoActivity.this);
-                progressDialog.setMessage("Refreshing All Data!");
-                progressDialog.setTitle("Please wait");
+                progressDialog.setMessage(getString(R.string.refresh_all_data));
+                progressDialog.setTitle(getString(R.string.please_wait));
                 progressDialog.setCancelable(false);
                 progressDialog.setIndeterminate(true);
                 progressDialog.show();
@@ -335,10 +335,10 @@ public class SiteInfoActivity extends AppCompatActivity {
             case (R.id.menu_display_all_user):
                 if(showAllSites) {
                     showAllSites = false;
-                    item.setTitle("Display All Worksites");
+                    item.setTitle(getString(R.string.display_all_worksites));
                 } else {
                     showAllSites = true;
-                    item.setTitle("Display My Worksites");
+                    item.setTitle(getString(R.string.display_my_worksites));
                 }
 
                 updateDisplaySites();
@@ -348,10 +348,10 @@ public class SiteInfoActivity extends AppCompatActivity {
                 case (R.id.menu_site_offline):
                     if (showOfflineSites) {
                         showOfflineSites = false;
-                        item.setTitle("Display Offline Sites");
+                        item.setTitle(getString(R.string.display_offline_worksites));
                     } else {
                         showOfflineSites = true;
-                        item.setTitle("Display Online Sites");
+                        item.setTitle(getString(R.string.display_online_worksites));
                     }
 
                     updateDisplaySites();

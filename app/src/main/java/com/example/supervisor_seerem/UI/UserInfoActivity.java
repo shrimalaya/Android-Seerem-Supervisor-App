@@ -230,7 +230,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (userEmergencyInfo == null) {
-            Toast.makeText(getApplicationContext(), "Fill in emergency information!",
+            Toast.makeText(getApplicationContext(), getString(R.string.fill_in_emergency_info),
                     Toast.LENGTH_LONG).show();
         } else {
             String savedFirstName = documentManager.getCurrentUser().getFirstName();

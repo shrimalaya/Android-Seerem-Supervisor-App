@@ -276,8 +276,8 @@ public class AdditionalInfoActivity extends AppCompatActivity {
 
             case (R.id.menu_additional_refresh):
                 final ProgressDialog progressDialog = new ProgressDialog(AdditionalInfoActivity.this);
-                progressDialog.setMessage("Refreshing All Data!");
-                progressDialog.setTitle("Please wait");
+                progressDialog.setMessage(getString(R.string.refresh_all_data));
+                progressDialog.setTitle(getString(R.string.please_wait));
                 progressDialog.setCancelable(false);
                 progressDialog.setIndeterminate(true);
                 progressDialog.show();
