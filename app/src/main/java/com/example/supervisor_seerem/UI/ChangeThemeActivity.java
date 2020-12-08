@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.supervisor_seerem.R;
 
@@ -110,6 +111,7 @@ public class ChangeThemeActivity extends AppCompatActivity{
         SharedPreferences languagePrefs = getSharedPreferences("LanguageChoice", Context.MODE_PRIVATE);
         String language = languagePrefs.getString("language", null);
         Locale newLocale = new Locale(language);
+        Toast.makeText(this, "language = " + language, Toast.LENGTH_SHORT).show();
         Resources resources = getResources();
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();
         Configuration configuration = resources.getConfiguration();

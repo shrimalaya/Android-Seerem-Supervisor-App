@@ -189,7 +189,7 @@
     <string name="install_zoom_prompt">Veuillez d\'abord installer Zoom!</string>
 
     <string name="change_password_title">Changer Le Mot De Passe</string>
-    <string name="change_language_title">Changer La Langue De L\'application</string>
+    <string name="change_language_title">Changer La Langue</string>
     <string name="change_theme_title">Changer Le Thème</string>
     <string name="add_overtime_title">Ajouter Des Heures Supplémentaires</string>
     <string name="add_day_leave_title">Ajouter Un Congé Journalier</string>
