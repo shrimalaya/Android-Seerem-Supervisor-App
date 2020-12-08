@@ -261,6 +261,9 @@
     <string name="directory_supervisors">Supervisors</string>
     <string name="directory_workers">Workers</string>
 
+    <string name="english_language">English</string>
+    <string name="french_language">French</string>
+
     <string name="log_out_title">You are about to exit the app</string>
     <string name="log_out_message">Do you want to log out?</string>
     <string name="log_out_dialog_positive">LOG OUT</string>
