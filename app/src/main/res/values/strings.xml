@@ -223,7 +223,7 @@
     <string name="add_day_leave_save_fail">Failed to send your day leave request.</string>
 
     <string name= "add_overtime_header">Add Overtime Hours</string>
-    <string name="select_unique_day">Please select a day!</string>
+    <string name="select_unique_day">You have made a request for this day already!</string>
     <string name= "add_overtime_help">Specify the days you work overtime for the Administration to verify and validate.</string>
     <string name= "add_overtime_header_">Select day:</string>
     <string name= "add_overtime_duration">Hrs</string>

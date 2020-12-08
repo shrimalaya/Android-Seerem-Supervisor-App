@@ -90,34 +90,12 @@ public class ChangeThemeActivity extends AppCompatActivity {
         modeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                launchRestartAppDialog();
-//                if (modeSwitch.isChecked()) {
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putString("theme", "dark");
-//                    editor.apply();
-//                } else {
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putString("theme", "light");
-//                    editor.apply();
-//                }
-//                changeLocale();
+                if (buttonView.isPressed()) {
+                    launchRestartAppDialog();
+                }
             }
         });
         switchMode();
-    }
-
-    private void changeLocale() {
-        SharedPreferences languagePrefs = getSharedPreferences("LanguageChoice", Context.MODE_PRIVATE);
-        String language = languagePrefs.getString("language", "en");
-        Locale newLocale = new Locale(language);
-//        Toast.makeText(this, "language = " + language, Toast.LENGTH_SHORT).show();
-        Resources resources = getResources();
-        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = newLocale;
-        resources.updateConfiguration(configuration, displayMetrics);
     }
 
     private void launchRestartAppDialog() {
