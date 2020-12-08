@@ -71,7 +71,7 @@ public class LoginInfoActivity extends AppCompatActivity {
 
     private void changeLocale() {
         SharedPreferences languagePrefs = getSharedPreferences("LanguageChoice", Context.MODE_PRIVATE);
-        String language = languagePrefs.getString("language", null);
+        String language = languagePrefs.getString("language", "en");
         Locale newLocale = new Locale(language);
         Resources resources = getResources();
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();

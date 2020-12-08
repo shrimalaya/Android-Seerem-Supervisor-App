@@ -77,11 +77,11 @@ public class ChangeLanguageActivity extends AppCompatActivity {
 
     private void setupLanguageRadioButton() {
         RadioGroup languageRadioGroup = (RadioGroup) findViewById(R.id.language_radio_group);
-        if (languageSharedPrefs.getString("language", null) != null) {
-            if (languageSharedPrefs.getString("language", null).equals("en")) {
+        if (languageSharedPrefs.getString("language", "") != null) {
+            if (languageSharedPrefs.getString("language", "").equals("en")) {
                 languageRadioGroup.check(R.id.english_radio_button);
                 languageChoice = "en";
-            } else if (languageSharedPrefs.getString("language", null).equals("fr")) {
+            } else if (languageSharedPrefs.getString("language", "").equals("fr")) {
                 languageRadioGroup.check(R.id.french_radio_button);
                 languageChoice = "fr";
             }

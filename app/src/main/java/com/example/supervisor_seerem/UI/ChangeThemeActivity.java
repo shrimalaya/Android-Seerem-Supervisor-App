@@ -22,11 +22,8 @@ import com.example.supervisor_seerem.R;
 
 import java.util.Locale;
 
-public class ChangeThemeActivity extends AppCompatActivity{
+public class ChangeThemeActivity extends AppCompatActivity {
 
-    private RadioGroup themes;
-    private RadioButton lightMode;
-    private RadioButton darkMode;
     private String savedTheme;
     SharedPreferences sharedPreferences;
 
@@ -48,10 +45,10 @@ public class ChangeThemeActivity extends AppCompatActivity{
             public void onClick(View view) {
                 String currentTheme = sharedPreferences.getString("theme",
                         "light");
-                if(currentTheme.equals("light")){
+                if (currentTheme.equals("light")) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     //Toast.makeText(getApplicationContext(), "Light saved", Toast.LENGTH_SHORT).show();
-                } else if (currentTheme.equals("dark")){
+                } else if (currentTheme.equals("dark")) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     //Toast.makeText(getApplicationContext(), "Dark saved", Toast.LENGTH_SHORT).show();
                 }
@@ -61,15 +58,15 @@ public class ChangeThemeActivity extends AppCompatActivity{
         toolbar.getContext().setTheme(R.style.AppTheme);
     }
 
-    private void switchMode(){
-    sharedPreferences = getSharedPreferences("ThemeData", Context.MODE_PRIVATE);
+    private void switchMode() {
+        sharedPreferences = getSharedPreferences("ThemeData", Context.MODE_PRIVATE);
         // Default to Light theme if for whatever reason nothing has been saved
         savedTheme = sharedPreferences.getString("theme", "light");
 
-        if(savedTheme.equals("light")){
+        if (savedTheme.equals("light")) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             modeSwitch.setChecked(false);
-        } else if (savedTheme.equals("dark")){
+        } else if (savedTheme.equals("dark")) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             modeSwitch.setChecked(true);
         }
@@ -109,9 +106,9 @@ public class ChangeThemeActivity extends AppCompatActivity{
 
     private void changeLocale() {
         SharedPreferences languagePrefs = getSharedPreferences("LanguageChoice", Context.MODE_PRIVATE);
-        String language = languagePrefs.getString("language", null);
+        String language = languagePrefs.getString("language", "");
         Locale newLocale = new Locale(language);
-        Toast.makeText(this, "language = " + language, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "language = " + language, Toast.LENGTH_SHORT).show();
         Resources resources = getResources();
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();
         Configuration configuration = resources.getConfiguration();
