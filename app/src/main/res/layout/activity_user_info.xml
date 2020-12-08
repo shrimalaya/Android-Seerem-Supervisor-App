@@ -285,17 +285,6 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/buttonUIPreferences"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:backgroundTint="@color/windowBackground"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="@string/go_to_ui_preferences_button"
-            android:textColor="@color/textColorPrimary"
-            android:textStyle="bold" />
-
-        <Button
             android:id="@+id/buttonSaveUserInfo"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -303,17 +292,6 @@
             android:backgroundTint="@color/windowBackground"
             android:fontFamily="sans-serif-smallcaps"
             android:text="@string/save_user_info_button"
-            android:textColor="@color/textColorPrimary"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/buttonSiteMap"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:backgroundTint="@color/windowBackground"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="@string/go_to_worksite"
             android:textColor="@color/textColorPrimary"
             android:textStyle="bold" />
 
