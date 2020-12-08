@@ -175,7 +175,7 @@
     <string name="log_out_sidebar_text">Log Out</string>
 
     <string name="sensorsUsageTextView">Device Sensor Values</string>
-    <string name="sensorUsageExplanationTextView">The current Ambient Temperature and Pressure values detected by your device is:</string>
+    <string name="sensorUsageExplanationTextView">The current Ambient Temperature and Pressure values detected by your device are:</string>
     <string name="temperatureTextView">Temperature</string>
     <string name="noTemperatureSensorTextView">(No Temperature sensor found)</string>
     <string name="pressureTextView">Pressure</string>
